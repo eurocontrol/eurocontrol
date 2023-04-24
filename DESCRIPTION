@@ -1,0 +1,24 @@
+Type: Package
+Package: eurocontrol
+Title: Helper function for EUROCONTROL useRs
+Version: 0.1.0
+Authors@R: c(
+    person("Enrico", "Spinielli", , "enrico.spinielli@eurocontrol.int", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-8584-9131")),
+    person("EUROCONTROL", role = c("cph", "fnd"))
+  )
+Maintainer: Enrico Spinielli <enrico.spinielli@eurocontrol.int>
+Description: The helper functions in this package are designed to make it
+    easy, homogeneus and transparent common tasks usually needed by
+    data analysts and useRs in EUROCONTROL.
+License: MIT + file LICENSE
+Imports: 
+    DBI,
+    dbplyr,
+    dplyr,
+    rlang,
+    ROracle,
+    withr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
