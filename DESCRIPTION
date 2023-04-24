@@ -16,6 +16,7 @@ Imports:
     DBI,
     dbplyr,
     dplyr,
+    lubridate,
     rlang,
     ROracle,
     withr

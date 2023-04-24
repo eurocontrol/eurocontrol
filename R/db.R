@@ -56,3 +56,104 @@ airlines_tbl <- function() {
   arl <- dplyr::tbl(con, dbplyr::in_schema("LDW_ACC", "AO_GROUPS_ASSOCIATION"))
   arl
 }
+
+
+#' Return a reference to the Flights table
+#'
+#' The returned `tbl` is referencing the flight table in PRISME.
+#' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
+#' datasets.
+#' NOTE: you need access to PRU_DEV
+#'
+#' @return a tbl referencing the Oracle table for flight
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' arl <- flights_tbl()
+#' }
+flights_tbl <- function() {
+  con <- db_connection(schema = "PRU_DEV")
+  flt <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT"))
+  flt
+}
+
+#' Extract useful flights list from NM flight table
+#'
+#' @param wef With EFfect date (included)
+#' @param til TILl date (excluded)
+#' @param .cols either ALL, USEFUL or a character vector of column names [default: USEFUL]
+#'              USEFUL is a subset of typically used column names.
+#'
+#' @return a data frame with
+#' * flight unique id,
+#' * lobt, iobt, actualt OBT, day
+#' * arrival datetime
+#' * aircraft id (also CRCO and ACARS ones)
+#' * aircraft registration (also from CRCO and ACARS)
+#' * ...
+#' * aircraft type
+#' * aircraft operator
+#' * aircraft group
+#' * market segment
+#'
+#' @examples
+#' \dontrun{
+#' my_flts <- flights_tidy(wef = "2023-01-01", wef = "2023-04-01")
+#' }
+flights_tidy <- function(wef, til, .cols = "USEFUL") {
+
+  columns <- c(
+    "FLT_UID",
+    "LOBT",
+    "IOBT",
+    "AIRCRAFT_ID",
+    "CRCO_FLT_ID",
+    "ACARS_CALLSIGN",
+    "REGISTRATION",
+    "CRCO_REGISTRATION",
+    "ACARS_REGISTRATION",
+    "AIRCRAFT_TYPE_ICAO_ID",
+    "FLT_RULES",
+    "ICAO_FLT_TYPE",
+    "CRCO_ICAO_AIRCRAFT_TYPE",
+    "WK_TBL_CAT",
+    "AIRCRAFT_OPERATOR",
+    "CRCO_USERNAME",
+    "AIRCRAFT_ADDRESS",
+    "CRCO_AIRCRAFT_ADDRESS",
+    "LAST_FPL_ARCADDR",
+    "ADEP",
+    "ADES",
+    "ID",
+    "SENSITIVE",
+    "EOBT_1",
+    "ARVT_1",
+    "TAXI_TIME_1",
+    "AOBT_3",
+    "ARVT_3",
+    "TAXI_TIME_3",
+    # Market Segment
+    "RULE_NAME",
+    # airline group
+    "AO_GRP_CODE",
+    "AO_GRP_NAME",
+    NULL)
+
+
+  con <- db_connection(schema = "PRU_DEV")
+
+  flt <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT"))
+  frl <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "DIM_FLIGHT_TYPE_RULE"))
+  aog <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO"))
+
+  wef <- (lubridate::ymd(wef, tz = "UTC") - lubridate::hours(28)) |> format("%Y-%m-%d %H:%M:%S")
+  til <- (lubridate::ymd(til, tz = "UTC") + lubridate::hours(24)) |> format("%Y-%m-%d %H:%M:%S")
+
+  fff <- flt |>
+    filter(to_date(wef, "yyyy-mm-dd hh24:mi:ss") <=LOBT,
+           LOBT < to_date(til, "yyyy-mm-dd hh24:mi:ss")) |>
+    dplyr::left_join(frl) |>
+    dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
+    dplyr::select(dplyr::all_of(columns))
+}

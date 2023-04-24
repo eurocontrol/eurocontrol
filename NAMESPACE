@@ -2,3 +2,4 @@
 
 export(airlines_tbl)
 export(db_connection)
+export(flights_tbl)
