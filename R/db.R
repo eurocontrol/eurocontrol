@@ -139,6 +139,7 @@ flights_tidy <- function(wef, til, .cols = "USEFUL") {
         "ADES",
         "ID",
         "SENSITIVE",
+        "EXMP_RSN_LH",
         "EOBT_1",
         "ARVT_1",
         "TAXI_TIME_1",
