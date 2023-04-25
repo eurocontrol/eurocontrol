@@ -128,6 +128,7 @@ flights_tidy <- function(wef, til, .cols = "USEFUL") {
         "AIRCRAFT_TYPE_ICAO_ID",
         "FLT_RULES",
         "ICAO_FLT_TYPE",
+        "SK_FLT_TYPE_RULE_ID",
         "CRCO_ICAO_AIRCRAFT_TYPE",
         "WK_TBL_CAT",
         "AIRCRAFT_OPERATOR",
