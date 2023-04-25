@@ -102,44 +102,51 @@ flights_tbl <- function() {
 #' my_flts <- flights_tidy(wef = "2023-01-01", wef = "2023-04-01")
 #' }
 flights_tidy <- function(wef, til, .cols = "USEFUL") {
-
-  columns <- c(
-    "FLT_UID",
-    "LOBT",
-    "IOBT",
-    "AIRCRAFT_ID",
-    "CRCO_FLT_ID",
-    "ACARS_CALLSIGN",
-    "REGISTRATION",
-    "CRCO_REGISTRATION",
-    "ACARS_REGISTRATION",
-    "AIRCRAFT_TYPE_ICAO_ID",
-    "FLT_RULES",
-    "ICAO_FLT_TYPE",
-    "CRCO_ICAO_AIRCRAFT_TYPE",
-    "WK_TBL_CAT",
-    "AIRCRAFT_OPERATOR",
-    "CRCO_USERNAME",
-    "AIRCRAFT_ADDRESS",
-    "CRCO_AIRCRAFT_ADDRESS",
-    "LAST_FPL_ARCADDR",
-    "ADEP",
-    "ADES",
-    "ID",
-    "SENSITIVE",
-    "EOBT_1",
-    "ARVT_1",
-    "TAXI_TIME_1",
-    "AOBT_3",
-    "ARVT_3",
-    "TAXI_TIME_3",
-    # Market Segment
-    "RULE_NAME",
-    # airline group
-    "AO_GRP_CODE",
-    "AO_GRP_NAME",
-    NULL)
-
+  stopifnot(is.character(.cols))
+  if (length(.cols) == 1L) {
+    if (toupper(.cols) == "USEFUL") {
+      columns <- c(
+        "FLT_UID",
+        "LOBT",
+        "IOBT",
+        "AIRCRAFT_ID",
+        "CRCO_FLT_ID",
+        "ACARS_CALLSIGN",
+        "REGISTRATION",
+        "CRCO_REGISTRATION",
+        "ACARS_REGISTRATION",
+        "AIRCRAFT_TYPE_ICAO_ID",
+        "FLT_RULES",
+        "ICAO_FLT_TYPE",
+        "CRCO_ICAO_AIRCRAFT_TYPE",
+        "WK_TBL_CAT",
+        "AIRCRAFT_OPERATOR",
+        "CRCO_USERNAME",
+        "AIRCRAFT_ADDRESS",
+        "CRCO_AIRCRAFT_ADDRESS",
+        "LAST_FPL_ARCADDR",
+        "ADEP",
+        "ADES",
+        "ID",
+        "SENSITIVE",
+        "EOBT_1",
+        "ARVT_1",
+        "TAXI_TIME_1",
+        "AOBT_3",
+        "ARVT_3",
+        "TAXI_TIME_3",
+        # Market Segment
+        "RULE_NAME",
+        # airline group
+        "AO_GRP_CODE",
+        "AO_GRP_NAME",
+        NULL)
+    } else if (toupper(.cols) == "ALL" || .cols == "") {
+      # GET the list f all cols
+    } else {
+      stop(".cols can take ALL, USEFUL or a vector of column names.")
+    }
+  }
 
   con <- db_connection(schema = "PRU_DEV")
 
