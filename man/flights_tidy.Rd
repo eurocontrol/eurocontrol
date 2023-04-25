@@ -2,14 +2,16 @@
 % Please edit documentation in R/db.R
 \name{flights_tidy}
 \alias{flights_tidy}
-\title{Extract useful flights list from NM flight table}
+\title{Extract useful flights list from NM flight table is an interval}
 \usage{
 flights_tidy(wef, til, .cols = "USEFUL")
 }
 \arguments{
-\item{wef}{With EFfect date (included)}
+\item{wef}{With EFfect date (included) at Zulu time
+in a format recognized by `lubridate::as_datetime()`}
 
-\item{til}{TILl date (excluded)}
+\item{til}{TILl date (excluded) at Zulu time
+in a format recognized by `lubridate::as_datetime()`}
 
 \item{.cols}{either ALL, USEFUL or a character vector of column names [default: USEFUL]
 USEFUL is a subset of typically used column names.}
@@ -28,7 +30,11 @@ a data frame with
 * market segment
 }
 \description{
-Extract useful flights list from NM flight table
+The returned `tbl` is referencing the flight table in PRISME and
+including flights in the right-opened interval [wef, til).
+You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
+datasets.
+NOTE: you need access to PRU_DEV
 }
 \examples{
 \dontrun{

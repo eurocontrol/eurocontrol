@@ -78,10 +78,18 @@ flights_tbl <- function() {
   flt
 }
 
-#' Extract useful flights list from NM flight table
+#' Extract useful flights list from NM flight table is an interval
 #'
-#' @param wef With EFfect date (included)
-#' @param til TILl date (excluded)
+#' The returned `tbl` is referencing the flight table in PRISME and
+#' including flights in the right-opened interval [wef, til).
+#' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
+#' datasets.
+#' NOTE: you need access to PRU_DEV
+#'
+#' @param wef With EFfect date (included) at Zulu time
+#'            in a format recognized by `lubridate::as_datetime()`
+#' @param til TILl date (excluded) at Zulu time
+#'            in a format recognized by `lubridate::as_datetime()`
 #' @param .cols either ALL, USEFUL or a character vector of column names [default: USEFUL]
 #'              USEFUL is a subset of typically used column names.
 #'
@@ -156,8 +164,8 @@ flights_tidy <- function(wef, til, .cols = "USEFUL") {
   frl <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "DIM_FLIGHT_TYPE_RULE"))
   aog <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO"))
 
-  wef <- (lubridate::ymd(wef, tz = "UTC") - lubridate::hours(28)) |> format("%Y-%m-%d %H:%M:%S")
-  til <- (lubridate::ymd(til, tz = "UTC") + lubridate::hours(24)) |> format("%Y-%m-%d %H:%M:%S")
+  wef <- lubridate::as_datetime(wef, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
+  til <- lubridate::as_datetime(til, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
 
   fff <- flt |>
     dplyr::filter(to_date(wef, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
