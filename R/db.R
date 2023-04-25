@@ -99,7 +99,7 @@ flights_tbl <- function() {
 #'
 #' @examples
 #' \dontrun{
-#' my_flts <- flights_tidy(wef = "2023-01-01", wef = "2023-04-01")
+#' my_flts <- flights_tidy(wef = "2023-01-01", til = "2023-04-01")
 #' }
 flights_tidy <- function(wef, til, .cols = "USEFUL") {
   stopifnot(is.character(.cols))
