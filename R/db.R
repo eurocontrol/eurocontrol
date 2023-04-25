@@ -158,8 +158,8 @@ flights_tidy <- function(wef, til, .cols = "USEFUL") {
   til <- (lubridate::ymd(til, tz = "UTC") + lubridate::hours(24)) |> format("%Y-%m-%d %H:%M:%S")
 
   fff <- flt |>
-    filter(to_date(wef, "yyyy-mm-dd hh24:mi:ss") <=LOBT,
-           LOBT < to_date(til, "yyyy-mm-dd hh24:mi:ss")) |>
+    dplyr::filter(to_date(wef, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
+                  LOBT < to_date(til, "yyyy-mm-dd hh24:mi:ss")) |>
     dplyr::left_join(frl) |>
     dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
     dplyr::select(dplyr::all_of(columns))
