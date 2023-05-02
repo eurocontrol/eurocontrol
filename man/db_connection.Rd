@@ -9,9 +9,9 @@ db_connection(schema = "PRU_PROD")
 \arguments{
 \item{schema}{the Oracle DB schema to connect to.
 Note: this is more the prefix of the environment variable
-where the credentials are stored, like `<schema>_USR`,
-`<schema>_PWD` and `<schema>_DBNAME`.
-Possible values are `PRU_PROD`, `PRU_DEV`, `PRU_TEST`, ...}
+where the credentials are stored, like \verb{<schema>_USR},
+\verb{<schema>_PWD} and \verb{<schema>_DBNAME}.
+Possible values are \code{PRU_PROD}, \code{PRU_DEV}, \code{PRU_TEST}, ...}
 }
 \value{
 DB connection

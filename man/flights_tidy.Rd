@@ -2,39 +2,78 @@
 % Please edit documentation in R/db.R
 \name{flights_tidy}
 \alias{flights_tidy}
-\title{Extract useful flights list from NM flight table is an interval}
+\title{Extract a clean flights list in an interval}
 \usage{
-flights_tidy(wef, til, .cols = "USEFUL")
+flights_tidy(wef, til)
 }
 \arguments{
-\item{wef}{With EFfect date (included) at Zulu time
-in a format recognized by `lubridate::as_datetime()`}
+\item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
+in a format recognized by \code{\link[=as_datetime]{as_datetime()}}}
 
-\item{til}{TILl date (excluded) at Zulu time
-in a format recognized by `lubridate::as_datetime()`}
-
-\item{.cols}{either ALL, USEFUL or a character vector of column names [default: USEFUL]
-USEFUL is a subset of typically used column names.}
+\item{til}{\strong{TIL}l date (excluded) at Zulu time
+in a format recognized by \code{\link[=as_datetime]{as_datetime()}}}
 }
 \value{
-a data frame with
-* flight unique id,
-* lobt, iobt, actualt OBT, day
-* arrival datetime
-* aircraft id (also CRCO and ACARS ones)
-* aircraft registration (also from CRCO and ACARS)
-* ...
-* aircraft type
-* aircraft operator
-* aircraft group
-* market segment
+a \link{tbl} with the following columns
+\itemize{
+\item FLT_UID: the flight unique id
+\item LOBT: \strong{L}ast received \strong{O}ff-\strong{B}lock \strong{T}ime
+\item IOBT: \strong{I}nitial \strong{O}ff-\strong{B}lock \strong{T}ime
+\item AIRCRAFT_ID
+\item REGISTRATION: the registration
+\item AIRCRAFT_TYPE_ICAO_ID
+\item FLT_RULES (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}):
+which sets of regulations the flight is operated under.
+Possible values are:
+\itemize{
+\item \code{I} for IFR
+\item \code{V} for VFR,
+\item \code{Y} first IFR thereafter VFR,
+\item \code{Z} first VFR thereafter IFR
+}
+\item ICAO_FLT_TYPE (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}):
+flight type. Possible values (but G, M aand X shouldn't appear):
+\itemize{
+\item \code{S} for scheduled air service
+\item \code{N} for non-scheduled air service
+\item \code{G} for general aviation
+\item \code{M} for military
+\item \code{X} for other than the preceding categories
+}
+\item WK_TBL_CAT (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 9}): wake turbulence category, cab be
+\itemize{
+\item \code{L} LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.
+\item \code{M} MEDIUM, i.e maximum certificated takeoff mass less than 136_000 kg (300_000 lbs),
+but more than 7_000 kg (15_500 lbs)
+\item \code{H} HEAVY, i.e. maximum certificated takeoff mass of 136_000 kg (300_000 lbs) or more
+(except those specified as \code{J})
+\item \code{J} SUPER, presently the only the AIRBUS A-380-800
+}
+\item AIRCRAFT_OPERATOR:
+\item AIRCRAFT_ADDRESS: the ICAO 24-bit address of the airframe for ADS-B/Mode S broadcasting
+\item ADEP: (\href{https://observablehq.com/@openaviation/airports}{ICAO code} of the) \strong{A}erodrome of \strong{DEP}arture
+\item ADES: (\href{https://observablehq.com/@openaviation/airports}{ICAO code} of the) \strong{A}erodrome of \strong{DES}tination
+\item ID: ETFMS ID (?)
+\item EOBT_1: \strong{E}stimated \strong{O}ff-\strong{B}lock \strong{T}ime for FPL-based (M1) trajectory
+\item ARVT_1: \strong{AR}ri\strong{V}al \strong{T}ime for FPL-based (M1) trajectory
+\item TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
+\item AOBT_3: \strong{A}ctual \strong{O}ff-\strong{B}lock \strong{T}ime for flown (M3) trajectory
+\item ARVT_3: \strong{ARV}ival \strong{T}ime for flown (M3) trajectory
+\item TAXI_TIME_3: Taxi time for flown (M3) trajectory
+\item RULE_NAME: market segment type
+\item AO_GRP_CODE: Aircraft Operator group (code)
+\item AO_GRP_NAME: : Aircraft Operator group (name)
+\item RTE_LEN_1: route length (NM) for FPL-based (M1) trajectory
+\item RTE_LEN_3: route length (NM) for for flown (M3) trajectory
+}
 }
 \description{
-The returned `tbl` is referencing the flight table in PRISME and
-including flights in the right-opened interval [wef, til).
-You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
-datasets.
-NOTE: you need access to PRU_DEV
+The returned \link{tbl} includes scheduled and non-scheduled flight
+in the right-opened interval \verb{[wef, til)}.
+General aviation, State, military and sensitive flight are excluded.
+}
+\details{
+\emph{NOTE}: you need access to PRU_DEV
 }
 \examples{
 \dontrun{

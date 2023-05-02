@@ -10,8 +10,8 @@ flights_tbl()
 a tbl referencing the Oracle table for flight
 }
 \description{
-The returned `tbl` is referencing the flight table in PRISME.
-You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
+The returned \code{tbl} is referencing the flight table in PRISME.
+You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 NOTE: you need access to PRU_DEV
 }
