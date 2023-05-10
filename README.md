@@ -12,13 +12,17 @@ employees.
 
 ## Installation
 
-You can install the development version of eurocontrol from
-[GitHub](https://github.com/) with:
+You can install the development version of the `eurocontrol` package
+from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("eurocontrol/eurocontrol")
 ```
+
+**NOTE**: This package (hiddenly) depends on the `ROracle` package,
+please have it installed according to the guidelines as published
+[here](https://github.com/euctrl-pru/howto/wiki/Tools-Installation-and-Setup-%28For-R%29#roracle).
 
 ## Example
 

@@ -14,23 +14,24 @@
 #' con <- db_connection()
 #' }
 db_connection <- function(schema = "PRU_PROD") {
-  withr::local_envvar(c(
-    "TZ" = "UTC",
-    "ORA_SDTZ" = "UTC",
-    "NLS_LANG" = ".AL32UTF8"
-  ))
-
-  drv <- ROracle::Oracle()
 
   USR <- Sys.getenv(paste0(schema, "_USR"))
   PWD <- Sys.getenv(paste0(schema, "_PWD"))
   DBN <- Sys.getenv(paste0(schema, "_DBNAME"))
 
-  con <- DBI::dbConnect(
-    drv = drv,
-    username = USR,
-    password = PWD,
-    dbname = DBN
+  withr::local_envvar(c(
+    "TZ" = "UTC",
+    "ORA_SDTZ" = "UTC",
+    "NLS_LANG" = ".AL32UTF8"
+  ))
+  withr::local_namespace("ROracle")
+  con <- withr::local_db_connection(
+    DBI::dbConnect(
+      DBI::dbDriver("Oracle"),
+      username = USR,
+      password = PWD,
+      dbname = DBN,
+      timezone = "UTC")
   )
 
   con
