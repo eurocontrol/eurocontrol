@@ -13,14 +13,21 @@ in a format recognized by \code{\link[=as_datetime]{as_datetime()}}}
 \item{til}{\strong{TIL}l date (excluded) at Zulu time
 in a format recognized by \code{\link[=as_datetime]{as_datetime()}}}
 
-\item{airspace}{the type of airspace, one of:
-'ES' (elementary sector), 'FIR'
-(\href{https://observablehq.com/@openaviation/flight-information-regions}{Flight Information Region})
-(default: 'FIR')
-The possible values are}
+\item{airspace}{the type of airspace (default: 'FIR'), one of:
+\itemize{
+\item 'FIR' (\href{https://observablehq.com/@openaviation/flight-information-regions}{Flight Information Region})
+\item 'NAS' (National Airspace)
+\item 'AUA' (ATC Unit Airspace)
+\item 'ES' (Elementary Sector)
+}}
 
-\item{profile}{the model of the trajectory profile, one of:
-"FTFM", "CTFM", "RTFM", "CPF" (default: 'CTFM')}
+\item{profile}{the model of the trajectory profil (default: 'CTFM'), one of:
+\itemize{
+\item "FTFM"
+\item "CTFM"
+\item "RTFM"
+\item "CPF"
+}}
 }
 \value{
 a \link{tbl} with the following columns

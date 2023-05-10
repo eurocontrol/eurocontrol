@@ -242,13 +242,17 @@ flights_tidy <- function(wef, til) {
 #' @param til **TIL**l date (excluded) at Zulu time
 #'            in a format recognized by [as_datetime()]
 #'
-#' @param airspace the type of airspace, one of:
-#'                 'ES' (elementary sector), 'FIR'
-#'                 ([Flight Information Region](https://observablehq.com/@openaviation/flight-information-regions))
-#'                 (default: 'FIR')
-#'                 The possible values are
-#' @param profile the model of the trajectory profile, one of:
-#'                "FTFM", "CTFM", "RTFM", "CPF" (default: 'CTFM')
+#' @param airspace the type of airspace (default: 'FIR'), one of:
+#'  * 'FIR' ([Flight Information Region](https://observablehq.com/@openaviation/flight-information-regions))
+#'  * 'NAS' (National Airspace)
+#'  * 'AUA' (ATC Unit Airspace)
+#'  * 'ES' (Elementary Sector)
+#'
+#' @param profile the model of the trajectory profil (default: 'CTFM'), one of:
+#'  * "FTFM"
+#'  * "CTFM"
+#'  * "RTFM"
+#'  * "CPF"
 #'
 #' @return a [tbl] with the following columns
 #'
