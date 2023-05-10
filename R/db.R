@@ -80,7 +80,7 @@ flights_tbl <- function() {
 
 
 
-profile_tbl <- function(profile = "CTFM") {
+airspace_profile_tbl <- function(profile = "CTFM") {
   # TODO: accept only "ALL" or a subset of "CTFM", "FTFM", "CPF" ...
   #       ALL could be useful for example to extract and plot all profiles for one flight
   con <- db_connection(schema = "PRU_DEV")
@@ -143,7 +143,7 @@ profile_tbl <- function(profile = "CTFM") {
 #' * AIRCRAFT_ADDRESS: the ICAO 24-bit address of the airframe for ADS-B/Mode S broadcasting
 #' * ADEP: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DEP**arture
 #' * ADES: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DES**tination
-#' * ID: ETFMS ID (?)
+#' * ID: the so called SAM ID, used internally by PRISME
 #' * EOBT_1: **E**stimated **O**ff-**B**lock **T**ime for FPL-based (M1) trajectory
 #' * ARVT_1: **AR**ri**V**al **T**ime for FPL-based (M1) trajectory
 #' * TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
@@ -235,30 +235,59 @@ flights_tidy <- function(wef, til) {
 }
 
 
-profiles_tidy <- function(wef, til, airspace = "FIR", profile) {
+#' Provide all airspace profile segments intersecting an interval of interest
+#'
+#' @param wef **W**ith **EF**fect date (included) at Zulu time
+#'            in a format recognized by [as_datetime()]
+#' @param til **TIL**l date (excluded) at Zulu time
+#'            in a format recognized by [as_datetime()]
+#'
+#' @param airspace the type of airspace, one of:
+#'                 'ES' (elementary sector), 'FIR'
+#'                 ([Flight Information Region](https://observablehq.com/@openaviation/flight-information-regions))
+#'                 (default: 'FIR')
+#'                 The possible values are
+#' @param profile the model of the trajectory profile, one of:
+#'                "FTFM", "CTFM", "RTFM", "CPF" (default: 'CTFM')
+#'
+#' @return a [tbl] with the following columns
+#'
+#' * ID: the so called SAM ID, used internally by PRISME
+#' * SEQ_ID: the sequence number of the segment for the relevant airspace profile
+#' * ENTRY_TIME: the time of entry into the relevant airspace
+#' * ENTRY_LON:  the longitude of entry into the relevant airspace
+#' * ENTRY_LAT: the latitude of entry into the relevant airspace
+#' * ENTRY_FL: the flight level of entry into the relevant airspace
+#' * EXIT_TIME: the time of exit out of the relevant airspace
+#' * EXIT_LON: the longitude of exit out of the relevant airspace
+#' * EXIT_LAT: the latitude of exit out of the relevant airspace
+#' * EXIT_FL: the flight level of exit out of the relevant airspace
+#' * AIRSPACE_ID: the airspace ID
+#' * AIRSPACE_TYPE: the airspace type as per `airspace` input parameter
+#' * MODEL_TYPE: the trajectory model as per `profile` input parameter
+#'
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' asp_profs <- airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+#' }
+airspace_profiles_tidy <- function(wef, til, airspace = "FIR", profile = "CTFM") {
 
-  con <- db_connection(schema = "PRU_DEV")
-  wef_before <- (lubridate::as_datetime(wef) - lubridate::ddays(1)) |>
+  # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
+  #                capture actual flight events, so we need some buffers.
+  before_hours <- 28
+  after_hours  <- 24
+
+  wef_before <- (lubridate::as_datetime(wef) - lubridate::dhours(before_hours))|>
     format("%Y-%m-%d %H:%M:%S")
-  til_after  <- (lubridate::as_date(til) + lubridate::ddays(1.25)) |>
+  til_after  <- (lubridate::as_date(til)     + lubridate::dhours(after_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
 
-  flt <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT")) |>
-    dplyr::filter(
-      # take some buffer before and after [wef, til)
-      to_date(wef_before, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
-      LOBT < to_date(til_after, "yyyy-mm-dd hh24:mi:ss"),
-      # only commercial flights (scheduled and non-scheduled),
-      # i.e. General Aviation, Military and Other excluded
-      ICAO_FLT_TYPE %in% c('S', 'N'),
-      # make double sure military flights are excluded
-      SK_FLT_TYPE_RULE_ID != 1L,
-      # exclude sensitive flights
-      SENSITIVE != 'Y',
-      # exclude "Head of State" flights
-      # (might be redundant with the "SENSITIVE" flag)
-      EXMP_RSN_LH != 'HEAD'
-    )
+  flt <- flights_tidy(wef = wef_before, til = til_after)
+  # reuse the same DB connection as per the flights
+  con <- flt$src$con
 
 
   prf <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE")) |>
@@ -286,7 +315,7 @@ profiles_tidy <- function(wef, til, airspace = "FIR", profile) {
     # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
     dplyr::inner_join(flt, by = c("SAM_ID" = "ID", "LOBT" = "LOBT")) |>
     dplyr::select(
-      SAM_ID,
+      ID = SAM_ID,
       SEQ_ID,
       ENTRY_TIME, ENTRY_LON, ENTRY_LAT, ENTRY_FL,
       EXIT_TIME, EXIT_LON, EXIT_LAT, EXIT_FL,

@@ -53,7 +53,7 @@ but more than 7_000 kg (15_500 lbs)
 \item AIRCRAFT_ADDRESS: the ICAO 24-bit address of the airframe for ADS-B/Mode S broadcasting
 \item ADEP: (\href{https://observablehq.com/@openaviation/airports}{ICAO code} of the) \strong{A}erodrome of \strong{DEP}arture
 \item ADES: (\href{https://observablehq.com/@openaviation/airports}{ICAO code} of the) \strong{A}erodrome of \strong{DES}tination
-\item ID: ETFMS ID (?)
+\item ID: the so called SAM ID, used internally by PRISME
 \item EOBT_1: \strong{E}stimated \strong{O}ff-\strong{B}lock \strong{T}ime for FPL-based (M1) trajectory
 \item ARVT_1: \strong{AR}ri\strong{V}al \strong{T}ime for FPL-based (M1) trajectory
 \item TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
