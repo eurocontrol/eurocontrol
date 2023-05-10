@@ -80,6 +80,17 @@ flights_tbl <- function() {
 
 
 
+profile_tbl <- function(profile = "CTFM") {
+  # TODO: accept only "ALL" or a subset of "CTFM", "FTFM", "CPF" ...
+  #       ALL could be useful for example to extract and plot all profiles for one flight
+  con <- db_connection(schema = "PRU_DEV")
+  prof <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE")) |>
+    dplyr::filter(MODEL_TYPE %in% profile)
+
+  prof
+}
+
+
 #' Extract a clean flights list in an interval
 #'
 #' The returned [tbl] includes scheduled and non-scheduled flight
@@ -152,6 +163,7 @@ flights_tbl <- function() {
 #' my_flts <- flights_tidy(wef = "2023-01-01", til = "2023-04-01")
 #' }
 flights_tidy <- function(wef, til) {
+
   columns <- c(
     "FLT_UID",
     "LOBT",
@@ -204,11 +216,9 @@ flights_tidy <- function(wef, til) {
   til <- lubridate::as_datetime(til, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
 
   fff <- flt |>
-    dplyr::filter(to_date(wef, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
-                  LOBT < to_date(til, "yyyy-mm-dd hh24:mi:ss")) |>
-    dplyr::left_join(frl, by = "SK_FLT_TYPE_RULE_ID") |>
-    dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
     dplyr::filter(
+      to_date(wef, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
+      LOBT < to_date(til, "yyyy-mm-dd hh24:mi:ss"),
       # only commercial flights (scheduled and non-scheduled), i.e. General Aviation, Military and Other excluded
       ICAO_FLT_TYPE %in% c('S', 'N'),
       # make sure military flights are excluded
@@ -216,6 +226,69 @@ flights_tidy <- function(wef, til) {
       # exclude sensitive flights
       SENSITIVE != 'Y',
       # exclude "Head of State" flights, might be redundant with the "SENSITIVE" flag
-      EXMP_RSN_LH != 'HEAD') |>
+      EXMP_RSN_LH != 'HEAD'
+      ) |>
+    dplyr::left_join(frl, by = "SK_FLT_TYPE_RULE_ID") |>
+    dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
     dplyr::select(dplyr::all_of(columns))
+  fff
+}
+
+
+profiles_tidy <- function(wef, til, airspace = "FIR", profile) {
+
+  con <- db_connection(schema = "PRU_DEV")
+  wef_before <- (lubridate::as_datetime(wef) - lubridate::ddays(1)) |>
+    format("%Y-%m-%d %H:%M:%S")
+  til_after  <- (lubridate::as_date(til) + lubridate::ddays(1.25)) |>
+    format("%Y-%m-%d %H:%M:%S")
+
+  flt <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT")) |>
+    dplyr::filter(
+      # take some buffer before and after [wef, til)
+      to_date(wef_before, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
+      LOBT < to_date(til_after, "yyyy-mm-dd hh24:mi:ss"),
+      # only commercial flights (scheduled and non-scheduled),
+      # i.e. General Aviation, Military and Other excluded
+      ICAO_FLT_TYPE %in% c('S', 'N'),
+      # make double sure military flights are excluded
+      SK_FLT_TYPE_RULE_ID != 1L,
+      # exclude sensitive flights
+      SENSITIVE != 'Y',
+      # exclude "Head of State" flights
+      # (might be redundant with the "SENSITIVE" flag)
+      EXMP_RSN_LH != 'HEAD'
+    )
+
+
+  prf <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE")) |>
+    dplyr::filter(
+      to_date(wef_before, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
+      LOBT < to_date(til_after, "yyyy-mm-dd hh24:mi:ss"),
+      MODEL_TYPE %in% profile,
+      AIRSPACE_TYPE == airspace,
+      # entry
+      !is.na(ENTRY_LON),
+      !is.na(ENTRY_LAT),
+      !is.na(ENTRY_TIME),
+      !is.na(ENTRY_FL),
+      # exit
+      !is.na(EXIT_LON),
+      !is.na(EXIT_LAT),
+      !is.na(EXIT_TIME),
+      !is.na(EXIT_FL),
+      # consider only the segments intersecting the [wef, til)
+      ENTRY_TIME <= to_date(til, "yyyy-mm-dd hh24:mi:ss"),
+      to_date(wef, "yyyy-mm-dd hh24:mi:ss") < EXIT_TIME
+    )
+
+  prf |>
+    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
+    dplyr::inner_join(flt, by = c("SAM_ID" = "ID", "LOBT" = "LOBT")) |>
+    dplyr::select(
+      SAM_ID,
+      SEQ_ID,
+      ENTRY_TIME, ENTRY_LON, ENTRY_LAT, ENTRY_FL,
+      EXIT_TIME, EXIT_LON, EXIT_LAT, EXIT_FL,
+      AIRSPACE_ID, AIRSPACE_TYPE, MODEL_TYPE)
 }
