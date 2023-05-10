@@ -1,6 +1,6 @@
 Type: Package
 Package: eurocontrol
-Title: Helper function for EUROCONTROL useRs
+Title: Helper functions for EUROCONTROL useRs
 Version: 0.1.0
 Authors@R: c(
     person("Enrico", "Spinielli", , "enrico.spinielli@eurocontrol.int", role = c("aut", "cre"),
