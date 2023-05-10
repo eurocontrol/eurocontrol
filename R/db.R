@@ -248,11 +248,16 @@ flights_tidy <- function(wef, til) {
 #'  * 'AUA' (ATC Unit Airspace)
 #'  * 'ES' (Elementary Sector)
 #'
-#' @param profile the model of the trajectory profil (default: 'CTFM'), one of:
-#'  * "FTFM"
-#'  * "CTFM"
-#'  * "RTFM"
-#'  * "CPF"
+#' @param profile the [model of the trajectory](https://ansperformance.eu/definition/flight-models/)
+#'  profile (default: 'CTFM'), one of:
+#'  * 'FTFM'
+#'  * 'RTFM'
+#'  * 'CTFM'
+#'  * 'CPF'
+#'  * 'DCT'
+#'  * 'SCR'
+#'  * 'SRR'
+#'  * 'SUR'
 #'
 #' @return a [tbl] with the following columns
 #'

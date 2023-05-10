@@ -21,12 +21,17 @@ in a format recognized by \code{\link[=as_datetime]{as_datetime()}}}
 \item 'ES' (Elementary Sector)
 }}
 
-\item{profile}{the model of the trajectory profil (default: 'CTFM'), one of:
+\item{profile}{the \href{https://ansperformance.eu/definition/flight-models/}{model of the trajectory}
+profile (default: 'CTFM'), one of:
 \itemize{
-\item "FTFM"
-\item "CTFM"
-\item "RTFM"
-\item "CPF"
+\item 'FTFM'
+\item 'RTFM'
+\item 'CTFM'
+\item 'CPF'
+\item 'DCT'
+\item 'SCR'
+\item 'SRR'
+\item 'SUR'
 }}
 }
 \value{
