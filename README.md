@@ -1,0 +1,34 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# The `eurocontrol` package
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of the `eurocontrol` package is to provide helper function for
+setup, data retrieval from internal databases, … to the Agency’s
+employees.
+
+## Installation
+
+You can install the development version of eurocontrol from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("eurocontrol/eurocontrol")
+```
+
+## Example
+
+A typical use case is to retrieve a list of flights operated in the area
+managed by EUROCONTROL’s Network Manager.
+
+For example for the flight list of March 2023 you can run:
+
+``` r
+library(eurocontrol)
+
+flights_tidy(wef = "2023-01-01", til = "2023-04-01")
+```
