@@ -40,10 +40,12 @@ db_connection <- function(schema = "PRU_PROD") {
 
 #' Return a reference to the Airlines table
 #'
-#' The returned `tbl` is referencing the airline table in PRISME.
+#' @description
+#' The returned [dplyr::tbl()] is referencing the airlines table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
-#' NOTE: you need access to PRU_DEV
+#'
+#' **NOTE**: you need access to PRU_DEV schema
 #'
 #' @return a tbl referencing the Oracle table for airlines
 #' @export
@@ -61,10 +63,12 @@ airlines_tbl <- function() {
 
 #' Return a reference to the Flights table
 #'
-#' The returned `tbl` is referencing the flight table in PRISME.
+#' @description
+#' The returned [dplyr::tbl()] is referencing the flights table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
-#' NOTE: you need access to PRU_DEV
+#'
+#' **NOTE**: you need access to PRU_DEV schema
 #'
 #' @return a tbl referencing the Oracle table for flight
 #' @export
@@ -73,6 +77,7 @@ airlines_tbl <- function() {
 #' \dontrun{
 #' arl <- flights_tbl()
 #' }
+#'
 flights_tbl <- function() {
   con <- db_connection(schema = "PRU_DEV")
   flt <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT"))
@@ -81,6 +86,24 @@ flights_tbl <- function() {
 
 
 
+#' Return a reference to the Airspace Profile table
+#'
+#' @description
+#' The returned [dplyr::tbl()] is referencing the flights table in PRISME.
+#' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
+#' datasets.
+#'
+#' **NOTE**: you need access to PRU_DEV schema
+#'
+#' @inheritParams airspace_profiles_tidy
+#'
+#' @return a tbl referencing the Oracle table for airspace profiles
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' prf <- airspace_profile_tbl(profile = "FTFM")
+#' }
 airspace_profile_tbl <- function(profile = "CTFM") {
   # TODO: accept only "ALL" or a subset of "CTFM", "FTFM", "CPF" ...
   #       ALL could be useful for example to extract and plot all profiles for one flight
@@ -94,16 +117,14 @@ airspace_profile_tbl <- function(profile = "CTFM") {
 
 #' Extract a clean flights list in an interval
 #'
+#' @description
 #' The returned [tbl] includes scheduled and non-scheduled flight
 #' in the right-opened interval `[wef, til)`.
 #' General aviation, State, military and sensitive flight are excluded.
 #'
-#' *NOTE*: you need access to PRU_DEV
+#' **NOTE**: you need access to PRU_DEV schema
 #'
-#' @param wef **W**ith **EF**fect date (included) at Zulu time
-#'            in a format recognized by [as_datetime()]
-#' @param til **TIL**l date (excluded) at Zulu time
-#'            in a format recognized by [as_datetime()]
+#' @inheritParams airspace_profiles_tidy
 #'
 #' @return a [tbl] with the following columns
 #'
@@ -238,10 +259,17 @@ flights_tidy <- function(wef, til) {
 
 #' Provide all airspace profile segments intersecting an interval of interest
 #'
+#' @description
+#' The returned [tbl] includes segments for scheduled and non-scheduled flights
+#' in the right-opened interval `[wef, til)`.
+#' General aviation, State, military and sensitive flight are excluded.
+#'
+#' **NOTE**: you need access to PRU_DEV schema
+#'
 #' @param wef **W**ith **EF**fect date (included) at Zulu time
-#'            in a format recognized by [as_datetime()]
-#' @param til **TIL**l date (excluded) at Zulu time
-#'            in a format recognized by [as_datetime()]
+#'            in a format recognized by [lubridate::as_datetime()]
+#' @param til u**TIL**l date (excluded) at Zulu time
+#'            in a format recognized by [lubridate::as_datetime()]
 #'
 #' @param airspace the type of airspace (default: 'FIR'), one of:
 #'  * 'FIR' ([Flight Information Region](https://observablehq.com/@openaviation/flight-information-regions))

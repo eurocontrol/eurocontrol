@@ -8,10 +8,10 @@ airspace_profiles_tidy(wef, til, airspace = "FIR", profile = "CTFM")
 }
 \arguments{
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
-in a format recognized by \code{\link[=as_datetime]{as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
-\item{til}{\strong{TIL}l date (excluded) at Zulu time
-in a format recognized by \code{\link[=as_datetime]{as_datetime()}}}
+\item{til}{u\strong{TIL}l date (excluded) at Zulu time
+in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
 \item{airspace}{the type of airspace (default: 'FIR'), one of:
 \itemize{
@@ -53,7 +53,11 @@ a \link{tbl} with the following columns
 }
 }
 \description{
-Provide all airspace profile segments intersecting an interval of interest
+The returned \link{tbl} includes segments for scheduled and non-scheduled flights
+in the right-opened interval \verb{[wef, til)}.
+General aviation, State, military and sensitive flight are excluded.
+
+\strong{NOTE}: you need access to PRU_DEV schema
 }
 \examples{
 \dontrun{

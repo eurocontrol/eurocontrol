@@ -10,10 +10,11 @@ airlines_tbl()
 a tbl referencing the Oracle table for airlines
 }
 \description{
-The returned \code{tbl} is referencing the airline table in PRISME.
+The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} is referencing the airlines table in PRISME.
 You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
-NOTE: you need access to PRU_DEV
+
+\strong{NOTE}: you need access to PRU_DEV schema
 }
 \examples{
 \dontrun{

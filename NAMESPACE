@@ -3,6 +3,7 @@
 export(":=")
 export(.data)
 export(airlines_tbl)
+export(airspace_profile_tbl)
 export(airspace_profiles_tidy)
 export(as_label)
 export(as_name)

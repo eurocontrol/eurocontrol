@@ -24,12 +24,26 @@ devtools::install_github("eurocontrol/eurocontrol")
 please have it installed according to the guidelines as published
 [here](https://github.com/euctrl-pru/howto/wiki/Tools-Installation-and-Setup-%28For-R%29#roracle).
 
+## Setup
+
+Some of the functions in this package access data from internal Oracle
+schema. The code relies on having the relevant credentials stored in
+specifically named environment variables. The pattern for the
+environment variable names is
+
+    PRU_XXXX_DBNAME 
+    PRU_XXXX_PWD
+    PRU_XXXX_USR
+
+where `XXXX` is something like `DEV`, `PROD`, …
+
 ## Example
 
 A typical use case is to retrieve a list of flights operated in the area
 managed by EUROCONTROL’s Network Manager.
 
-For example for the flight list of March 2023 you can run:
+For example for the flight list of March 2023 you can run (you need
+access and setup for `PRU_DEV` schema):
 
 ``` r
 library(eurocontrol)
