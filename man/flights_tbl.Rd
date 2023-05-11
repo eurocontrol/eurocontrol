@@ -4,7 +4,10 @@
 \alias{flights_tbl}
 \title{Return a reference to the Flights table}
 \usage{
-flights_tbl()
+flights_tbl(con = NULL)
+}
+\arguments{
+\item{con}{DB connection to be used, if NULL instantiate one.}
 }
 \value{
 a tbl referencing the Oracle table for flight

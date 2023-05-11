@@ -24,14 +24,12 @@ db_connection <- function(schema = "PRU_PROD") {
     "ORA_SDTZ" = "UTC",
     "NLS_LANG" = ".AL32UTF8"
   ))
-  withr::local_namespace("ROracle")
-  con <- withr::local_db_connection(
-    DBI::dbConnect(
-      DBI::dbDriver("Oracle"),
-      username = USR,
-      password = PWD,
-      dbname = DBN,
-      timezone = "UTC")
+  con <- DBI::dbConnect(
+    drv = DBI::dbDriver("Oracle"),
+    username = USR,
+    password = PWD,
+    dbname = DBN,
+    timezone = "UTC"
   )
 
   con
@@ -47,6 +45,8 @@ db_connection <- function(schema = "PRU_PROD") {
 #'
 #' **NOTE**: you need access to PRU_DEV schema
 #'
+#' @param con DB connection to be used, if NULL instantiate one.
+#'
 #' @return a tbl referencing the Oracle table for airlines
 #' @export
 #'
@@ -54,8 +54,10 @@ db_connection <- function(schema = "PRU_PROD") {
 #' \dontrun{
 #' arl <- airlines_tbl()
 #' }
-airlines_tbl <- function() {
-  con <- db_connection(schema = "PRU_DEV")
+airlines_tbl <- function(con = NULL) {
+  if (is.null(con)) {
+    con <- db_connection(schema = "PRU_DEV")
+  }
   arl <- dplyr::tbl(con, dbplyr::in_schema("LDW_ACC", "AO_GROUPS_ASSOCIATION"))
   arl
 }
@@ -70,6 +72,8 @@ airlines_tbl <- function() {
 #'
 #' **NOTE**: you need access to PRU_DEV schema
 #'
+#' @inheritParams airlines_tbl
+#'
 #' @return a tbl referencing the Oracle table for flight
 #' @export
 #'
@@ -78,8 +82,10 @@ airlines_tbl <- function() {
 #' arl <- flights_tbl()
 #' }
 #'
-flights_tbl <- function() {
-  con <- db_connection(schema = "PRU_DEV")
+flights_tbl <- function(con = NULL) {
+  if (is.null(con)) {
+    con <- db_connection(schema = "PRU_DEV")
+  }
   flt <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT"))
   flt
 }
@@ -89,27 +95,26 @@ flights_tbl <- function() {
 #' Return a reference to the Airspace Profile table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the flights table in PRISME.
+#' The returned [dplyr::tbl()] is referencing the airspace profiles table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
 #' **NOTE**: you need access to PRU_DEV schema
 #'
-#' @inheritParams airspace_profiles_tidy
+#' @inheritParams airlines_tbl
 #'
 #' @return a tbl referencing the Oracle table for airspace profiles
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' prf <- airspace_profile_tbl(profile = "FTFM")
+#' prf <- airspace_profile_tbl()
 #' }
-airspace_profile_tbl <- function(profile = "CTFM") {
-  # TODO: accept only "ALL" or a subset of "CTFM", "FTFM", "CPF" ...
-  #       ALL could be useful for example to extract and plot all profiles for one flight
-  con <- db_connection(schema = "PRU_DEV")
-  prof <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE")) |>
-    dplyr::filter(MODEL_TYPE %in% profile)
+airspace_profile_tbl <- function(con = NULL) {
+  if (is.null(con)) {
+    con <- db_connection(schema = "PRU_DEV")
+  }
+  prof <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE"))
 
   prof
 }
@@ -184,7 +189,7 @@ airspace_profile_tbl <- function(profile = "CTFM") {
 #' \dontrun{
 #' my_flts <- flights_tidy(wef = "2023-01-01", til = "2023-04-01")
 #' }
-flights_tidy <- function(wef, til) {
+flights_tidy <- function(con = NULL, wef, til) {
 
   columns <- c(
     "FLT_UID",
@@ -228,9 +233,11 @@ flights_tidy <- function(wef, til) {
     "RTE_LEN_3",
     NULL)
 
-  con <- db_connection(schema = "PRU_DEV")
+  if (is.null(con)) {
+    con <- db_connection(schema = "PRU_DEV")
+  }
 
-  flt <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT"))
+  flt <- flights_tbl(con)
   frl <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "DIM_FLIGHT_TYPE_RULE"))
   aog <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO"))
 
@@ -261,10 +268,12 @@ flights_tidy <- function(wef, til) {
 #'
 #' @description
 #' The returned [tbl] includes segments for scheduled and non-scheduled flights
-#' in the right-opened interval `[wef, til)`.
+#' temporally intersecting the right-opened interval `[wef, til)`.
 #' General aviation, State, military and sensitive flight are excluded.
 #'
 #' **NOTE**: you need access to PRU_DEV schema
+#'
+#' @inheritParams airlines_tbl
 #'
 #' @param wef **W**ith **EF**fect date (included) at Zulu time
 #'            in a format recognized by [lubridate::as_datetime()]
@@ -309,9 +318,9 @@ flights_tidy <- function(wef, til) {
 #'
 #' @examples
 #' \dontrun{
-#' asp_profs <- airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+#' asp_profs <- airspace_profiles_tidy(con = NULL, wef = "2023-01-01", til = "2023-04-01")
 #' }
-airspace_profiles_tidy <- function(wef, til, airspace = "FIR", profile = "CTFM") {
+airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
 
   # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
   #                capture actual flight events, so we need some buffers.
@@ -323,12 +332,13 @@ airspace_profiles_tidy <- function(wef, til, airspace = "FIR", profile = "CTFM")
   til_after  <- (lubridate::as_date(til)     + lubridate::dhours(after_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
 
-  flt <- flights_tidy(wef = wef_before, til = til_after)
-  # reuse the same DB connection as per the flights
-  con <- flt$src$con
+  if (is.null(con)) {
+    con <- db_connection(schema = "PRU_DEV")
+  }
 
+  flt <- flights_tidy(con = con, wef = wef_before, til = til_after)
 
-  prf <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE")) |>
+  prf <- airspace_profile_tbl(con = con) |>
     dplyr::filter(
       to_date(wef_before, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
       LOBT < to_date(til_after, "yyyy-mm-dd hh24:mi:ss"),
@@ -358,4 +368,48 @@ airspace_profiles_tidy <- function(wef, til, airspace = "FIR", profile = "CTFM")
       ENTRY_TIME, ENTRY_LON, ENTRY_LAT, ENTRY_FL,
       EXIT_TIME, EXIT_LON, EXIT_LAT, EXIT_FL,
       AIRSPACE_ID, AIRSPACE_TYPE, MODEL_TYPE)
+}
+
+
+#' Extract the flights list for the airspace profile segments intersecting an interval of interest
+#'
+#' @description
+#' The returned [tbl] includes scheduled and non-scheduled flights whose airspace segments
+#' temporally intersecting the right-opened interval `[wef, til)`.
+#' General aviation, State, military and sensitive flight are excluded.
+#'
+#' **NOTE**: you need access to PRU_DEV schema
+#'
+#' @inheritParams airspace_profiles_tidy
+#'
+#' @return a [tbl] with the same columns as [flights_tidy]
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' asp_profs <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+#' }
+flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
+
+  # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
+  #                capture actual flight events, so we need some buffers.
+  before_hours <- 28
+  after_hours  <- 24
+
+  wef_before <- (lubridate::as_datetime(wef) - lubridate::dhours(before_hours))|>
+    format("%Y-%m-%d %H:%M:%S")
+  til_after  <- (lubridate::as_date(til)     + lubridate::dhours(after_hours)) |>
+    format("%Y-%m-%d %H:%M:%S")
+
+  prf <- airspace_profiles_tidy(con = con, wef, til, airspace = airspace, profile = profile)
+
+  # reuse the same DB connection as per the flights
+  con <- prf$src$con
+
+  flt <- flights_tidy(con = con, wef = wef_before, til = til_after)
+  flt |>
+    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
+    dplyr::inner_join(prf, by = c("ID" = "ID"))
+
 }

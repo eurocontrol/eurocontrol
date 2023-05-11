@@ -4,9 +4,11 @@
 \alias{flights_tidy}
 \title{Extract a clean flights list in an interval}
 \usage{
-flights_tidy(wef, til)
+flights_tidy(con = NULL, wef, til)
 }
 \arguments{
+\item{con}{DB connection to be used, if NULL instantiate one.}
+
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
