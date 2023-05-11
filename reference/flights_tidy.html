@@ -51,12 +51,16 @@ General aviation, State, military and sensitive flight are excluded.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flights_tidy</span><span class="op">(</span><span class="va">wef</span>, <span class="va">til</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flights_tidy</span><span class="op">(</span>con <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">wef</span>, <span class="va">til</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>wef</dt>
+    <dl><dt>con</dt>
+<dd><p>DB connection to be used, if NULL instantiate one.</p></dd>
+
+
+<dt>wef</dt>
 <dd><p><strong>W</strong>ith <strong>EF</strong>fect date (included) at Zulu time
 in a format recognized by <code><a href="https://lubridate.tidyverse.org/reference/as_date.html" class="external-link">lubridate::as_datetime()</a></code></p></dd>
 
