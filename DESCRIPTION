@@ -25,4 +25,4 @@ RoxygenNote: 7.2.3
 Suggests: 
     roxygen2
 Roxygen: list(markdown = TRUE)
-URL: https://eurocontrol.github.io/eurocontrol/
+URL: https://eurocontrol.github.io/eurocontrol/, https://github.com/eurocontrol/eurocontrol
