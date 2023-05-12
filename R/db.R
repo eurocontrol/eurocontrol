@@ -337,6 +337,7 @@ airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profi
   }
 
   flt <- flights_tidy(con = con, wef = wef_before, til = til_after)
+  ids <- flt |> dplyr::select(ID) |> dplyr::distinct()
 
   prf <- airspace_profile_tbl(con = con) |>
     dplyr::filter(
@@ -359,15 +360,16 @@ airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profi
       to_date(wef, "yyyy-mm-dd hh24:mi:ss") < EXIT_TIME
     )
 
-  prf |>
+  prf <- prf |>
     # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
-    dplyr::inner_join(flt, by = c("SAM_ID" = "ID", "LOBT" = "LOBT")) |>
+    dplyr::inner_join(ids, by = c("SAM_ID" = "ID")) |>
     dplyr::select(
       ID = SAM_ID,
       SEQ_ID,
       ENTRY_TIME, ENTRY_LON, ENTRY_LAT, ENTRY_FL,
       EXIT_TIME, EXIT_LON, EXIT_LAT, EXIT_FL,
       AIRSPACE_ID, AIRSPACE_TYPE, MODEL_TYPE)
+  prf
 }
 
 
@@ -403,13 +405,20 @@ flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR
     format("%Y-%m-%d %H:%M:%S")
 
   prf <- airspace_profiles_tidy(con = con, wef, til, airspace = airspace, profile = profile)
+  ids <- prf |> dplyr::select(ID) |> dplyr::distinct()
 
   # reuse the same DB connection as per the flights
   con <- prf$src$con
 
   flt <- flights_tidy(con = con, wef = wef_before, til = til_after)
-  flt |>
-    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
-    dplyr::inner_join(prf, by = c("ID" = "ID"))
+  cols <- colnames(flt)
 
+  flt <- flt |>
+    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
+    # dplyr::inner_join(prf, by = c("ID" = "ID"))
+    dplyr::inner_join(prf, by = c("ID" = "ID")) |>
+    select(cols) |>
+    distinct()
+
+  flt
 }
