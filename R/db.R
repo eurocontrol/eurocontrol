@@ -332,6 +332,9 @@ airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profi
   til_after  <- (lubridate::as_date(til)     + lubridate::dhours(after_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
 
+  wef <- lubridate::as_datetime(wef) |> format("%Y-%m-%d %H:%M:%S")
+  til <- lubridate::as_datetime(til) |> format("%Y-%m-%d %H:%M:%S")
+
   if (is.null(con)) {
     con <- db_connection(schema = "PRU_DEV")
   }
