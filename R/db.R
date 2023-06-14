@@ -246,16 +246,16 @@ flights_tidy <- function(con = NULL, wef, til) {
 
   fff <- flt |>
     dplyr::filter(
-      to_date(wef, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
-      LOBT < to_date(til, "yyyy-mm-dd hh24:mi:ss"),
+      to_date(wef, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
+      .data$LOBT < to_date(til, "yyyy-mm-dd hh24:mi:ss"),
       # only commercial flights (scheduled and non-scheduled), i.e. General Aviation, Military and Other excluded
-      ICAO_FLT_TYPE %in% c('S', 'N'),
+      .data$ICAO_FLT_TYPE %in% c('S', 'N'),
       # make sure military flights are excluded
-      SK_FLT_TYPE_RULE_ID != 1L,
+      .data$SK_FLT_TYPE_RULE_ID != 1L,
       # exclude sensitive flights
-      SENSITIVE != 'Y',
+      .data$SENSITIVE != 'Y',
       # exclude "Head of State" flights, might be redundant with the "SENSITIVE" flag
-      EXMP_RSN_LH != 'HEAD'
+      .data$EXMP_RSN_LH != 'HEAD'
       ) |>
     dplyr::left_join(frl, by = "SK_FLT_TYPE_RULE_ID") |>
     dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
@@ -424,4 +424,207 @@ flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR
     distinct()
 
   flt
+}
+
+
+
+#' Airline info including group affiliation
+#'
+#' The
+#'
+#' @param con Optional connection to the PRU_DEV schema.
+#'
+#' @return A data frame with airline info such as:
+#'         * `operator_code`: the airline's ICAO code, i.e. OAL,
+#'         * `operator_name`: the airline's name, i.e. Olympic,
+#'         * `operator_group`: the airline's affiliation group, i.e. AEGEAN Group,
+#'         * `iso2c`: the ISO2C code of the airline's country, i.e. GR,
+#'         * `eu`: whether the airlines is in a EUROCONTROL's Member State (plus Kosovo), i.e. TRUE.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' airlines_tidy()
+#' }
+airlines_tidy <- function(con = NULL) {
+  if (is.null(con)) {
+    con <- db_connection(schema = "PRU_DEV")
+  }
+
+  query <- "
+    WITH
+        DATA_SOURCE
+        AS
+            (SELECT TRIM (AO_GRP_LEVEL) AS AO_GRP_LEVEL,
+                    AO_CRCO_ID,
+                    CRCO_DUPLICATE_FLAG,
+                    AO_ID,
+                    AO_ISO_CTRY,
+                    TRIM (AO_CODE)      AS ao_code,
+                    TRIM (AO_NAME)      AS ao_name,
+                    AO_GRP_ID,
+                    TRIM (AO_GRP_CODE)  AS ao_grp_code,
+                    TRIM (AO_GRP_NAME)  AS ao_grp_name,
+                    WEF,
+                    TIL,
+                    LAST_UPD_DT,
+                    LAST_UPD_BY,
+                    COMMENTS
+               FROM ldw_acc.AO_GROUPS_ASSOCIATION
+               WHERE CRCO_DUPLICATE_FLAG IS NULL
+                    AND ao_code IS NOT NULL),
+
+        DIM_AO_GROUP1
+        AS
+            (SELECT DISTINCT
+               a.AO_CODE,
+               a.ao_grp_code     AS AO_GRP_CODE,
+               a.ao_grp_name     AS AO_GRP_NAME,
+               'Y'           AS AO_NM_GROUP_FLAG,
+               a.ao_grp_level,
+               LAST_VALUE(a.ao_name) OVER (partition by --ao_id,
+               ao_code ORDER BY TIL ASC , WEF ASC
+               RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as ao_name
+             FROM DATA_SOURCE a
+             WHERE
+               a.ao_grp_level = 'GROUP1' ),
+        DIM_AO_OTHER_GROUP
+        AS    -- need to recuperate the name of the AO  , otherwise not needed
+            (  SELECT distinct AO_CODE,
+                         LAST_VALUE(a.ao_name) OVER (partition by --ao_id,
+                                                  ao_code ORDER BY TIL ASC , WEF ASC
+                                                  RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as ao_name,
+                      ao_code       AS ao_grp_code,
+                      LAST_VALUE(a.ao_name) OVER (partition by --ao_id,
+                                                  ao_code ORDER BY TIL ASC , WEF ASC
+                                                  RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as ao_grp_name,
+                      'N'           AS ao_nm_group_flag,
+                      'GROUP1_OTHER' AS ao_grp_level
+                 FROM DATA_SOURCE a
+                WHERE     ao_grp_level NOT IN ('GROUP1')
+                      AND NOT EXISTS
+                              (SELECT NULL
+                                 FROM DIM_AO_GROUP1 b
+                                WHERE a.ao_code = b.ao_code)
+              ),
+          DIM_AO_NO_GROUP_1
+        AS
+            (SELECT distinct a.aoa_id  AS ao_code,
+                    LAST_VALUE(a.aoa_name) OVER (partition by --ao_id,
+                                                  aoa_id ORDER BY AO_UID ASC
+                                                  RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as ao_name
+                      FROM ARU_PER.dim_ao@BO_USER_DWH_OP3 a
+                      WHERE     AOA_NAME <> 'Not Available'       -- supress ANSP name
+                     AND NOT EXISTS
+                            (SELECT NULL FROM  DIM_AO_GROUP1 b
+                              WHERE a.aoa_id = b.ao_code)
+                     AND NOT EXISTS
+                            (SELECT NULL FROM  DIM_AO_OTHER_GROUP c
+                              WHERE a.aoa_id = c.ao_code)
+             ),
+          DIM_AO_NO_GROUP
+           as
+            (SELECT  ao_code,
+
+                    CASE  WHEN ao_code = 'ZZZ' THEN 'Unidentified' ELSE INITCAP (a.ao_name) END AS ao_name,
+                    a.ao_code  AS ao_grp_code,
+                    CASE  WHEN ao_code = 'ZZZ' THEN 'Unidentified' ELSE INITCAP (a.ao_name) END AS ao_grp_name,
+                    'N' AS AO_NM_GROUP_FLAG,
+                    'GROUP1_OTHER' AS ao_grp_level
+               FROM DIM_AO_NO_GROUP_1 a
+            ),
+ DIM_AO_ALL
+        AS
+            (SELECT AO_CODE,
+                    AO_NAME,
+                    AO_GRP_CODE,
+                    AO_GRP_NAME,
+                    AO_NM_GROUP_FLAG,
+                    AO_GRP_LEVEL
+               FROM DIM_AO_GROUP1
+             UNION
+             SELECT AO_CODE,
+                    AO_NAME,
+                    AO_GRP_CODE,
+                    AO_GRP_NAME,
+                    AO_NM_GROUP_FLAG,
+                    AO_GRP_LEVEL
+               FROM DIM_AO_OTHER_GROUP
+             UNION
+             SELECT AO_CODE,
+                    AO_NAME,
+                    AO_GRP_CODE,
+                    AO_GRP_NAME,
+                    AO_NM_GROUP_FLAG,
+                    AO_GRP_LEVEL
+               FROM DIM_AO_NO_GROUP),
+
+  DIM_GROUP2
+        AS
+            (SELECT DISTINCT AO_CODE,
+                             AO_ISO_CTRY,
+                             AO_NAME,
+                             AO_GRP_CODE,
+                             AO_GRP_NAME,
+                             AO_GRP_CODE AS AO_GRP_CODE_NEW,
+                             AO_GRP_NAME AO_GRP_NAME_NEW,
+                             'Y'         AS AO_GROUP2_COVID_LIST
+               FROM DATA_SOURCE
+              WHERE ao_grp_level = 'GROUP2' AND CRCO_DUPLICATE_FLAG IS NULL)
+
+
+ SELECT a.AO_CODE,
+        d.AO_ISO_CTRY,
+           a.AO_NAME,
+           a.ao_name  AS NM_AO_NAME,
+           a.AO_GRP_CODE as  AO_NM_GROUP_CODE,
+            a.AO_GRP_NAME as   AO_NM_GROUP_NAME,
+             a.AO_GRP_CODE,
+              a.AO_GRP_NAME,
+           a.AO_NM_GROUP_FLAG,
+           COALESCE (c.LIST_DSH, 'N')
+               AS AO_NM_LIST,
+           COALESCE (c.LIST_DSH, 'N')
+               AS LIST_DSH,
+           COALESCE (c.LIST_DENIS, 'N')
+               AS LIST_DENIS,
+           COALESCE (b.AO_GRP_CODE, a.AO_GRP_CODE)
+               AS AO_GROUP2_CODE,
+           COALESCE (b.AO_GRP_NAME, a.AO_GRP_NAME)
+               AS AO_GROUP2_NAME,
+           COALESCE (b.AO_GROUP2_COVID_LIST, 'N')
+               AO_GROUP2_COVID_LIST,
+           a.AO_GRP_LEVEL
+      FROM DIM_AO_ALL  A
+           LEFT JOIN DIM_GROUP2 B ON (a.ao_code = b.ao_code)
+           LEFT JOIN PRUDEV.V_COVID_DSH_LIST_AO C ON (a.ao_code = c.ao_code)
+           LEFT JOIN DATA_SOURCE D ON (a.ao_code = d.ao_code)
+  "
+
+  arl <- dplyr::tbl(con, dplyr::sql(query)) |>
+    dplyr::select(
+      operator_code  = .data$AO_CODE,
+      operator_name  = .data$AO_NAME,
+      operator_group = .data$AO_GRP_NAME,
+      iso2c          = .data$AO_ISO_CTRY) |>
+    dplyr::collect()
+
+
+  arl_grp <- arl |>
+    dplyr::distinct(operator_code, .keep_all = TRUE)
+
+
+  grp_codes <- arl_grp |> dplyr::pull(operator_code)
+
+  arl_non_grp <- arl |>
+    dplyr::filter(!operator_code %in% grp_codes) |>
+    dplyr::distinct(operator_code, .keep_all = TRUE)
+
+  ect <- member_states |> dplyr::pull(iso2c)
+
+  arl <- arl_non_grp |>
+    dplyr::bind_rows(arl_grp) |>
+    dplyr::mutate(eu = dplyr::if_else(iso2c %in% ect, TRUE, FALSE))
+
+  arl
 }

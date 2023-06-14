@@ -26,3 +26,5 @@ Suggests:
     roxygen2
 Roxygen: list(markdown = TRUE)
 URL: https://eurocontrol.github.io/eurocontrol/, https://github.com/eurocontrol/eurocontrol
+Depends: 
+    R (>= 2.10)
