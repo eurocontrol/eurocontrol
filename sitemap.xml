@@ -19,6 +19,9 @@
     <loc>https://eurocontrol.github.io/eurocontrol/reference/airlines_tbl.html</loc>
   </url>
   <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/airlines_tidy.html</loc>
+  </url>
+  <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/airspace_profile_tbl.html</loc>
   </url>
   <url>
@@ -26,6 +29,9 @@
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/db_connection.html</loc>
+  </url>
+  <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/eurocontrol-package.html</loc>
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/flights_airspace_profiles_tidy.html</loc>
@@ -38,6 +44,9 @@
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/member_states.html</loc>
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/tidyeval.html</loc>
