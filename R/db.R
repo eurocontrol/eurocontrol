@@ -430,7 +430,13 @@ flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR
 
 #' Airline info including group affiliation
 #'
-#' The
+#' A data frame with airline info such as:
+#'
+#'  * `operator_code`: the airline's ICAO code, i.e. OAL,
+#'  * `operator_name`: the airline's name, i.e. Olympic,
+#'  * `operator_group`: the airline's affiliation group, i.e. AEGEAN Group,
+#'  * `iso2c`: the ISO2C code of the airline's country, i.e. GR,
+#'  * `eu`: whether the airlines is in a EUROCONTROL's Member State (plus Kosovo), i.e. TRUE.
 #'
 #' @param con Optional connection to the PRU_DEV schema.
 #'

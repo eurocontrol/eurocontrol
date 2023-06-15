@@ -18,7 +18,16 @@ A data frame with airline info such as:
 * \code{eu}: whether the airlines is in a EUROCONTROL's Member State (plus Kosovo), i.e. TRUE.
 }
 \description{
-The
+A data frame with airline info such as:
+}
+\details{
+\itemize{
+\item \code{operator_code}: the airline's ICAO code, i.e. OAL,
+\item \code{operator_name}: the airline's name, i.e. Olympic,
+\item \code{operator_group}: the airline's affiliation group, i.e. AEGEAN Group,
+\item \code{iso2c}: the ISO2C code of the airline's country, i.e. GR,
+\item \code{eu}: whether the airlines is in a EUROCONTROL's Member State (plus Kosovo), i.e. TRUE.
+}
 }
 \examples{
 \dontrun{
