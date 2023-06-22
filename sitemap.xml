@@ -16,6 +16,12 @@
     <loc>https://eurocontrol.github.io/eurocontrol/index.html</loc>
   </url>
   <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/aircraft_model.html</loc>
+  </url>
+  <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/aircraft_type.html</loc>
+  </url>
+  <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/airlines_tbl.html</loc>
   </url>
   <url>
@@ -46,7 +52,7 @@
     <loc>https://eurocontrol.github.io/eurocontrol/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://eurocontrol.github.io/eurocontrol/reference/member_states.html</loc>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/member_state.html</loc>
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/tidyeval.html</loc>
