@@ -457,14 +457,12 @@ airlines_tidy <- function(con = NULL) {
     con <- db_connection(schema = "PRU_DEV")
   }
 
-  query <- "SELECT * FROM V_COVID_DIM_AO"
-
-  arl <- dplyr::tbl(con, dplyr::sql(query)) |>
+  arl <- dplyr::tbl(con, "V_COVID_DIM_AO") |>
     dplyr::select(
-      operator_code  = .data$AO_CODE,
-      operator_name  = .data$AO_NAME,
-      operator_group = .data$AO_GRP_NAME,
-      iso2c          = .data$AO_ISO_CTRY_CODE) |>
+      operator_code  = "AO_CODE",
+      operator_name  = "AO_NAME",
+      operator_group = "AO_GRP_NAME",
+      iso2c          = "AO_ISO_CTRY_CODE") |>
     dplyr::collect()
 
 
@@ -478,7 +476,7 @@ airlines_tidy <- function(con = NULL) {
     dplyr::filter(!operator_code %in% grp_codes) |>
     dplyr::distinct(operator_code, .keep_all = TRUE)
 
-  ect <- member_states |> dplyr::pull(iso2c)
+  ect <- eurocontrol::member_state |> dplyr::pull(iso2c)
 
   arl <- arl_non_grp |>
     dplyr::bind_rows(arl_grp) |>
