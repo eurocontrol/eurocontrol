@@ -19,6 +19,8 @@ reference:
     Useful data.
   contents:
   - member_state
+  - aircraft_type
+  - aircraft_model
 
 - subtitle: Datasets
   desc: >
