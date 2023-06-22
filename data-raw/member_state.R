@@ -4,10 +4,10 @@
 library(readr)
 library(dplyr)
 
-member_states <- read_csv(here::here("data-raw", "member_states.csv")) %>%
+member_state <- read_csv(here::here("data-raw", "member_state.csv")) %>%
   select(name, iso3c, iso2c, icao, iso3n, date, status) %>%
   arrange("name")
 usethis::use_data(
-  member_states,
+  member_state,
   compress = "bzip2",
   overwrite = TRUE)
