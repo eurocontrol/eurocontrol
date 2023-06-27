@@ -54,3 +54,22 @@ library(eurocontrol)
 flights_tidy(wef = "2023-01-01", til = "2023-04-01")
 ```
 
+
+
+# Development
+
+In order to build the relevant `pkgdown` web pages, execute the following code:
+
+```{r, eval=FALSE}
+
+# How to build the pakgdown from behind proxied Internet
+library(withr)
+library(pkgdown)
+
+with_options(list(pkgdown.internet = FALSE),
+             build_site())
+
+
+```
+
+
