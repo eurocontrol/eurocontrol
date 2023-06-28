@@ -124,7 +124,7 @@ airspace_profile_tbl <- function(con = NULL) {
 #'
 #' @description
 #' The returned [tbl] includes scheduled and non-scheduled flight
-#' in the right-opened interval `[wef, til)`.
+#' departing in the right-opened interval `[wef, til)`.
 #' General aviation, State, military and sensitive flight are excluded.
 #'
 #' **NOTE**: you need access to PRU_DEV schema

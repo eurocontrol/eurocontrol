@@ -71,7 +71,7 @@ but more than 7_000 kg (15_500 lbs)
 }
 \description{
 The returned \link{tbl} includes scheduled and non-scheduled flight
-in the right-opened interval \verb{[wef, til)}.
+departing in the right-opened interval \verb{[wef, til)}.
 General aviation, State, military and sensitive flight are excluded.
 
 \strong{NOTE}: you need access to PRU_DEV schema
