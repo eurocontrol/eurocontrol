@@ -100,7 +100,7 @@ flight type. Possible values (but G, M aand X shouldn't appear):</p><ul><li><p><
 <li><p><code>M</code> for military</p></li>
 <li><p><code>X</code> for other than the preceding categories</p></li>
 </ul></li>
-<li><p>WK_TBL_CAT (see <a href="https://www.skybrary.aero/articles/flight-plan-completion" class="external-link">FPL Item 9</a>): wake turbulence category, cab be</p><ul><li><p><code>L</code> LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.</p></li>
+<li><p>WK_TBL_CAT (see <a href="https://www.skybrary.aero/articles/flight-plan-completion" class="external-link">FPL Item 9</a>): wake turbulence category, can be</p><ul><li><p><code>L</code> LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.</p></li>
 <li><p><code>M</code> MEDIUM, i.e maximum certificated takeoff mass less than 136_000 kg (300_000 lbs),
 but more than 7_000 kg (15_500 lbs)</p></li>
 <li><p><code>H</code> HEAVY, i.e. maximum certificated takeoff mass of 136_000 kg (300_000 lbs) or more
@@ -118,7 +118,17 @@ but more than 7_000 kg (15_500 lbs)</p></li>
 <li><p>AOBT_3: <strong>A</strong>ctual <strong>O</strong>ff-<strong>B</strong>lock <strong>T</strong>ime for flown (M3) trajectory</p></li>
 <li><p>ARVT_3: <strong>ARV</strong>ival <strong>T</strong>ime for flown (M3) trajectory</p></li>
 <li><p>TAXI_TIME_3: Taxi time for flown (M3) trajectory</p></li>
-<li><p>RULE_NAME: market segment type</p></li>
+<li><p>RULE_NAME: market segment type as defined on the
+<a href="https://www.eurocontrol.int/publication/market-segment-rules" class="external-link">Market Segment Rules</a>,
+it can be:</p><ul><li><p>“Mainline”,</p></li>
+<li><p>“Regional”,</p></li>
+<li><p>“Low-Cost”,</p></li>
+<li><p>“Business Aviation”,</p></li>
+<li><p>“All-Cargo”,</p></li>
+<li><p>“Charter” (Non-Scheduled),</p></li>
+<li><p>“Military”, or</p></li>
+<li><p>“Other”.</p></li>
+</ul></li>
 <li><p>AO_GRP_CODE: Aircraft Operator group (code)</p></li>
 <li><p>AO_GRP_NAME: : Aircraft Operator group (name)</p></li>
 <li><p>RTE_LEN_1: route length (NM) for FPL-based (M1) trajectory</p></li>
