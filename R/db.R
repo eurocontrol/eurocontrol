@@ -158,7 +158,7 @@ airspace_profile_tbl <- function(con = NULL) {
 #'   - `X` for other than the preceding categories
 #'
 #'
-#' * WK_TBL_CAT (see [FPL Item 9](https://www.skybrary.aero/articles/flight-plan-completion)): wake turbulence category, cab be
+#' * WK_TBL_CAT (see [FPL Item 9](https://www.skybrary.aero/articles/flight-plan-completion)): wake turbulence category, can be
 #'   - `L` LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.
 #'   - `M` MEDIUM, i.e maximum certificated takeoff mass less than 136_000 kg (300_000 lbs),
 #'     but more than 7_000 kg (15_500 lbs)
@@ -177,7 +177,18 @@ airspace_profile_tbl <- function(con = NULL) {
 #' * AOBT_3: **A**ctual **O**ff-**B**lock **T**ime for flown (M3) trajectory
 #' * ARVT_3: **ARV**ival **T**ime for flown (M3) trajectory
 #' * TAXI_TIME_3: Taxi time for flown (M3) trajectory
-#' * RULE_NAME: market segment type
+#' * RULE_NAME: market segment type as defined on the
+#'              [Market Segment Rules](https://www.eurocontrol.int/publication/market-segment-rules),
+#'              it can be:
+#'   - “Mainline”,
+#'   - “Regional”,
+#'   - “Low-Cost”,
+#'   - “Business Aviation”,
+#'   - “All-Cargo”,
+#'   - “Charter” (Non-Scheduled),
+#'   - “Military”, or
+#'   - “Other”.
+#'
 #' * AO_GRP_CODE: Aircraft Operator group (code)
 #' * AO_GRP_NAME: : Aircraft Operator group (name)
 #' * RTE_LEN_1: route length (NM) for FPL-based (M1) trajectory

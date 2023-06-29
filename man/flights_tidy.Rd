@@ -42,7 +42,7 @@ flight type. Possible values (but G, M aand X shouldn't appear):
 \item \code{M} for military
 \item \code{X} for other than the preceding categories
 }
-\item WK_TBL_CAT (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 9}): wake turbulence category, cab be
+\item WK_TBL_CAT (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 9}): wake turbulence category, can be
 \itemize{
 \item \code{L} LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.
 \item \code{M} MEDIUM, i.e maximum certificated takeoff mass less than 136_000 kg (300_000 lbs),
@@ -62,7 +62,19 @@ but more than 7_000 kg (15_500 lbs)
 \item AOBT_3: \strong{A}ctual \strong{O}ff-\strong{B}lock \strong{T}ime for flown (M3) trajectory
 \item ARVT_3: \strong{ARV}ival \strong{T}ime for flown (M3) trajectory
 \item TAXI_TIME_3: Taxi time for flown (M3) trajectory
-\item RULE_NAME: market segment type
+\item RULE_NAME: market segment type as defined on the
+\href{https://www.eurocontrol.int/publication/market-segment-rules}{Market Segment Rules},
+it can be:
+\itemize{
+\item “Mainline”,
+\item “Regional”,
+\item “Low-Cost”,
+\item “Business Aviation”,
+\item “All-Cargo”,
+\item “Charter” (Non-Scheduled),
+\item “Military”, or
+\item “Other”.
+}
 \item AO_GRP_CODE: Aircraft Operator group (code)
 \item AO_GRP_NAME: : Aircraft Operator group (name)
 \item RTE_LEN_1: route length (NM) for FPL-based (M1) trajectory
