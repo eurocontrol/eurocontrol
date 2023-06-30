@@ -70,7 +70,9 @@ airlines_tbl <- function(con = NULL) {
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
-#' **NOTE**: you need access to PRU_DEV schema
+#' **NOTE**: you need to either provide a connection to a schema
+#' that has access to `SWH_FCT.FAC_FLIGHT` or go with the default
+#' use of PRU_DEV.
 #'
 #' @inheritParams airlines_tbl
 #'
@@ -99,7 +101,9 @@ flights_tbl <- function(con = NULL) {
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
-#' **NOTE**: you need access to PRU_DEV schema
+#' **NOTE**: you need to either provide a connection to a schema
+#' that has access to `FSD.ALL_FT_ASP_PROFILE` or go with the default
+#' use of PRU_DEV.
 #'
 #' @inheritParams airlines_tbl
 #'
@@ -127,7 +131,9 @@ airspace_profile_tbl <- function(con = NULL) {
 #' departing in the right-opened interval `[wef, til)`.
 #' General aviation, State, military and sensitive flight are excluded.
 #'
-#' **NOTE**: you need access to PRU_DEV schema
+#' **NOTE**: you need to either provide a connection to a schema
+#' that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`, `PRUDEV.V_COVID_DIM_AO` and
+#' `SWH_FCT.FAC_FLIGHT` or go with the default use of PRU_DEV.
 #'
 #' @inheritParams airspace_profiles_tidy
 #'
@@ -136,9 +142,10 @@ airspace_profile_tbl <- function(con = NULL) {
 #' * FLT_UID: the flight unique id
 #' * LOBT: **L**ast received **O**ff-**B**lock **T**ime
 #' * IOBT: **I**nitial **O**ff-**B**lock **T**ime
-#' * AIRCRAFT_ID
-#' * REGISTRATION: the registration
-#' * AIRCRAFT_TYPE_ICAO_ID
+#' * AIRCRAFT_ID: the callsign of the relevant flight, e.g. BAW6VB
+#' * REGISTRATION: the registration (with spaces, dashes, ... stripped), e.g. GEUUU.
+#' * AIRCRAFT_TYPE_ICAO_ID: the [ICAO code for the aircraft type](), for example A30B for an
+#'   Airbus A-300B2-200
 #' * FLT_RULES (see [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)):
 #'   which sets of regulations the flight is operated under.
 #'   Possible values are:
@@ -166,7 +173,7 @@ airspace_profile_tbl <- function(con = NULL) {
 #'     (except those specified as `J`)
 #'   - `J` SUPER, presently the only the AIRBUS A-380-800
 #'
-#' * AIRCRAFT_OPERATOR:
+#' * AIRCRAFT_OPERATOR: the aircraft operator code, i.e. `BAW` for British Airways.
 #' * AIRCRAFT_ADDRESS: the ICAO 24-bit address of the airframe for ADS-B/Mode S broadcasting
 #' * ADEP: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DEP**arture
 #' * ADES: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DES**tination
