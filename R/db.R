@@ -153,8 +153,8 @@ airspace_profile_tbl <- function(con = NULL) {
 #'
 #'   - `S` for scheduled air service
 #'   - `N` for non-scheduled air service
-#'   - `G` for general aviation
-#'   - `M` for military
+#'   - `G` for general aviation (note: filtered out)
+#'   - `M` for military (note: filtered out)
 #'   - `X` for other than the preceding categories
 #'
 #'
