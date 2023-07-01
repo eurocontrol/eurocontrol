@@ -1,12 +1,17 @@
 #' Provide a connection to the relevant Oracle database
 #'
-#' @param schema the Oracle DB schema to connect to.
-#'               Note: this is more the prefix of the environment variable
-#'               where the credentials are stored, like `<schema>_USR`,
-#'               `<schema>_PWD` and `<schema>_DBNAME`.
-#'               Possible values are `PRU_PROD`, `PRU_DEV`, `PRU_TEST`, ...
+#' # Note
+#' The `schema` is in fact the prefix of the environment variables
+#' where the credentials are stored, like `<schema>_USR`,
+#' `<schema>_PWD` and `<schema>_DBNAME`.
+#' Possible values for `schema` are `PRU_PROD`, `PRU_DEV`,
+#' `PRU_TEST`, ...
 #'
-#' @return DB connection
+#' @param schema the Oracle DB schema to connect to.
+#'
+#'
+#' @return A connection to a database (specifically an implementation of [DBI::DBIConnection-class]
+#'         for an Oracle database.)
 #' @export
 #'
 #' @examples
@@ -39,15 +44,18 @@ db_connection <- function(schema = "PRU_PROD") {
 #' Return a reference to the Airlines table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the airlines table in PRISME.
+#' The returned [tbl] is referencing the airlines table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
-#' **NOTE**: you need access to PRU_DEV schema
+#' # Note
+#' You need to either provide a connection `con`
+#' that has access to `PRU_DEV.V_COVID_DIM_AO` or go with the
+#' default which uses PRU_DEV to establish a [db_connection()].
 #'
-#' @param con DB connection to be used, if NULL instantiate one.
+#' @param con Database connection or instantiate the default one.
 #'
-#' @return a tbl referencing the Oracle table for airlines
+#' @return a [tbl] referencing the Oracle table for airlines.
 #' @export
 #'
 #' @examples
@@ -66,17 +74,17 @@ airlines_tbl <- function(con = NULL) {
 #' Return a reference to the Flights table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the flights table in PRISME.
+#' The returned [tbl] is referencing the flights table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
-#' **NOTE**: you need to either provide a connection to a schema
-#' that has access to `SWH_FCT.FAC_FLIGHT` or go with the default
-#' use of PRU_DEV.
+#' # Note
+#' You need to either provide a connection `con` that has access to `SWH_FCT.FAC_FLIGHT` or
+#' go with the default which uses PRU_DEV to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a tbl referencing the Oracle table for flight
+#' @return a [tbl] referencing the Oracle table for flights.
 #' @export
 #'
 #' @examples
@@ -97,17 +105,17 @@ flights_tbl <- function(con = NULL) {
 #' Return a reference to the Airspace Profile table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the airspace profiles table in PRISME.
+#' The returned [tbl] is referencing the airspace profiles table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
-#' **NOTE**: you need to either provide a connection to a schema
-#' that has access to `FSD.ALL_FT_ASP_PROFILE` or go with the default
-#' use of PRU_DEV.
+#' # Note
+#' You need to either provide a connection `con` that has access to `FSD.ALL_FT_ASP_PROFILE` or
+#' go with the default which uses PRU_DEV to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a tbl referencing the Oracle table for airspace profiles
+#' @return a [tbl] referencing the Oracle table for airspace profiles.
 #' @export
 #'
 #' @examples
@@ -129,41 +137,47 @@ airspace_profile_tbl <- function(con = NULL) {
 #' @description
 #' The returned [tbl] includes scheduled and non-scheduled flight
 #' departing in the right-opened interval `[wef, til)`.
+#'
 #' General aviation, State, military and sensitive flight are excluded.
 #'
-#' **NOTE**: you need to either provide a connection to a schema
-#' that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`, `PRUDEV.V_COVID_DIM_AO` and
-#' `SWH_FCT.FAC_FLIGHT` or go with the default use of PRU_DEV.
+#' # Note
+#' You need to either provide a connection `con` that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`,
+#' `PRUDEV.V_COVID_DIM_AO` and `SWH_FCT.FAC_FLIGHT` or go with the default which uses
+#' PRU_DEV to establish a [db_connection()].
 #'
-#' @inheritParams airspace_profiles_tidy
+#' @inheritParams airlines_tbl
 #'
-#' @return a [tbl] with the following columns
+#' @param wef **W**ith **EF**fect date (included) at Zulu time
+#'            in a format recognized by [lubridate::as_datetime()]
+#' @param til un**TIL**l date (excluded) at Zulu time
+#'            in a format recognized by [lubridate::as_datetime()]
 #'
-#' * FLT_UID: the flight unique id
-#' * LOBT: **L**ast received **O**ff-**B**lock **T**ime
-#' * IOBT: **I**nitial **O**ff-**B**lock **T**ime
-#' * AIRCRAFT_ID: the callsign of the relevant flight, e.g. BAW6VB
-#' * REGISTRATION: the registration (with spaces, dashes, ... stripped), e.g. GEUUU.
+#' @return A [tbl] with the following columns:
+#'
+#' * FLT_UID: the flight unique id.
+#' * LOBT: **L**ast received **O**ff-**B**lock **T**ime.
+#' * IOBT: **I**nitial **O**ff-**B**lock **T**ime.
+#' * AIRCRAFT_ID: the [callsign](https://www.skybrary.aero/articles/aircraft-call-sign)
+#'                of the relevant flight, e.g. BAW6VB.
+#' * REGISTRATION: the [aircraft registration](https://en.wikipedia.org/wiki/Aircraft_registration)
+#'   (with spaces, dashes, ... stripped), e.g. GEUUU.
 #' * AIRCRAFT_TYPE_ICAO_ID: the [ICAO code for the aircraft type](), for example A30B for an
-#'   Airbus A-300B2-200
+#'   Airbus A-300B2-200.
 #' * FLT_RULES (see [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)):
 #'   which sets of regulations the flight is operated under.
 #'   Possible values are:
-#'
 #'   - `I` for IFR
-#'   - `V` for VFR,
-#'   - `Y` first IFR thereafter VFR,
+#'   - `V` for VFR
+#'   - `Y` first IFR thereafter VFR
 #'   - `Z` first VFR thereafter IFR
 #'
 #' * ICAO_FLT_TYPE (see [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)):
 #'   flight type. Possible values (but G, M aand X shouldn't appear):
-#'
 #'   - `S` for scheduled air service
 #'   - `N` for non-scheduled air service
 #'   - `G` for general aviation (note: filtered out)
 #'   - `M` for military (note: filtered out)
 #'   - `X` for other than the preceding categories
-#'
 #'
 #' * WK_TBL_CAT (see [FPL Item 9](https://www.skybrary.aero/articles/flight-plan-completion)): wake turbulence category, can be
 #'   - `L` LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.
@@ -173,11 +187,13 @@ airspace_profile_tbl <- function(con = NULL) {
 #'     (except those specified as `J`)
 #'   - `J` SUPER, presently the only the AIRBUS A-380-800
 #'
-#' * AIRCRAFT_OPERATOR: the aircraft operator code, i.e. `BAW` for British Airways.
-#' * AIRCRAFT_ADDRESS: the ICAO 24-bit address of the airframe for ADS-B/Mode S broadcasting
+#' * AIRCRAFT_OPERATOR: the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes),
+#'   i.e. `OAL` for `Olympic`
+#' * AIRCRAFT_ADDRESS: the [ICAO 24-bit address](https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address)
+#'                     of the airframe for ADS-B/Mode S broadcasting
 #' * ADEP: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DEP**arture
 #' * ADES: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DES**tination
-#' * ID: the so called SAM ID, used internally by PRISME
+#' * ID: the so called `SAM ID`, used internally by PRISME
 #' * EOBT_1: **E**stimated **O**ff-**B**lock **T**ime for FPL-based (M1) trajectory
 #' * ARVT_1: **AR**ri**V**al **T**ime for FPL-based (M1) trajectory
 #' * TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
@@ -187,19 +203,19 @@ airspace_profile_tbl <- function(con = NULL) {
 #' * RULE_NAME: market segment type as defined on the
 #'              [Market Segment Rules](https://www.eurocontrol.int/publication/market-segment-rules),
 #'              it can be:
-#'   - “Mainline”,
-#'   - “Regional”,
-#'   - “Low-Cost”,
-#'   - “Business Aviation”,
-#'   - “All-Cargo”,
-#'   - “Charter” (Non-Scheduled),
-#'   - “Military”, or
-#'   - “Other”.
+#'   - “Mainline”
+#'   - “Regional”
+#'   - “Low-Cost”
+#'   - “Business Aviation”
+#'   - “All-Cargo”
+#'   - “Charter” (Non-Scheduled)
+#'   - “Military”
+#'   - “Other”
 #'
-#' * AO_GRP_CODE: Aircraft Operator group (code)
-#' * AO_GRP_NAME: : Aircraft Operator group (name)
-#' * RTE_LEN_1: route length (NM) for FPL-based (M1) trajectory
-#' * RTE_LEN_3: route length (NM) for for flown (M3) trajectory
+#' * AO_GRP_CODE: Aircraft Operator group (code), i.e.
+#' * AO_GRP_NAME: : Aircraft Operator group (name), i.e. AEGEAN Group
+#' * RTE_LEN_1: route length (in Nautical Miles) for FPL-based (M1) trajectory
+#' * RTE_LEN_3: route length (in Nautical Miles) for for flown (M3) trajectory
 #'
 #' @export
 #'
@@ -287,16 +303,15 @@ flights_tidy <- function(con = NULL, wef, til) {
 #' @description
 #' The returned [tbl] includes segments for scheduled and non-scheduled flights
 #' temporally intersecting the right-opened interval `[wef, til)`.
+#'
 #' General aviation, State, military and sensitive flight are excluded.
 #'
-#' **NOTE**: you need access to PRU_DEV schema
+#' # Note
+#' You need to either provide a connection `con` that has access to as noted in
+#' [airspace_profile_tbl] and [flight_tidy] or go with the default which uses
+#' PRU_DEV to establish a [db_connection()].
 #'
-#' @inheritParams airlines_tbl
-#'
-#' @param wef **W**ith **EF**fect date (included) at Zulu time
-#'            in a format recognized by [lubridate::as_datetime()]
-#' @param til u**TIL**l date (excluded) at Zulu time
-#'            in a format recognized by [lubridate::as_datetime()]
+#' @inheritParams flights_tidy
 #'
 #' @param airspace the type of airspace (default: 'FIR'), one of:
 #'  * 'FIR' ([Flight Information Region](https://observablehq.com/@openaviation/flight-information-regions))
@@ -306,18 +321,18 @@ flights_tidy <- function(con = NULL, wef, til) {
 #'
 #' @param profile the [model of the trajectory](https://ansperformance.eu/definition/flight-models/)
 #'  profile (default: 'CTFM'), one of:
-#'  * 'FTFM'
-#'  * 'RTFM'
-#'  * 'CTFM'
-#'  * 'CPF'
-#'  * 'DCT'
-#'  * 'SCR'
-#'  * 'SRR'
-#'  * 'SUR'
+#'  * 'FTFM', Filed Tactical Flight Model
+#'  * 'RTFM', Regulated Tactical Flight Model
+#'  * 'CTFM', Current Tactical Flight Model
+#'  * 'CPF', Correlated Position reports for a Flight
+#'  * 'DCT', Direct route
+#'  * 'SCR', Shortest Constrained Route
+#'  * 'SRR', Shortest RAD restrictions applied Route
+#'  * 'SUR', Shortest Unconstrained Route
 #'
 #' @return a [tbl] with the following columns
 #'
-#' * ID: the so called SAM ID, used internally by PRISME
+#' * ID: the so called `SAM ID`, used internally by PRISME
 #' * SEQ_ID: the sequence number of the segment for the relevant airspace profile
 #' * ENTRY_TIME: the time of entry into the relevant airspace
 #' * ENTRY_LON:  the longitude of entry into the relevant airspace
@@ -401,7 +416,10 @@ airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profi
 #' temporally intersecting the right-opened interval `[wef, til)`.
 #' General aviation, State, military and sensitive flight are excluded.
 #'
-#' **NOTE**: you need access to PRU_DEV schema
+#' # Note
+#' You need to either provide a connection `con` that has access to as noted in
+#' [airspace_profile_tbl] and [flight_tidy] or go with the default which uses
+#' PRU_DEV to establish a [db_connection()].
 #'
 #' @inheritParams airspace_profiles_tidy
 #'
@@ -448,22 +466,21 @@ flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR
 
 #' Airline info including group affiliation
 #'
-#' A data frame with airline info such as:
-#'
-#'  * `operator_code`: the airline's ICAO code, i.e. OAL,
-#'  * `operator_name`: the airline's name, i.e. Olympic,
-#'  * `operator_group`: the airline's affiliation group, i.e. AEGEAN Group,
-#'  * `iso2c`: the ISO2C code of the airline's country, i.e. GR,
-#'  * `eu`: whether the airlines is in a EUROCONTROL's Member State (plus Kosovo), i.e. TRUE.
+#' # Note
+#' You need to either provide a connection `con` that has access to `PRUDEV.V_COVID_DIM_AO`
+#' or go with the default which uses PRU_DEV to establish a [db_connection()].
 #'
 #' @param con Optional connection to the PRU_DEV schema.
 #'
 #' @return A data frame with airline info such as:
-#'         * `operator_code`: the airline's ICAO code, i.e. OAL,
-#'         * `operator_name`: the airline's name, i.e. Olympic,
-#'         * `operator_group`: the airline's affiliation group, i.e. AEGEAN Group,
-#'         * `iso2c`: the ISO2C code of the airline's country, i.e. GR,
-#'         * `eu`: whether the airlines is in a EUROCONTROL's Member State (plus Kosovo), i.e. TRUE.
+#'
+#' * `AO_CODE`: the the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes), i.e. OAL
+#' * `AO_NAME`: the airline's name, i.e. Olympic
+#' * `AO_GRP_CODE`: the airline's affiliation group code, i.e.
+#' * `AO_GRP_NAME`: the airline's affiliation group, i.e. AEGEAN Group
+#' * `AO_ISO_CTRY_CODE`: the ISO2C code of the airline's country, i.e. GR,
+#' * `EU`: whether the airlines is in a EUROCONTROL's Member State (full, comprehensive or
+#'         transition plus Kosovo), i.e. TRUE.
 #' @export
 #'
 #' @examples
@@ -475,12 +492,13 @@ airlines_tidy <- function(con = NULL) {
     con <- db_connection(schema = "PRU_DEV")
   }
 
-  arl <- dplyr::tbl(con, "V_COVID_DIM_AO") |>
+  arl <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO")) |>
     dplyr::select(
-      operator_code  = "AO_CODE",
-      operator_name  = "AO_NAME",
-      operator_group = "AO_GRP_NAME",
-      iso2c          = "AO_ISO_CTRY_CODE") |>
+      "AO_CODE",
+      "AO_NAME",
+      "AO_GRP_CODE",
+      "AO_GRP_NAME",
+      "AO_ISO_CTRY_CODE") |>
     dplyr::collect()
 
 
@@ -498,7 +516,7 @@ airlines_tidy <- function(con = NULL) {
 
   arl <- arl_non_grp |>
     dplyr::bind_rows(arl_grp) |>
-    dplyr::mutate(eu = dplyr::if_else(iso2c %in% ect, TRUE, FALSE))
+    dplyr::mutate(EU = dplyr::if_else(iso2c %in% ect, TRUE, FALSE))
 
   arl
 }

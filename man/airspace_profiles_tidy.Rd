@@ -13,12 +13,12 @@ airspace_profiles_tidy(
 )
 }
 \arguments{
-\item{con}{DB connection to be used, if NULL instantiate one.}
+\item{con}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
-\item{til}{u\strong{TIL}l date (excluded) at Zulu time
+\item{til}{un\strong{TIL}l date (excluded) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
 \item{airspace}{the type of airspace (default: 'FIR'), one of:
@@ -32,20 +32,20 @@ in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime(
 \item{profile}{the \href{https://ansperformance.eu/definition/flight-models/}{model of the trajectory}
 profile (default: 'CTFM'), one of:
 \itemize{
-\item 'FTFM'
-\item 'RTFM'
-\item 'CTFM'
-\item 'CPF'
-\item 'DCT'
-\item 'SCR'
-\item 'SRR'
-\item 'SUR'
+\item 'FTFM', Filed Tactical Flight Model
+\item 'RTFM', Regulated Tactical Flight Model
+\item 'CTFM', Current Tactical Flight Model
+\item 'CPF', Correlated Position reports for a Flight
+\item 'DCT', Direct route
+\item 'SCR', Shortest Constrained Route
+\item 'SRR', Shortest RAD restrictions applied Route
+\item 'SUR', Shortest Unconstrained Route
 }}
 }
 \value{
 a \link{tbl} with the following columns
 \itemize{
-\item ID: the so called SAM ID, used internally by PRISME
+\item ID: the so called \verb{SAM ID}, used internally by PRISME
 \item SEQ_ID: the sequence number of the segment for the relevant airspace profile
 \item ENTRY_TIME: the time of entry into the relevant airspace
 \item ENTRY_LON:  the longitude of entry into the relevant airspace
@@ -63,10 +63,15 @@ a \link{tbl} with the following columns
 \description{
 The returned \link{tbl} includes segments for scheduled and non-scheduled flights
 temporally intersecting the right-opened interval \verb{[wef, til)}.
-General aviation, State, military and sensitive flight are excluded.
 
-\strong{NOTE}: you need access to PRU_DEV schema
+General aviation, State, military and sensitive flight are excluded.
 }
+\section{Note}{
+You need to either provide a connection \code{con} that has access to as noted in
+\link{airspace_profile_tbl} and \link{flight_tidy} or go with the default which uses
+PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+}
+
 \examples{
 \dontrun{
 asp_profs <- airspace_profiles_tidy(con = NULL, wef = "2023-01-01", til = "2023-04-01")

@@ -9,10 +9,15 @@ library(lubridate)
 # library(here)
 library(janitor)
 library(usethis)
+library(magrittr)
 
-# CHECK "Last Updates:" date in
+# get "Last Updates:" date in
 #   https://www.icao.int/publications/DOC8643/Pages/Search.aspx
-update_date <- ymd("2023-05-19")
+#  (in fact in some JS you find the URL for the relevant POST request ;-)
+update_date <- POST("https://www4.icao.int/doc8643/External/Stats") |>
+  httr::content() |>
+  extract2("LastUpdated") |>
+  lubridate::parse_date_time("%d %B %Y")
 
 # SCRAPE the DATA from THE WEB
 # if you look at the network traffic you see wher
@@ -24,6 +29,7 @@ atype <- fromJSON(r)  |>
   as_tibble() |>
   clean_names() |>
   mutate(last_updated = ymd(update_date))
+
 
 aircraft_type <- atype %>%
   select(designator, aircraft_description,

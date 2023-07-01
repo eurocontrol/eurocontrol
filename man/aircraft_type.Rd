@@ -5,7 +5,7 @@
 \alias{aircraft_type}
 \title{ICAO's Aircraft types}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 2716 rows and 7 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 2718 rows and 7 columns.
 }
 \usage{
 aircraft_type
@@ -17,9 +17,10 @@ A data frame with the following fields
 \item{aircraft_description}{the aircraft description, e.g. "LandPlane".}
 \item{description}{the aircraft , e.g. "IT".}
 \item{wtc}{the aircraft \href{https://www.skybrary.aero/articles/icao-wake-turbulence-category}{wake turbulence category}, e.g. "M".}
-\item{engine_count}{the number pf engines, e.g. "2".}
+\item{engine_count}{the number pf engines, e.g. "2". \strong{Note}: this is not a number unfortunately,
+there is one model encoded \code{C}}
 \item{engine_type}{the engine type, e.g. "Jet".}
-\item{last_updated}{the last updated date when the data have been updated, e.g. "2023-05-19".}
+\item{last_updated}{the date when the data have been last updated, e.g. "2023-05-19".}
 }
 }
 \keyword{datasets}

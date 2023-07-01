@@ -20,9 +20,13 @@ A data frame with the following fields
 \item{iso3n}{the 3-digits ISO code, e.g. "380"}
 \item{date}{the date of \code{status} code, e.g. 1996-04-01}
 \item{status}{the status code, e.g. "M"
-(\code{M} Member State, \code{C} Comprehensive Agreement State, \code{T} Transitional State)}
+(\code{M} Member State, \code{C} Comprehensive Agreement State, \code{T} Transitional State,
+NA for Kosovo)}
 }
 These are useful to grab the right spatial polygons in case of need.
-Note: Kosovo is also included in the list.
 }
+\section{Note}{
+Kosovo is also included in the list.
+}
+
 \keyword{datasets}

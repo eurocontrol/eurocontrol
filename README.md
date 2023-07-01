@@ -26,16 +26,20 @@ please have it installed according to the guidelines as published
 
 ## Setup
 
-Some of the functions in this package access data from internal Oracle
-schema. The code relies on having the relevant credentials stored in
-specifically named environment variables. The pattern for the
-environment variable names is
+Some of the functions in this package access data from EUROCONTROL’s
+internal Oracle schemes (maintained by PRISME group.) The code relies on
+having the relevant credentials stored in specifically named environment
+variables. The pattern for the environment variable names is
 
-    PRU_XXXX_DBNAME 
-    PRU_XXXX_PWD
-    PRU_XXXX_USR
+    XXXX_DBNAME 
+    XXXX_PWD
+    XXXX_USR
 
-where `XXXX` is something like `DEV`, `PROD`, …
+where `XXXX` is something like `PRU_DEV`, `PRU_PROD`, … as defined in
+the AIU. Of course other accounts/schemes with access to the underlying
+tables can be used and encoded in custom environment variables following
+the pattern above. The details about which tables are accessed can be
+found in the relevant functions documentation.
 
 ## Example
 

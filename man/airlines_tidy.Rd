@@ -11,24 +11,24 @@ airlines_tidy(con = NULL)
 }
 \value{
 A data frame with airline info such as:
-* \code{operator_code}: the airline's ICAO code, i.e. OAL,
-* \code{operator_name}: the airline's name, i.e. Olympic,
-* \code{operator_group}: the airline's affiliation group, i.e. AEGEAN Group,
-* \code{iso2c}: the ISO2C code of the airline's country, i.e. GR,
-* \code{eu}: whether the airlines is in a EUROCONTROL's Member State (plus Kosovo), i.e. TRUE.
+\itemize{
+\item \code{AO_CODE}: the the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator}, i.e. OAL
+\item \code{AO_NAME}: the airline's name, i.e. Olympic
+\item \code{AO_GRP_CODE}: the airline's affiliation group code, i.e.
+\item \code{AO_GRP_NAME}: the airline's affiliation group, i.e. AEGEAN Group
+\item \code{AO_ISO_CTRY_CODE}: the ISO2C code of the airline's country, i.e. GR,
+\item \code{EU}: whether the airlines is in a EUROCONTROL's Member State (full, comprehensive or
+transition plus Kosovo), i.e. TRUE.
+}
 }
 \description{
-A data frame with airline info such as:
+Airline info including group affiliation
 }
-\details{
-\itemize{
-\item \code{operator_code}: the airline's ICAO code, i.e. OAL,
-\item \code{operator_name}: the airline's name, i.e. Olympic,
-\item \code{operator_group}: the airline's affiliation group, i.e. AEGEAN Group,
-\item \code{iso2c}: the ISO2C code of the airline's country, i.e. GR,
-\item \code{eu}: whether the airlines is in a EUROCONTROL's Member State (plus Kosovo), i.e. TRUE.
+\section{Note}{
+You need to either provide a connection \code{con} that has access to \code{PRUDEV.V_COVID_DIM_AO}
+or go with the default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 }
-}
+
 \examples{
 \dontrun{
 airlines_tidy()

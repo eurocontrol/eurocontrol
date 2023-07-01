@@ -7,18 +7,21 @@
 airspace_profile_tbl(con = NULL)
 }
 \arguments{
-\item{con}{DB connection to be used, if NULL instantiate one.}
+\item{con}{Database connection or instantiate the default one.}
 }
 \value{
-a tbl referencing the Oracle table for airspace profiles
+a \link{tbl} referencing the Oracle table for airspace profiles.
 }
 \description{
-The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} is referencing the airspace profiles table in PRISME.
+The returned \link{tbl} is referencing the airspace profiles table in PRISME.
 You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
-
-\strong{NOTE}: you need access to PRU_DEV schema
 }
+\section{Note}{
+You need to either provide a connection \code{con} that has access to \code{FSD.ALL_FT_ASP_PROFILE} or
+go with the default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+}
+
 \examples{
 \dontrun{
 prf <- airspace_profile_tbl()

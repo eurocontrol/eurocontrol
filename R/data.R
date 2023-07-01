@@ -9,10 +9,12 @@
 #'   \item{iso3n}{the 3-digits ISO code, e.g. "380"}
 #'   \item{date}{the date of `status` code, e.g. 1996-04-01}
 #'   \item{status}{the status code, e.g. "M"
-#'   (`M` Member State, `C` Comprehensive Agreement State, `T` Transitional State)}
+#'   (`M` Member State, `C` Comprehensive Agreement State, `T` Transitional State,
+#'    NA for Kosovo)}
 #' }
 #' These are useful to grab the right spatial polygons in case of need.
-#' Note: Kosovo is also included in the list.
+#' # Note
+#' Kosovo is also included in the list.
 "member_state"
 
 
@@ -25,9 +27,10 @@
 #'   \item{aircraft_description}{the aircraft description, e.g. "LandPlane".}
 #'   \item{description}{the aircraft , e.g. "IT".}
 #'   \item{wtc}{the aircraft [wake turbulence category](https://www.skybrary.aero/articles/icao-wake-turbulence-category), e.g. "M".}
-#'   \item{engine_count}{the number pf engines, e.g. "2".}
+#'   \item{engine_count}{the number pf engines, e.g. "2". **Note**: this is not a number unfortunately,
+#'         there is one model encoded `C`}
 #'   \item{engine_type}{the engine type, e.g. "Jet".}
-#'   \item{last_updated}{the last updated date when the data have been updated, e.g. "2023-05-19".}
+#'   \item{last_updated}{the date when the data have been last updated, e.g. "2023-05-19".}
 #' }
 "aircraft_type"
 
@@ -39,7 +42,7 @@
 #'   \item{model_full_name}{the model full name, e.g. "A-320neo".}
 #'   \item{manufacturer_code}{the manufacturer's code, e.g. "AIRBUS".}
 #'   \item{designator}{the model's designator, e.g. "A20N"}
-#'   \item{last_updated}{the last updated date when the data have been updated, e.g. "2023-05-19".}
+#'   \item{last_updated}{the date when the data have been last updated, e.g. "2023-05-19".}
 #' }
 "aircraft_model"
 

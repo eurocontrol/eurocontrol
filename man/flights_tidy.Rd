@@ -7,30 +7,33 @@
 flights_tidy(con = NULL, wef, til)
 }
 \arguments{
-\item{con}{DB connection to be used, if NULL instantiate one.}
+\item{con}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
-\item{til}{u\strong{TIL}l date (excluded) at Zulu time
+\item{til}{un\strong{TIL}l date (excluded) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 }
 \value{
-a \link{tbl} with the following columns
+A \link{tbl} with the following columns:
 \itemize{
-\item FLT_UID: the flight unique id
-\item LOBT: \strong{L}ast received \strong{O}ff-\strong{B}lock \strong{T}ime
-\item IOBT: \strong{I}nitial \strong{O}ff-\strong{B}lock \strong{T}ime
-\item AIRCRAFT_ID
-\item REGISTRATION: the registration
-\item AIRCRAFT_TYPE_ICAO_ID
+\item FLT_UID: the flight unique id.
+\item LOBT: \strong{L}ast received \strong{O}ff-\strong{B}lock \strong{T}ime.
+\item IOBT: \strong{I}nitial \strong{O}ff-\strong{B}lock \strong{T}ime.
+\item AIRCRAFT_ID: the \href{https://www.skybrary.aero/articles/aircraft-call-sign}{callsign}
+of the relevant flight, e.g. BAW6VB.
+\item REGISTRATION: the \href{https://en.wikipedia.org/wiki/Aircraft_registration}{aircraft registration}
+(with spaces, dashes, ... stripped), e.g. GEUUU.
+\item AIRCRAFT_TYPE_ICAO_ID: the \url{ICAO code for the aircraft type}, for example A30B for an
+Airbus A-300B2-200.
 \item FLT_RULES (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}):
 which sets of regulations the flight is operated under.
 Possible values are:
 \itemize{
 \item \code{I} for IFR
-\item \code{V} for VFR,
-\item \code{Y} first IFR thereafter VFR,
+\item \code{V} for VFR
+\item \code{Y} first IFR thereafter VFR
 \item \code{Z} first VFR thereafter IFR
 }
 \item ICAO_FLT_TYPE (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}):
@@ -38,8 +41,8 @@ flight type. Possible values (but G, M aand X shouldn't appear):
 \itemize{
 \item \code{S} for scheduled air service
 \item \code{N} for non-scheduled air service
-\item \code{G} for general aviation
-\item \code{M} for military
+\item \code{G} for general aviation (note: filtered out)
+\item \code{M} for military (note: filtered out)
 \item \code{X} for other than the preceding categories
 }
 \item WK_TBL_CAT (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 9}): wake turbulence category, can be
@@ -51,11 +54,13 @@ but more than 7_000 kg (15_500 lbs)
 (except those specified as \code{J})
 \item \code{J} SUPER, presently the only the AIRBUS A-380-800
 }
-\item AIRCRAFT_OPERATOR:
-\item AIRCRAFT_ADDRESS: the ICAO 24-bit address of the airframe for ADS-B/Mode S broadcasting
+\item AIRCRAFT_OPERATOR: the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator},
+i.e. \code{OAL} for \code{Olympic}
+\item AIRCRAFT_ADDRESS: the \href{https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address}{ICAO 24-bit address}
+of the airframe for ADS-B/Mode S broadcasting
 \item ADEP: (\href{https://observablehq.com/@openaviation/airports}{ICAO code} of the) \strong{A}erodrome of \strong{DEP}arture
 \item ADES: (\href{https://observablehq.com/@openaviation/airports}{ICAO code} of the) \strong{A}erodrome of \strong{DES}tination
-\item ID: the so called SAM ID, used internally by PRISME
+\item ID: the so called \verb{SAM ID}, used internally by PRISME
 \item EOBT_1: \strong{E}stimated \strong{O}ff-\strong{B}lock \strong{T}ime for FPL-based (M1) trajectory
 \item ARVT_1: \strong{AR}ri\strong{V}al \strong{T}ime for FPL-based (M1) trajectory
 \item TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
@@ -66,28 +71,33 @@ but more than 7_000 kg (15_500 lbs)
 \href{https://www.eurocontrol.int/publication/market-segment-rules}{Market Segment Rules},
 it can be:
 \itemize{
-\item “Mainline”,
-\item “Regional”,
-\item “Low-Cost”,
-\item “Business Aviation”,
-\item “All-Cargo”,
-\item “Charter” (Non-Scheduled),
-\item “Military”, or
-\item “Other”.
+\item “Mainline”
+\item “Regional”
+\item “Low-Cost”
+\item “Business Aviation”
+\item “All-Cargo”
+\item “Charter” (Non-Scheduled)
+\item “Military”
+\item “Other”
 }
-\item AO_GRP_CODE: Aircraft Operator group (code)
-\item AO_GRP_NAME: : Aircraft Operator group (name)
-\item RTE_LEN_1: route length (NM) for FPL-based (M1) trajectory
-\item RTE_LEN_3: route length (NM) for for flown (M3) trajectory
+\item AO_GRP_CODE: Aircraft Operator group (code), i.e.
+\item AO_GRP_NAME: : Aircraft Operator group (name), i.e. AEGEAN Group
+\item RTE_LEN_1: route length (in Nautical Miles) for FPL-based (M1) trajectory
+\item RTE_LEN_3: route length (in Nautical Miles) for for flown (M3) trajectory
 }
 }
 \description{
 The returned \link{tbl} includes scheduled and non-scheduled flight
 departing in the right-opened interval \verb{[wef, til)}.
-General aviation, State, military and sensitive flight are excluded.
 
-\strong{NOTE}: you need access to PRU_DEV schema
+General aviation, State, military and sensitive flight are excluded.
 }
+\section{Note}{
+You need to either provide a connection \code{con} that has access to \code{SWH_FCT.DIM_FLIGHT_TYPE_RULE},
+\code{PRUDEV.V_COVID_DIM_AO} and \code{SWH_FCT.FAC_FLIGHT} or go with the default which uses
+PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+}
+
 \examples{
 \dontrun{
 my_flts <- flights_tidy(wef = "2023-01-01", til = "2023-04-01")

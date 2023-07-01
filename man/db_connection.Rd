@@ -7,18 +7,23 @@
 db_connection(schema = "PRU_PROD")
 }
 \arguments{
-\item{schema}{the Oracle DB schema to connect to.
-Note: this is more the prefix of the environment variable
-where the credentials are stored, like \verb{<schema>_USR},
-\verb{<schema>_PWD} and \verb{<schema>_DBNAME}.
-Possible values are \code{PRU_PROD}, \code{PRU_DEV}, \code{PRU_TEST}, ...}
+\item{schema}{the Oracle DB schema to connect to.}
 }
 \value{
-DB connection
+A connection to a database (specifically an implementation of \link[DBI:DBIConnection-class]{DBI::DBIConnection}
+for an Oracle database.)
 }
 \description{
 Provide a connection to the relevant Oracle database
 }
+\section{Note}{
+The \code{schema} is in fact the prefix of the environment variables
+where the credentials are stored, like \verb{<schema>_USR},
+\verb{<schema>_PWD} and \verb{<schema>_DBNAME}.
+Possible values for \code{schema} are \code{PRU_PROD}, \code{PRU_DEV},
+\code{PRU_TEST}, ...
+}
+
 \examples{
 \dontrun{
 con <- db_connection()
