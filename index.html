@@ -79,11 +79,11 @@
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
-<p>Some of the functions in this package access data from internal Oracle schema. The code relies on having the relevant credentials stored in specifically named environment variables. The pattern for the environment variable names is</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>PRU_XXXX_DBNAME </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>PRU_XXXX_PWD</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>PRU_XXXX_USR</span></code></pre></div>
-<p>where <code>XXXX</code> is something like <code>DEV</code>, <code>PROD</code>, …</p>
+<p>Some of the functions in this package access data from EUROCONTROL’s internal Oracle schemes (maintained by PRISME group.) The code relies on having the relevant credentials stored in specifically named environment variables. The pattern for the environment variable names is</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>XXXX_DBNAME </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>XXXX_PWD</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>XXXX_USR</span></code></pre></div>
+<p>where <code>XXXX</code> is something like <code>PRU_DEV</code>, <code>PRU_PROD</code>, … as defined in the AIU. Of course other accounts/schemes with access to the underlying tables can be used and encoded in custom environment variables following the pattern above. The details about which tables are accessed can be found in the relevant functions documentation.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
