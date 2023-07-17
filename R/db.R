@@ -516,7 +516,7 @@ airlines_tidy <- function(con = NULL) {
 
   arl <- arl_non_grp |>
     dplyr::bind_rows(arl_grp) |>
-    dplyr::mutate(EU = dplyr::if_else(iso2c %in% ect, TRUE, FALSE))
+    dplyr::mutate(EU = dplyr::if_else(AO_ISO_CTRY_CODE %in% ect, TRUE, FALSE))
 
   arl
 }
