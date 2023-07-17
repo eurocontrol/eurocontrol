@@ -512,7 +512,7 @@ airlines_tidy <- function(con = NULL) {
     dplyr::filter(!AO_CODE %in% grp_codes) |>
     dplyr::distinct(AO_CODE, .keep_all = TRUE)
 
-  ect <- eurocontrol::member_state |> dplyr::pull(iso2c)
+  ect <- eurocontrol::member_state |> dplyr::pull(AO_ISO_CTRY_CODE)
 
   arl <- arl_non_grp |>
     dplyr::bind_rows(arl_grp) |>
