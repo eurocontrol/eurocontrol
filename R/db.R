@@ -503,20 +503,20 @@ airlines_tidy <- function(con = NULL) {
 
 
   arl_grp <- arl |>
-    dplyr::distinct(operator_code, .keep_all = TRUE)
+    dplyr::distinct(AO_CODE, .keep_all = TRUE)
 
 
-  grp_codes <- arl_grp |> dplyr::pull(operator_code)
+  grp_codes <- arl_grp |> dplyr::pull(AO_CODE)
 
   arl_non_grp <- arl |>
-    dplyr::filter(!operator_code %in% grp_codes) |>
-    dplyr::distinct(operator_code, .keep_all = TRUE)
+    dplyr::filter(!AO_CODE %in% grp_codes) |>
+    dplyr::distinct(AO_CODE, .keep_all = TRUE)
 
   ect <- eurocontrol::member_state |> dplyr::pull(iso2c)
 
   arl <- arl_non_grp |>
     dplyr::bind_rows(arl_grp) |>
-    dplyr::mutate(EU = dplyr::if_else(iso2c %in% ect, TRUE, FALSE))
+    dplyr::mutate(EU = dplyr::if_else(AO_ISO_CTRY_CODE %in% ect, TRUE, FALSE))
 
   arl
 }
