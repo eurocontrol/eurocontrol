@@ -192,7 +192,13 @@ airspace_profile_tbl <- function(con = NULL) {
 #' * AIRCRAFT_ADDRESS: the [ICAO 24-bit address](https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address)
 #'                     of the airframe for ADS-B/Mode S broadcasting
 #' * ADEP: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DEP**arture
+#' * NAME_ADEP: the (AIU) name of the departing airport
+#' * COUNTRY_CODE_ADEP: the ISO 2-alpha country code for the ADEP
+#' * COUNTRY_NAME_ADEP: the country name for the ADEP
 #' * ADES: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DES**tination
+#' * NAME_ADES: the (AIU) name of the airport
+#' * COUNTRY_CODE_ADES: the ISO 2-alpha country code for the ADES
+#' * COUNTRY_NAME_ADES: the country name for the ADES
 #' * ID: the so called `SAM ID`, used internally by PRISME
 #' * EOBT_1: **E**stimated **O**ff-**B**lock **T**ime for FPL-based (M1) trajectory
 #' * ARVT_1: **AR**ri**V**al **T**ime for FPL-based (M1) trajectory
@@ -247,7 +253,13 @@ flights_tidy <- function(con = NULL, wef, til) {
     # "CRCO_AIRCRAFT_ADDRESS",
     # "LAST_FPL_ARCADDR",
     "ADEP",
+    "NAME_ADEP",
+    "COUNTRY_CODE_ADEP",
+    "COUNTRY_NAME_ADEP",
     "ADES",
+    "NAME_ADES",
+    "COUNTRY_CODE_ADES",
+    "COUNTRY_NAME_ADES",
     "ID",
     # "SENSITIVE",
     # "EXMP_RSN_LH",
@@ -262,6 +274,7 @@ flights_tidy <- function(con = NULL, wef, til) {
     # airline group
     "AO_GRP_CODE",
     "AO_GRP_NAME",
+    "AO_ISO_CTRY_CODE",
     # route length
     "RTE_LEN_1",
     "RTE_LEN_3",
@@ -274,6 +287,12 @@ flights_tidy <- function(con = NULL, wef, til) {
   flt <- flights_tbl(con)
   frl <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "DIM_FLIGHT_TYPE_RULE"))
   aog <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO"))
+  apt <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_REL_AIRPORT_AREA"))
+  # |>
+  #   dplyr::select(APT_CODE = CFMU_AP_CODE,
+  #          APT_NAME = PRU_DASHBOARD_AP_NAME,
+  #          COUNTRY_CODE,
+  #          COUNTRY_NAME)
 
   wef <- lubridate::as_datetime(wef, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
   til <- lubridate::as_datetime(til, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
@@ -293,6 +312,16 @@ flights_tidy <- function(con = NULL, wef, til) {
       ) |>
     dplyr::left_join(frl, by = "SK_FLT_TYPE_RULE_ID") |>
     dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
+    dplyr::left_join(apt, by = c("ADEP" = "CFMU_AP_CODE")) |>
+    dplyr::rename(
+      NAME_ADEP = PRU_DASHBOARD_AP_NAME,
+      COUNTRY_CODE_ADEP = COUNTRY_CODE,
+      COUNTRY_NAME_ADEP = COUNTRY_NAME) |>
+    dplyr::left_join(apt, by = c("ADES" = "CFMU_AP_CODE")) |>
+    dplyr::rename(
+      NAME_ADES = PRU_DASHBOARD_AP_NAME,
+      COUNTRY_CODE_ADES = COUNTRY_CODE,
+      COUNTRY_NAME_ADES = COUNTRY_NAME) |>
     dplyr::select(dplyr::all_of(columns))
   fff
 }
