@@ -531,11 +531,7 @@ airlines_tidy <- function(con = NULL) {
     dplyr::collect()
 
 
-  arl_grp <- arl |>
-    dplyr::distinct(AO_CODE, .keep_all = TRUE)
-
-
-  grp_codes <- arl_grp |> dplyr::pull(AO_CODE)
+  grp_codes <- arl |> dplyr::pull(AO_CODE)
 
   arl_non_grp <- arl |>
     dplyr::filter(!AO_CODE %in% grp_codes) |>
