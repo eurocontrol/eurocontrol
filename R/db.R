@@ -44,7 +44,7 @@ db_connection <- function(schema = "PRU_PROD") {
 #' Return a reference to the Airlines table
 #'
 #' @description
-#' The returned [tbl] is referencing the airlines table in PRISME.
+#' The returned [dplyr::tbl()] is referencing the airlines table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
@@ -55,7 +55,7 @@ db_connection <- function(schema = "PRU_PROD") {
 #'
 #' @param con Database connection or instantiate the default one.
 #'
-#' @return a [tbl] referencing the Oracle table for airlines.
+#' @return a [dplyr::tbl()] referencing the Oracle table for airlines.
 #' @export
 #'
 #' @examples
@@ -74,7 +74,7 @@ airlines_tbl <- function(con = NULL) {
 #' Return a reference to the Flights table
 #'
 #' @description
-#' The returned [tbl] is referencing the flights table in PRISME.
+#' The returned [dplyr::tbl()] is referencing the flights table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
@@ -84,7 +84,7 @@ airlines_tbl <- function(con = NULL) {
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a [tbl] referencing the Oracle table for flights.
+#' @return a [dplyr::tbl()] referencing the Oracle table for flights.
 #' @export
 #'
 #' @examples
@@ -102,40 +102,12 @@ flights_tbl <- function(con = NULL) {
 
 
 
-#' Return a reference to the Airspace Profile table
-#'
-#' @description
-#' The returned [tbl] is referencing the airspace profiles table in PRISME.
-#' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
-#' datasets.
-#'
-#' # Note
-#' You need to either provide a connection `con` that has access to `FSD.ALL_FT_ASP_PROFILE` or
-#' go with the default which uses PRU_DEV to establish a [db_connection()].
-#'
-#' @inheritParams airlines_tbl
-#'
-#' @return a [tbl] referencing the Oracle table for airspace profiles.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' prf <- airspace_profile_tbl()
-#' }
-airspace_profile_tbl <- function(con = NULL) {
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
-  }
-  prof <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE"))
-
-  prof
-}
 
 
 #' Extract a clean flights list in an interval
 #'
 #' @description
-#' The returned [tbl] includes scheduled and non-scheduled flight
+#' The returned [dplyr::tbl()] includes scheduled and non-scheduled flight
 #' departing in the right-opened interval `[wef, til)`.
 #'
 #' General aviation, State, military and sensitive flight are excluded.
@@ -152,7 +124,7 @@ airspace_profile_tbl <- function(con = NULL) {
 #' @param til un**TIL**l date (excluded) at Zulu time
 #'            in a format recognized by [lubridate::as_datetime()]
 #'
-#' @return A [tbl] with the following columns:
+#' @return A [dplyr::tbl()] with the following columns:
 #'
 #' * FLT_UID: the flight unique id.
 #' * LOBT: **L**ast received **O**ff-**B**lock **T**ime.
@@ -161,7 +133,7 @@ airspace_profile_tbl <- function(con = NULL) {
 #'                of the relevant flight, e.g. BAW6VB.
 #' * REGISTRATION: the [aircraft registration](https://en.wikipedia.org/wiki/Aircraft_registration)
 #'   (with spaces, dashes, ... stripped), e.g. GEUUU.
-#' * AIRCRAFT_TYPE_ICAO_ID: the [ICAO code for the aircraft type](), for example A30B for an
+#' * AIRCRAFT_TYPE_ICAO_ID: the [ICAO code for the aircraft type](https://www.icao.int/publications/doc8643/pages/search.aspx), for example A30B for an
 #'   Airbus A-300B2-200.
 #' * FLT_RULES (see [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)):
 #'   which sets of regulations the flight is operated under.
@@ -190,12 +162,12 @@ airspace_profile_tbl <- function(con = NULL) {
 #' * AIRCRAFT_OPERATOR: the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes),
 #'   i.e. `OAL` for `Olympic`
 #' * AIRCRAFT_ADDRESS: the [ICAO 24-bit address](https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address)
-#'                     of the airframe for ADS-B/Mode S broadcasting
-#' * ADEP: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DEP**arture
+#'   of the airframe for ADS-B/Mode S broadcasting.
+#' * ADEP: [ICAO code](https://observablehq.com/@openaviation/airports) of the **A**erodrome of **DEP**arture
 #' * NAME_ADEP: the (AIU) name of the departing airport
 #' * COUNTRY_CODE_ADEP: the ISO 2-alpha country code for the ADEP
 #' * COUNTRY_NAME_ADEP: the country name for the ADEP
-#' * ADES: ([ICAO code](https://observablehq.com/@openaviation/airports) of the) **A**erodrome of **DES**tination
+#' * ADES: [ICAO code](https://observablehq.com/@openaviation/airports) of the **A**erodrome of **DES**tination
 #' * NAME_ADES: the (AIU) name of the airport
 #' * COUNTRY_CODE_ADES: the ISO 2-alpha country code for the ADES
 #' * COUNTRY_NAME_ADES: the country name for the ADES
@@ -207,8 +179,8 @@ airspace_profile_tbl <- function(con = NULL) {
 #' * ARVT_3: **ARV**ival **T**ime for flown (M3) trajectory
 #' * TAXI_TIME_3: Taxi time for flown (M3) trajectory
 #' * RULE_NAME: market segment type as defined on the
-#'              [Market Segment Rules](https://www.eurocontrol.int/publication/market-segment-rules),
-#'              it can be:
+#'   [Market Segment Rules](https://www.eurocontrol.int/publication/market-segment-rules),
+#'   it can be:
 #'   - “Mainline”
 #'   - “Regional”
 #'   - “Low-Cost”
@@ -299,8 +271,8 @@ flights_tidy <- function(con = NULL, wef, til) {
 
   fff <- flt |>
     dplyr::filter(
-      to_date(wef, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
-      .data$LOBT < to_date(til, "yyyy-mm-dd hh24:mi:ss"),
+      TO_DATE(wef, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
+      .data$LOBT < TO_DATE(til, "yyyy-mm-dd hh24:mi:ss"),
       # only commercial flights (scheduled and non-scheduled), i.e. General Aviation, Military and Other excluded
       .data$ICAO_FLT_TYPE %in% c('S', 'N'),
       # make sure military flights are excluded
@@ -314,182 +286,21 @@ flights_tidy <- function(con = NULL, wef, til) {
     dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
     dplyr::left_join(apt, by = c("ADEP" = "CFMU_AP_CODE")) |>
     dplyr::rename(
-      NAME_ADEP = PRU_DASHBOARD_AP_NAME,
-      COUNTRY_CODE_ADEP = COUNTRY_CODE,
-      COUNTRY_NAME_ADEP = COUNTRY_NAME) |>
+      NAME_ADEP = .data$PRU_DASHBOARD_AP_NAME,
+      COUNTRY_CODE_ADEP = .data$COUNTRY_CODE,
+      COUNTRY_NAME_ADEP = .data$COUNTRY_NAME) |>
     dplyr::left_join(apt, by = c("ADES" = "CFMU_AP_CODE")) |>
     dplyr::rename(
-      NAME_ADES = PRU_DASHBOARD_AP_NAME,
-      COUNTRY_CODE_ADES = COUNTRY_CODE,
-      COUNTRY_NAME_ADES = COUNTRY_NAME) |>
+      NAME_ADES = .data$PRU_DASHBOARD_AP_NAME,
+      COUNTRY_CODE_ADES = .data$COUNTRY_CODE,
+      COUNTRY_NAME_ADES = .data$COUNTRY_NAME) |>
     dplyr::select(dplyr::all_of(columns))
   fff
 }
 
 
-#' Provide all airspace profile segments intersecting an interval of interest
-#'
-#' @description
-#' The returned [tbl] includes segments for scheduled and non-scheduled flights
-#' temporally intersecting the right-opened interval `[wef, til)`.
-#'
-#' General aviation, State, military and sensitive flight are excluded.
-#'
-#' # Note
-#' You need to either provide a connection `con` that has access to as noted in
-#' [airspace_profile_tbl] and [flight_tidy] or go with the default which uses
-#' PRU_DEV to establish a [db_connection()].
-#'
-#' @inheritParams flights_tidy
-#'
-#' @param airspace the type of airspace (default: 'FIR'), one of:
-#'  * 'FIR' ([Flight Information Region](https://observablehq.com/@openaviation/flight-information-regions))
-#'  * 'NAS' (National Airspace)
-#'  * 'AUA' (ATC Unit Airspace)
-#'  * 'ES' (Elementary Sector)
-#'
-#' @param profile the [model of the trajectory](https://ansperformance.eu/definition/flight-models/)
-#'  profile (default: 'CTFM'), one of:
-#'  * 'FTFM', Filed Tactical Flight Model
-#'  * 'RTFM', Regulated Tactical Flight Model
-#'  * 'CTFM', Current Tactical Flight Model
-#'  * 'CPF', Correlated Position reports for a Flight
-#'  * 'DCT', Direct route
-#'  * 'SCR', Shortest Constrained Route
-#'  * 'SRR', Shortest RAD restrictions applied Route
-#'  * 'SUR', Shortest Unconstrained Route
-#'
-#' @return a [tbl] with the following columns
-#'
-#' * ID: the so called `SAM ID`, used internally by PRISME
-#' * SEQ_ID: the sequence number of the segment for the relevant airspace profile
-#' * ENTRY_TIME: the time of entry into the relevant airspace
-#' * ENTRY_LON:  the longitude of entry into the relevant airspace
-#' * ENTRY_LAT: the latitude of entry into the relevant airspace
-#' * ENTRY_FL: the flight level of entry into the relevant airspace
-#' * EXIT_TIME: the time of exit out of the relevant airspace
-#' * EXIT_LON: the longitude of exit out of the relevant airspace
-#' * EXIT_LAT: the latitude of exit out of the relevant airspace
-#' * EXIT_FL: the flight level of exit out of the relevant airspace
-#' * AIRSPACE_ID: the airspace ID
-#' * AIRSPACE_TYPE: the airspace type as per `airspace` input parameter
-#' * MODEL_TYPE: the trajectory model as per `profile` input parameter
-#'
-#'
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' asp_profs <- airspace_profiles_tidy(con = NULL, wef = "2023-01-01", til = "2023-04-01")
-#' }
-airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
-
-  # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
-  #                capture actual flight events, so we need some buffers.
-  before_hours <- 28
-  after_hours  <- 24
-
-  wef_before <- (lubridate::as_datetime(wef) - lubridate::dhours(before_hours))|>
-    format("%Y-%m-%d %H:%M:%S")
-  til_after  <- (lubridate::as_date(til)     + lubridate::dhours(after_hours)) |>
-    format("%Y-%m-%d %H:%M:%S")
-
-  wef <- lubridate::as_datetime(wef) |> format("%Y-%m-%d %H:%M:%S")
-  til <- lubridate::as_datetime(til) |> format("%Y-%m-%d %H:%M:%S")
-
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
-  }
-
-  flt <- flights_tidy(con = con, wef = wef_before, til = til_after)
-  ids <- flt |> dplyr::select(ID) |> dplyr::distinct()
-
-  prf <- airspace_profile_tbl(con = con) |>
-    dplyr::filter(
-      to_date(wef_before, "yyyy-mm-dd hh24:mi:ss") <= LOBT,
-      LOBT < to_date(til_after, "yyyy-mm-dd hh24:mi:ss"),
-      MODEL_TYPE %in% profile,
-      AIRSPACE_TYPE == airspace,
-      # entry
-      !is.na(ENTRY_LON),
-      !is.na(ENTRY_LAT),
-      !is.na(ENTRY_TIME),
-      !is.na(ENTRY_FL),
-      # exit
-      !is.na(EXIT_LON),
-      !is.na(EXIT_LAT),
-      !is.na(EXIT_TIME),
-      !is.na(EXIT_FL),
-      # consider only the segments intersecting the [wef, til)
-      ENTRY_TIME <= to_date(til, "yyyy-mm-dd hh24:mi:ss"),
-      to_date(wef, "yyyy-mm-dd hh24:mi:ss") < EXIT_TIME
-    )
-
-  prf <- prf |>
-    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
-    dplyr::inner_join(ids, by = c("SAM_ID" = "ID")) |>
-    dplyr::select(
-      ID = SAM_ID,
-      SEQ_ID,
-      ENTRY_TIME, ENTRY_LON, ENTRY_LAT, ENTRY_FL,
-      EXIT_TIME, EXIT_LON, EXIT_LAT, EXIT_FL,
-      AIRSPACE_ID, AIRSPACE_TYPE, MODEL_TYPE)
-  prf
-}
 
 
-#' Extract the flights list for the airspace profile segments intersecting an interval of interest
-#'
-#' @description
-#' The returned [tbl] includes scheduled and non-scheduled flights whose airspace segments
-#' temporally intersecting the right-opened interval `[wef, til)`.
-#' General aviation, State, military and sensitive flight are excluded.
-#'
-#' # Note
-#' You need to either provide a connection `con` that has access to as noted in
-#' [airspace_profile_tbl] and [flight_tidy] or go with the default which uses
-#' PRU_DEV to establish a [db_connection()].
-#'
-#' @inheritParams airspace_profiles_tidy
-#'
-#' @return a [tbl] with the same columns as [flights_tidy]
-#'
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' asp_profs <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
-#' }
-flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
-
-  # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
-  #                capture actual flight events, so we need some buffers.
-  before_hours <- 28
-  after_hours  <- 24
-
-  wef_before <- (lubridate::as_datetime(wef) - lubridate::dhours(before_hours))|>
-    format("%Y-%m-%d %H:%M:%S")
-  til_after  <- (lubridate::as_date(til)     + lubridate::dhours(after_hours)) |>
-    format("%Y-%m-%d %H:%M:%S")
-
-  prf <- airspace_profiles_tidy(con = con, wef, til, airspace = airspace, profile = profile)
-  ids <- prf |> dplyr::select(ID) |> dplyr::distinct()
-
-  # reuse the same DB connection as per the flights
-  con <- prf$src$con
-
-  flt <- flights_tidy(con = con, wef = wef_before, til = til_after)
-  cols <- colnames(flt)
-
-  flt <- flt |>
-    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
-    # dplyr::inner_join(prf, by = c("ID" = "ID"))
-    dplyr::inner_join(prf, by = c("ID" = "ID")) |>
-    select(cols) |>
-    distinct()
-
-  flt
-}
 
 
 
@@ -531,17 +342,17 @@ airlines_tidy <- function(con = NULL) {
     dplyr::collect()
 
 
-  grp_codes <- arl |> dplyr::pull(AO_CODE)
+  grp_codes <- arl |> dplyr::pull(.data$AO_CODE)
 
   arl_non_grp <- arl |>
-    dplyr::filter(!AO_CODE %in% grp_codes) |>
-    dplyr::distinct(AO_CODE, .keep_all = TRUE)
+    dplyr::filter(!.data$AO_CODE %in% grp_codes) |>
+    dplyr::distinct(.data$AO_CODE, .keep_all = TRUE)
 
-  ect <- eurocontrol::member_state |> dplyr::pull(iso2c)
+  ect <- eurocontrol::member_state |> dplyr::pull(.data$iso2c)
 
   arl <- arl_non_grp |>
-    dplyr::bind_rows(arl_grp) |>
-    dplyr::mutate(EU = dplyr::if_else(AO_ISO_CTRY_CODE %in% ect, TRUE, FALSE))
+    dplyr::bind_rows(arl) |>
+    dplyr::mutate(EU = dplyr::if_else(.data$AO_ISO_CTRY_CODE %in% ect, TRUE, FALSE))
 
   arl
 }

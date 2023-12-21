@@ -10,10 +10,10 @@ airlines_tbl(con = NULL)
 \item{con}{Database connection or instantiate the default one.}
 }
 \value{
-a \link{tbl} referencing the Oracle table for airlines.
+a \code{\link[dplyr:tbl]{dplyr::tbl()}} referencing the Oracle table for airlines.
 }
 \description{
-The returned \link{tbl} is referencing the airlines table in PRISME.
+The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} is referencing the airlines table in PRISME.
 You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }

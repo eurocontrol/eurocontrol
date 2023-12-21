@@ -16,7 +16,7 @@ in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime(
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 }
 \value{
-A \link{tbl} with the following columns:
+A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns:
 \itemize{
 \item FLT_UID: the flight unique id.
 \item LOBT: \strong{L}ast received \strong{O}ff-\strong{B}lock \strong{T}ime.
@@ -25,7 +25,7 @@ A \link{tbl} with the following columns:
 of the relevant flight, e.g. BAW6VB.
 \item REGISTRATION: the \href{https://en.wikipedia.org/wiki/Aircraft_registration}{aircraft registration}
 (with spaces, dashes, ... stripped), e.g. GEUUU.
-\item AIRCRAFT_TYPE_ICAO_ID: the \url{ICAO code for the aircraft type}, for example A30B for an
+\item AIRCRAFT_TYPE_ICAO_ID: the \href{https://www.icao.int/publications/doc8643/pages/search.aspx}{ICAO code for the aircraft type}, for example A30B for an
 Airbus A-300B2-200.
 \item FLT_RULES (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}):
 which sets of regulations the flight is operated under.
@@ -57,9 +57,15 @@ but more than 7_000 kg (15_500 lbs)
 \item AIRCRAFT_OPERATOR: the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator},
 i.e. \code{OAL} for \code{Olympic}
 \item AIRCRAFT_ADDRESS: the \href{https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address}{ICAO 24-bit address}
-of the airframe for ADS-B/Mode S broadcasting
-\item ADEP: (\href{https://observablehq.com/@openaviation/airports}{ICAO code} of the) \strong{A}erodrome of \strong{DEP}arture
-\item ADES: (\href{https://observablehq.com/@openaviation/airports}{ICAO code} of the) \strong{A}erodrome of \strong{DES}tination
+of the airframe for ADS-B/Mode S broadcasting.
+\item ADEP: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the \strong{A}erodrome of \strong{DEP}arture
+\item NAME_ADEP: the (AIU) name of the departing airport
+\item COUNTRY_CODE_ADEP: the ISO 2-alpha country code for the ADEP
+\item COUNTRY_NAME_ADEP: the country name for the ADEP
+\item ADES: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the \strong{A}erodrome of \strong{DES}tination
+\item NAME_ADES: the (AIU) name of the airport
+\item COUNTRY_CODE_ADES: the ISO 2-alpha country code for the ADES
+\item COUNTRY_NAME_ADES: the country name for the ADES
 \item ID: the so called \verb{SAM ID}, used internally by PRISME
 \item EOBT_1: \strong{E}stimated \strong{O}ff-\strong{B}lock \strong{T}ime for FPL-based (M1) trajectory
 \item ARVT_1: \strong{AR}ri\strong{V}al \strong{T}ime for FPL-based (M1) trajectory
@@ -87,7 +93,7 @@ it can be:
 }
 }
 \description{
-The returned \link{tbl} includes scheduled and non-scheduled flight
+The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} includes scheduled and non-scheduled flight
 departing in the right-opened interval \verb{[wef, til)}.
 
 General aviation, State, military and sensitive flight are excluded.

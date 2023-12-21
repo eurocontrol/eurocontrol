@@ -5,7 +5,7 @@
 \alias{aircraft_model}
 \title{ICAO's Manufacturer codes}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 10434 rows and 4 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 10438 rows and 4 columns.
 }
 \usage{
 aircraft_model
