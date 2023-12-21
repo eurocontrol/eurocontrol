@@ -30,10 +30,10 @@ db_connection <- function(schema = "PRU_PROD") {
     "NLS_LANG" = ".AL32UTF8"
   ))
   conn <- DBI::dbConnect(
-    drv = DBI::dbDriver("Oracle"),
+    drv      = DBI::dbDriver("Oracle"),
     username = USR,
     password = PWD,
-    dbname = DBN,
+    dbname   = DBN,
     timezone = "UTC"
   )
 
