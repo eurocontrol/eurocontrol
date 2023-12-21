@@ -28,13 +28,17 @@ reference:
   contents:
   - airlines_tidy
   - airspace_profiles_tidy
+  - aodf_tidy
   - flights_airspace_profiles_tidy
   - flights_tidy
+  - point_profiles_tidy
 
 - subtitle: Tables
   desc: >
     Access to typical tables.
   contents:
   - airlines_tbl
-  - flights_tbl
   - airspace_profile_tbl
+  - aodf_tbl
+  - flights_tbl
+  - point_profile_tbl
