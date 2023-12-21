@@ -10,15 +10,15 @@ airlines_tidy(conn = NULL)
 \item{conn}{Optional connection to the PRU_DEV schema.}
 }
 \value{
-A data frame with airline info such as:
+A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns:
 \itemize{
-\item \code{AO_CODE}: the the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator}, i.e. OAL
-\item \code{AO_NAME}: the airline's name, i.e. Olympic
-\item \code{AO_GRP_CODE}: the airline's affiliation group code, i.e.
-\item \code{AO_GRP_NAME}: the airline's affiliation group, i.e. AEGEAN Group
-\item \code{AO_ISO_CTRY_CODE}: the ISO2C code of the airline's country, i.e. GR,
-\item \code{EU}: whether the airlines is in a EUROCONTROL's Member State (full, comprehensive or
-transition plus Kosovo), i.e. TRUE.
+\item \code{AO_CODE}: the the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator}, i.e. 'OAL'
+\item \code{AO_NAME}: the airline's name, i.e. 'Olympic'
+\item \code{AO_GRP_CODE}: the airline's affiliation group code, i.e. 'AEE_GRP'
+\item \code{AO_GRP_NAME}: the airline's affiliation group, i.e. 'AEGEAN Group'
+\item \code{AO_ISO_CTRY_CODE}: the ISO2C code of the airline's country, i.e. 'GR'
+\item \code{EU}: (a character) whether the airlines is in a EUROCONTROL's Member State
+(full, comprehensive or transition plus Kosovo), i.e. 'TRUE'
 }
 }
 \description{

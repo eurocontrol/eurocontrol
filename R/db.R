@@ -312,15 +312,15 @@ flights_tidy <- function(conn = NULL, wef, til) {
 #'
 #' @param conn Optional connection to the PRU_DEV schema.
 #'
-#' @return A data frame with airline info such as:
+#' @return A [dplyr::tbl()] with the following columns:
 #'
-#' * `AO_CODE`: the the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes), i.e. OAL
-#' * `AO_NAME`: the airline's name, i.e. Olympic
-#' * `AO_GRP_CODE`: the airline's affiliation group code, i.e.
-#' * `AO_GRP_NAME`: the airline's affiliation group, i.e. AEGEAN Group
-#' * `AO_ISO_CTRY_CODE`: the ISO2C code of the airline's country, i.e. GR,
-#' * `EU`: whether the airlines is in a EUROCONTROL's Member State (full, comprehensive or
-#'         transition plus Kosovo), i.e. TRUE.
+#' * `AO_CODE`: the the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes), i.e. 'OAL'
+#' * `AO_NAME`: the airline's name, i.e. 'Olympic'
+#' * `AO_GRP_CODE`: the airline's affiliation group code, i.e. 'AEE_GRP'
+#' * `AO_GRP_NAME`: the airline's affiliation group, i.e. 'AEGEAN Group'
+#' * `AO_ISO_CTRY_CODE`: the ISO2C code of the airline's country, i.e. 'GR'
+#' * `EU`: (a character) whether the airlines is in a EUROCONTROL's Member State
+#'         (full, comprehensive or transition plus Kosovo), i.e. 'TRUE'
 #' @export
 #'
 #' @examples
@@ -332,27 +332,19 @@ airlines_tidy <- function(conn = NULL) {
     conn <- db_connection(schema = "PRU_DEV")
   }
 
-  arl <- dplyr::tbl(conn, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO")) |>
+  ect <- eurocontrol::member_state |> dplyr::pull(.data$iso2c)
+
+  arl <- airlines_tbl(conn) |>
     dplyr::select(
       "AO_CODE",
       "AO_NAME",
       "AO_GRP_CODE",
       "AO_GRP_NAME",
       "AO_ISO_CTRY_CODE") |>
-    dplyr::collect()
-
-
-  grp_codes <- arl |> dplyr::pull(.data$AO_CODE)
-
-  arl_non_grp <- arl |>
-    dplyr::filter(!.data$AO_CODE %in% grp_codes) |>
-    dplyr::distinct(.data$AO_CODE, .keep_all = TRUE)
-
-  ect <- eurocontrol::member_state |> dplyr::pull(.data$iso2c)
-
-  arl <- arl_non_grp |>
-    dplyr::bind_rows(arl) |>
-    dplyr::mutate(EU = dplyr::if_else(.data$AO_ISO_CTRY_CODE %in% ect, TRUE, FALSE))
+    # default to NA and then set what is TRUE
+    dplyr::mutate(
+      EU = NA_character_,
+      EU = dplyr::if_else(.data$AO_ISO_CTRY_CODE %in% ect, "TRUE", EU))
 
   arl
 }
