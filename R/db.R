@@ -344,7 +344,7 @@ airlines_tidy <- function(conn = NULL) {
     # default to NA and then set what is TRUE
     dplyr::mutate(
       EU = NA_character_,
-      EU = dplyr::if_else(.data$AO_ISO_CTRY_CODE %in% ect, "TRUE", EU))
+      EU = dplyr::if_else(.data$AO_ISO_CTRY_CODE %in% ect, "TRUE", .data$EU))
 
   arl
 }
