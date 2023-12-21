@@ -1,17 +1,17 @@
 #' Return a reference to the Airport Operator Data Flow table
 #'
 #' @description
-#' The returned [tbl] is referencing the airport operator data flow table in PRISME.
+#' The returned [dplyr::tbl()] is referencing the airport operator data flow table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to `SWH_FCT.FAC_APDS_FLIGHT_IR691` or
+#' You need to either provide a connection `conn` that has access to `SWH_FCT.FAC_APDS_FLIGHT_IR691` or
 #' go with the default which uses PRU_ATMAP to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a [tbl] referencing the Oracle table for airport operator data flow.
+#' @return a [dplyr::tbl()] referencing the Oracle table for airport operator data flow.
 #' @export
 #'
 #' @examples
@@ -19,11 +19,11 @@
 #' aodf <- aodf_tbl()
 #' }
 #'
-aodf_tbl <- function(con = NULL) {
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_ATMAP")
+aodf_tbl <- function(conn = NULL) {
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_ATMAP")
   }
-  aodf <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_APDS_FLIGHT_IR691"))
+  aodf <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "FAC_APDS_FLIGHT_IR691"))
   aodf
 }
 
@@ -33,12 +33,12 @@ aodf_tbl <- function(con = NULL) {
 #' Extract a clean airport operator data flow list in an interval
 #'
 #' @description
-#' The returned [tbl] includes movements information in the
+#' The returned [dplyr::tbl()] includes movements information in the
 #' interval `[wef, til)`.
 #' **NOTE**: it can only cover ONE month at a time
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to `SWH_FCT.FAC_APDS_FLIGHT_IR691`,
+#' You need to either provide a connection `conn` that has access to `SWH_FCT.FAC_APDS_FLIGHT_IR691`,
 #' or go with the default which uses PRU_ATMAP to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
@@ -46,7 +46,7 @@ aodf_tbl <- function(con = NULL) {
 #' @inheritParams flights_tidy
 #'
 #'
-#' @return A [tbl] with the following columns:
+#' @return A [dplyr::tbl()] with the following columns:
 #'
 #'  * APDS_ID: the airport operator dataflow unique record id.
 #'  * AP_C_FLTID: flight identifier (aource Airport)
@@ -88,12 +88,11 @@ aodf_tbl <- function(con = NULL) {
 #' @examples
 #' \dontrun{
 #' my_aodf <- aodf_tidy(wef = "2023-01-01", til = "2023-01-02")
+#' # ...
+#' DBI::dbDisconnect(my_aodf$src$con)
 #' }
-aodf_tidy <- function(con = NULL, wef, til) {
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_ATMAP")
-  }
-  aodf <- aodf_tbl(con)
+aodf_tidy <- function(conn = NULL, wef, til) {
+  aodf <- aodf_tbl(conn)
 
   wef <- lubridate::as_datetime(wef, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
   til <- lubridate::as_datetime(til, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")

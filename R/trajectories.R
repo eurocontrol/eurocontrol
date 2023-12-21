@@ -6,7 +6,7 @@
 #' datasets.
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to `FSD.ALL_FT_ASP_PROFILE` or
+#' You need to either provide a connection `conn` that has access to `FSD.ALL_FT_ASP_PROFILE` or
 #' go with the default which uses PRU_DEV to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
@@ -18,11 +18,11 @@
 #' \dontrun{
 #' prf <- airspace_profile_tbl()
 #' }
-airspace_profile_tbl <- function(con = NULL) {
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
+airspace_profile_tbl <- function(conn = NULL) {
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_DEV")
   }
-  prof <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE"))
+  prof <- dplyr::tbl(conn, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE"))
 
   prof
 }
@@ -37,7 +37,7 @@ airspace_profile_tbl <- function(con = NULL) {
 #' General aviation, State, military and sensitive flight are excluded.
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to as noted in
+#' You need to either provide a connection `conn` that has access to as noted in
 #' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which uses
 #' PRU_DEV to establish a [db_connection()].
 #'
@@ -83,7 +83,7 @@ airspace_profile_tbl <- function(con = NULL) {
 #' \dontrun{
 #' asp_profs <- airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
 #' }
-airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
+airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
   # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
   #                capture actual flight events, so we need some buffers.
   before_hours <- 28
@@ -101,16 +101,16 @@ airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profi
   wef <- wef |> format("%Y-%m-%d %H:%M:%S")
   til <- til |> format("%Y-%m-%d %H:%M:%S")
 
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_DEV")
   }
 
-  flt <- flights_tidy(con = con, wef = wef_before, til = til_after)
+  flt <- flights_tidy(conn = conn, wef = wef_before, til = til_after)
   ids <- flt |>
     dplyr::select(.data$ID) |>
     dplyr::distinct()
 
-  prf <- airspace_profile_tbl(con = con) |>
+  prf <- airspace_profile_tbl(conn = conn) |>
     dplyr::filter(
       TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
       .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss"),
@@ -155,7 +155,7 @@ airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profi
 #' General aviation, State, military and sensitive flight are excluded.
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to as noted in
+#' You need to either provide a connection `conn` that has access to as noted in
 #' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which uses
 #' PRU_DEV to establish a [db_connection()].
 #'
@@ -169,7 +169,7 @@ airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profi
 #' \dontrun{
 #' asp_profs <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
 #' }
-flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
+flights_airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
   # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
   #                capture actual flight events, so we need some buffers.
   before_hours <- 28
@@ -180,15 +180,15 @@ flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR
   til_after <- (lubridate::as_date(til) + lubridate::dhours(after_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
 
-  prf <- airspace_profiles_tidy(con = con, wef, til, airspace = airspace, profile = profile)
+  prf <- airspace_profiles_tidy(conn = conn, wef, til, airspace = airspace, profile = profile)
   ids <- prf |>
     dplyr::select(.data$ID) |>
     dplyr::distinct()
 
   # reuse the same DB connection as per the flights
-  con <- prf$src$con
+  conn <- prf$src$conn
 
-  flt <- flights_tidy(con = con, wef = wef_before, til = til_after)
+  flt <- flights_tidy(conn = conn, wef = wef_before, til = til_after)
   cols <- colnames(flt)
 
   flt <- flt |>
@@ -211,7 +211,7 @@ flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR
 #' datasets.
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to
+#' You need to either provide a connection `conn` that has access to
 #' `FSD.ALL_FT_POINT_PROFILE` or go with the default which uses
 #' PRU_DEV to establish a [db_connection()].
 #'
@@ -224,11 +224,11 @@ flights_airspace_profiles_tidy <- function(con = NULL, wef, til, airspace = "FIR
 #' \dontrun{
 #' prf <- point_profile_tbl()
 #' }
-point_profile_tbl <- function(con = NULL) {
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
+point_profile_tbl <- function(conn = NULL) {
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_DEV")
   }
-  prof <- dplyr::tbl(con, dbplyr::in_schema("FSD", "ALL_FT_POINT_PROFILE"))
+  prof <- dplyr::tbl(conn, dbplyr::in_schema("FSD", "ALL_FT_POINT_PROFILE"))
 
   prof
 }
@@ -238,7 +238,7 @@ point_profile_tbl <- function(con = NULL) {
 #' Extract NM point profile trajectories from PRISME database
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to as noted in
+#' You need to either provide a connection `conn` that has access to as noted in
 #' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which uses
 #' PRU_DEV to establish a [db_connection()].
 #'
@@ -271,7 +271,7 @@ point_profile_tbl <- function(con = NULL) {
 #' point_profiles_tidy("2019-01-01 00:00", "2019-01-02 00:00", bbox = bb)
 #' }
 point_profiles_tidy <- function(
-    con = NULL,
+    conn = NULL,
     wef, til,
     model = "CTFM",
     bbox = NULL
@@ -299,11 +299,11 @@ point_profiles_tidy <- function(
   wef <- wef |> format("%Y-%m-%d %H:%M:%SZ")
   til <- til |> format("%Y-%m-%d %H:%M:%SZ")
 
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_DEV")
   }
 
-  p <- point_profile_tbl(con = con) |>
+  p <- point_profile_tbl(conn = conn) |>
     dplyr::filter(
       TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
       .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss"),
@@ -313,7 +313,7 @@ point_profiles_tidy <- function(
       !is.na(.data$LAT),
       !is.na(.data$TIME_OVER)
     )
-  f <- dplyr::tbl(con, dbplyr::in_schema("FLX", "FLIGHT")) |>
+  f <- dplyr::tbl(conn, dbplyr::in_schema("FLX", "FLIGHT")) |>
     dplyr::filter(
       TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
       .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss")
@@ -339,7 +339,7 @@ point_profiles_tidy <- function(
     #   "ADES")
 
 
-  prf <- point_profile_tbl(con = con) |>
+  prf <- point_profile_tbl(conn = conn) |>
     dplyr::filter(
       TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
       .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss"),

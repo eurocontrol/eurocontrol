@@ -16,7 +16,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' con <- db_connection()
+#' conn <- db_connection()
 #' }
 db_connection <- function(schema = "PRU_PROD") {
 
@@ -29,7 +29,7 @@ db_connection <- function(schema = "PRU_PROD") {
     "ORA_SDTZ" = "UTC",
     "NLS_LANG" = ".AL32UTF8"
   ))
-  con <- DBI::dbConnect(
+  conn <- DBI::dbConnect(
     drv = DBI::dbDriver("Oracle"),
     username = USR,
     password = PWD,
@@ -37,7 +37,7 @@ db_connection <- function(schema = "PRU_PROD") {
     timezone = "UTC"
   )
 
-  con
+  conn
 }
 
 
@@ -49,11 +49,11 @@ db_connection <- function(schema = "PRU_PROD") {
 #' datasets.
 #'
 #' # Note
-#' You need to either provide a connection `con`
+#' You need to either provide a connection `conn`
 #' that has access to `PRU_DEV.V_COVID_DIM_AO` or go with the
 #' default which uses PRU_DEV to establish a [db_connection()].
 #'
-#' @param con Database connection or instantiate the default one.
+#' @param conn Database connection or instantiate the default one.
 #'
 #' @return a [dplyr::tbl()] referencing the Oracle table for airlines.
 #' @export
@@ -62,11 +62,11 @@ db_connection <- function(schema = "PRU_PROD") {
 #' \dontrun{
 #' arl <- airlines_tbl()
 #' }
-airlines_tbl <- function(con = NULL) {
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
+airlines_tbl <- function(conn = NULL) {
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_DEV")
   }
-  arl <- dplyr::tbl(con, "V_COVID_DIM_AO")
+  arl <- dplyr::tbl(conn, "V_COVID_DIM_AO")
   arl
 }
 
@@ -79,7 +79,7 @@ airlines_tbl <- function(con = NULL) {
 #' datasets.
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to `SWH_FCT.FAC_FLIGHT` or
+#' You need to either provide a connection `conn` that has access to `SWH_FCT.FAC_FLIGHT` or
 #' go with the default which uses PRU_DEV to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
@@ -92,11 +92,11 @@ airlines_tbl <- function(con = NULL) {
 #' arl <- flights_tbl()
 #' }
 #'
-flights_tbl <- function(con = NULL) {
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
+flights_tbl <- function(conn = NULL) {
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_DEV")
   }
-  flt <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT"))
+  flt <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT"))
   flt
 }
 
@@ -113,7 +113,7 @@ flights_tbl <- function(con = NULL) {
 #' General aviation, State, military and sensitive flight are excluded.
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`,
+#' You need to either provide a connection `conn` that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`,
 #' `PRUDEV.V_COVID_DIM_AO` and `SWH_FCT.FAC_FLIGHT` or go with the default which uses
 #' PRU_DEV to establish a [db_connection()].
 #'
@@ -201,7 +201,7 @@ flights_tbl <- function(con = NULL) {
 #' \dontrun{
 #' my_flts <- flights_tidy(wef = "2023-01-01", til = "2023-04-01")
 #' }
-flights_tidy <- function(con = NULL, wef, til) {
+flights_tidy <- function(conn = NULL, wef, til) {
 
   columns <- c(
     "FLT_UID",
@@ -252,14 +252,14 @@ flights_tidy <- function(con = NULL, wef, til) {
     "RTE_LEN_3",
     NULL)
 
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_DEV")
   }
 
-  flt <- flights_tbl(con)
-  frl <- dplyr::tbl(con, dbplyr::in_schema("SWH_FCT", "DIM_FLIGHT_TYPE_RULE"))
-  aog <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO"))
-  apt <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_REL_AIRPORT_AREA"))
+  flt <- flights_tbl(conn)
+  frl <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "DIM_FLIGHT_TYPE_RULE"))
+  aog <- dplyr::tbl(conn, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO"))
+  apt <- dplyr::tbl(conn, dbplyr::in_schema("PRUDEV", "V_COVID_REL_AIRPORT_AREA"))
   # |>
   #   dplyr::select(APT_CODE = CFMU_AP_CODE,
   #          APT_NAME = PRU_DASHBOARD_AP_NAME,
@@ -307,10 +307,10 @@ flights_tidy <- function(con = NULL, wef, til) {
 #' Airline info including group affiliation
 #'
 #' # Note
-#' You need to either provide a connection `con` that has access to `PRUDEV.V_COVID_DIM_AO`
+#' You need to either provide a connection `conn` that has access to `PRUDEV.V_COVID_DIM_AO`
 #' or go with the default which uses PRU_DEV to establish a [db_connection()].
 #'
-#' @param con Optional connection to the PRU_DEV schema.
+#' @param conn Optional connection to the PRU_DEV schema.
 #'
 #' @return A data frame with airline info such as:
 #'
@@ -327,12 +327,12 @@ flights_tidy <- function(con = NULL, wef, til) {
 #' \dontrun{
 #' airlines_tidy()
 #' }
-airlines_tidy <- function(con = NULL) {
-  if (is.null(con)) {
-    con <- db_connection(schema = "PRU_DEV")
+airlines_tidy <- function(conn = NULL) {
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_DEV")
   }
 
-  arl <- dplyr::tbl(con, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO")) |>
+  arl <- dplyr::tbl(conn, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO")) |>
     dplyr::select(
       "AO_CODE",
       "AO_NAME",

@@ -4,10 +4,10 @@
 \alias{flights_tbl}
 \title{Return a reference to the Flights table}
 \usage{
-flights_tbl(con = NULL)
+flights_tbl(conn = NULL)
 }
 \arguments{
-\item{con}{Database connection or instantiate the default one.}
+\item{conn}{Database connection or instantiate the default one.}
 }
 \value{
 a \code{\link[dplyr:tbl]{dplyr::tbl()}} referencing the Oracle table for flights.
@@ -18,7 +18,7 @@ You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }
 \section{Note}{
-You need to either provide a connection \code{con} that has access to \code{SWH_FCT.FAC_FLIGHT} or
+You need to either provide a connection \code{conn} that has access to \code{SWH_FCT.FAC_FLIGHT} or
 go with the default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 

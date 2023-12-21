@@ -5,7 +5,7 @@
 \title{Provide all airspace profile segments intersecting an interval of interest}
 \usage{
 airspace_profiles_tidy(
-  con = NULL,
+  conn = NULL,
   wef,
   til,
   airspace = "FIR",
@@ -13,7 +13,7 @@ airspace_profiles_tidy(
 )
 }
 \arguments{
-\item{con}{Database connection or instantiate the default one.}
+\item{conn}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
@@ -67,7 +67,7 @@ temporally intersecting the right-opened interval \verb{[wef, til)}.
 General aviation, State, military and sensitive flight are excluded.
 }
 \section{Note}{
-You need to either provide a connection \code{con} that has access to as noted in
+You need to either provide a connection \code{conn} that has access to as noted in
 \code{\link[=airspace_profile_tbl]{airspace_profile_tbl()}} and \code{\link[=flights_tidy]{flights_tidy()}} or go with the default which uses
 PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 }

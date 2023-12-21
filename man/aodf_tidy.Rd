@@ -4,10 +4,10 @@
 \alias{aodf_tidy}
 \title{Extract a clean airport operator data flow list in an interval}
 \usage{
-aodf_tidy(con = NULL, wef, til)
+aodf_tidy(conn = NULL, wef, til)
 }
 \arguments{
-\item{con}{Database connection or instantiate the default one.}
+\item{conn}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
@@ -16,7 +16,7 @@ in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime(
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 }
 \value{
-A \link{tbl} with the following columns:
+A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns:
 \itemize{
 \item APDS_ID: the airport operator dataflow unique record id.
 \item AP_C_FLTID: flight identifier (aource Airport)
@@ -59,17 +59,19 @@ for example A21N for Airbus A321neo.
 }
 }
 \description{
-The returned \link{tbl} includes movements information in the
+The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} includes movements information in the
 interval \verb{[wef, til)}.
 \strong{NOTE}: it can only cover ONE month at a time
 }
 \section{Note}{
-You need to either provide a connection \code{con} that has access to \code{SWH_FCT.FAC_APDS_FLIGHT_IR691},
+You need to either provide a connection \code{conn} that has access to \code{SWH_FCT.FAC_APDS_FLIGHT_IR691},
 or go with the default which uses PRU_ATMAP to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 
 \examples{
 \dontrun{
 my_aodf <- aodf_tidy(wef = "2023-01-01", til = "2023-01-02")
+# ...
+DBI::dbDisconnect(my_aodf$src$con)
 }
 }

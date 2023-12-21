@@ -4,10 +4,10 @@
 \alias{airlines_tidy}
 \title{Airline info including group affiliation}
 \usage{
-airlines_tidy(con = NULL)
+airlines_tidy(conn = NULL)
 }
 \arguments{
-\item{con}{Optional connection to the PRU_DEV schema.}
+\item{conn}{Optional connection to the PRU_DEV schema.}
 }
 \value{
 A data frame with airline info such as:
@@ -25,7 +25,7 @@ transition plus Kosovo), i.e. TRUE.
 Airline info including group affiliation
 }
 \section{Note}{
-You need to either provide a connection \code{con} that has access to \code{PRUDEV.V_COVID_DIM_AO}
+You need to either provide a connection \code{conn} that has access to \code{PRUDEV.V_COVID_DIM_AO}
 or go with the default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 

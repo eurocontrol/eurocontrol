@@ -4,10 +4,10 @@
 \alias{point_profiles_tidy}
 \title{Export point profile from NM trajectories}
 \usage{
-point_profiles_tidy(con = NULL, wef, til, model = "CTFM", bbox = NULL)
+point_profiles_tidy(conn = NULL, wef, til, model = "CTFM", bbox = NULL)
 }
 \arguments{
-\item{con}{Database connection or instantiate the default one.}
+\item{conn}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
@@ -29,7 +29,7 @@ a dataframe with trajectory data
 Extract NM point profile trajectories from PRISME database
 }
 \section{Note}{
-You need to either provide a connection \code{con} that has access to as noted in
+You need to either provide a connection \code{conn} that has access to as noted in
 \code{\link[=airspace_profile_tbl]{airspace_profile_tbl()}} and \code{\link[=flights_tidy]{flights_tidy()}} or go with the default which uses
 PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 }

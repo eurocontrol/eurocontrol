@@ -4,21 +4,21 @@
 \alias{aodf_tbl}
 \title{Return a reference to the Airport Operator Data Flow table}
 \usage{
-aodf_tbl(con = NULL)
+aodf_tbl(conn = NULL)
 }
 \arguments{
-\item{con}{Database connection or instantiate the default one.}
+\item{conn}{Database connection or instantiate the default one.}
 }
 \value{
-a \link{tbl} referencing the Oracle table for airport operator data flow.
+a \code{\link[dplyr:tbl]{dplyr::tbl()}} referencing the Oracle table for airport operator data flow.
 }
 \description{
-The returned \link{tbl} is referencing the airport operator data flow table in PRISME.
+The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} is referencing the airport operator data flow table in PRISME.
 You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }
 \section{Note}{
-You need to either provide a connection \code{con} that has access to \code{SWH_FCT.FAC_APDS_FLIGHT_IR691} or
+You need to either provide a connection \code{conn} that has access to \code{SWH_FCT.FAC_APDS_FLIGHT_IR691} or
 go with the default which uses PRU_ATMAP to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 

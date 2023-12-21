@@ -26,6 +26,6 @@ Possible values for \code{schema} are \code{PRU_PROD}, \code{PRU_DEV},
 
 \examples{
 \dontrun{
-con <- db_connection()
+conn <- db_connection()
 }
 }

@@ -4,10 +4,10 @@
 \alias{flights_tidy}
 \title{Extract a clean flights list in an interval}
 \usage{
-flights_tidy(con = NULL, wef, til)
+flights_tidy(conn = NULL, wef, til)
 }
 \arguments{
-\item{con}{Database connection or instantiate the default one.}
+\item{conn}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
@@ -99,7 +99,7 @@ departing in the right-opened interval \verb{[wef, til)}.
 General aviation, State, military and sensitive flight are excluded.
 }
 \section{Note}{
-You need to either provide a connection \code{con} that has access to \code{SWH_FCT.DIM_FLIGHT_TYPE_RULE},
+You need to either provide a connection \code{conn} that has access to \code{SWH_FCT.DIM_FLIGHT_TYPE_RULE},
 \code{PRUDEV.V_COVID_DIM_AO} and \code{SWH_FCT.FAC_FLIGHT} or go with the default which uses
 PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 }

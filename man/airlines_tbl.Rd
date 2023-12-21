@@ -4,10 +4,10 @@
 \alias{airlines_tbl}
 \title{Return a reference to the Airlines table}
 \usage{
-airlines_tbl(con = NULL)
+airlines_tbl(conn = NULL)
 }
 \arguments{
-\item{con}{Database connection or instantiate the default one.}
+\item{conn}{Database connection or instantiate the default one.}
 }
 \value{
 a \code{\link[dplyr:tbl]{dplyr::tbl()}} referencing the Oracle table for airlines.
@@ -18,7 +18,7 @@ You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }
 \section{Note}{
-You need to either provide a connection \code{con}
+You need to either provide a connection \code{conn}
 that has access to \code{PRU_DEV.V_COVID_DIM_AO} or go with the
 default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 }
