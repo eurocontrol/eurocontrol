@@ -134,14 +134,21 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
   prf <- prf |>
     # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
     dplyr::inner_join(ids, by = c("SAM_ID" = "ID")) |>
-    dplyr::rename(ID = .data$SAM_ID) |>
+    # dply::select(-ID) |>
+    # dplyr::rename(
+    #   ID = .data$SAM_ID
+    # ) |>
     dplyr::select(
-      .data$ID,
+      .data$SAM_ID,
       .data$SEQ_ID,
       .data$ENTRY_TIME, .data$ENTRY_LON, .data$ENTRY_LAT, .data$ENTRY_FL,
       .data$EXIT_TIME, .data$EXIT_LON, .data$EXIT_LAT, .data$EXIT_FL,
       .data$AIRSPACE_ID, .data$AIRSPACE_TYPE, .data$MODEL_TYPE
+    ) |>
+    dplyr::rename(
+      ID = .data$SAM_ID
     )
+
   prf
 }
 
@@ -186,7 +193,7 @@ flights_airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FI
     dplyr::distinct()
 
   # reuse the same DB connection as per the flights
-  conn <- prf$src$conn
+  conn <- prf$src$con
 
   flt <- flights_tidy(conn = conn, wef = wef_before, til = til_after)
   cols <- colnames(flt)
@@ -324,8 +331,8 @@ point_profiles_tidy <- function(
     dplyr::inner_join(
       f,
       dplyr::join_by(
-        .data$SAM_ID == .data$ID,
-        .data$LOBT == .data$LOBT)) |>
+        x$SAM_ID == y$ID,
+        x$LOBT == y$LOBT)) |>
     dplyr::distinct(.data$SAM_ID)
 
     # dplyr::select(
