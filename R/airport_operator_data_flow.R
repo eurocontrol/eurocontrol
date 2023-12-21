@@ -90,6 +90,9 @@ aodf_tbl <- function(con = NULL) {
 #' my_aodf <- aodf_tidy(wef = "2023-01-01", til = "2023-01-02")
 #' }
 aodf_tidy <- function(con = NULL, wef, til) {
+  if (is.null(con)) {
+    con <- db_connection(schema = "PRU_ATMAP")
+  }
   aodf <- aodf_tbl(con)
 
   wef <- lubridate::as_datetime(wef, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
