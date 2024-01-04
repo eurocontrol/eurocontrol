@@ -303,8 +303,8 @@ point_profiles_tidy <- function(
   til_after <- (til + lubridate::dhours(after_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
 
-  wef <- wef |> format("%Y-%m-%d %H:%M:%SZ")
-  til <- til |> format("%Y-%m-%d %H:%M:%SZ")
+  wef <- wef |> format("%Y-%m-%d %H:%M:%S")
+  til <- til |> format("%Y-%m-%d %H:%M:%S")
 
   if (is.null(conn)) {
     conn <- db_connection(schema = "PRU_DEV")
@@ -312,8 +312,12 @@ point_profiles_tidy <- function(
 
   p <- point_profile_tbl(conn = conn) |>
     dplyr::filter(
+      # lobt within interval with margin
       TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
       .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss"),
+      # time over within interval
+      TO_DATE(wef, "yyyy-mm-dd hh24:mi:ss") <= .data$TIME_OVER,
+      .data$TIME_OVER < TO_DATE(til, "yyyy-mm-dd hh24:mi:ss"),
       .data$MODEL_TYPE %in% model,
       # # non null LON/LAT: it can happen when ADEP/ADES are unknown, i.e. 'ZZZZ'
       !is.na(.data$LON),
@@ -333,6 +337,7 @@ point_profiles_tidy <- function(
       dplyr::join_by(
         x$SAM_ID == y$ID,
         x$LOBT == y$LOBT)) |>
+    select(.data$SAM_ID) |>
     dplyr::distinct(.data$SAM_ID)
 
     # dplyr::select(
@@ -397,5 +402,7 @@ point_profiles_tidy <- function(
       AIRCRAFT_TYPE = .data$AIRCRAFT_TYPE_ICAO_ID,
       ICAO24    = .data$AIRCRAFT_ADDRESS
     )
-  pp
+
+  # pp
+  ids
 }
