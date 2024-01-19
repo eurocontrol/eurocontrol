@@ -27,5 +27,8 @@ Possible values for \code{schema} are \code{PRU_PROD}, \code{PRU_DEV},
 \examples{
 \dontrun{
 conn <- db_connection()
+# ... perform other API operations re-using the same connection
+# ...
+DBI::dbDisconnect(conn)
 }
 }

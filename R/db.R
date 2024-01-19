@@ -17,6 +17,9 @@
 #' @examples
 #' \dontrun{
 #' conn <- db_connection()
+#' # ... perform other API operations re-using the same connection
+#' # ...
+#' DBI::dbDisconnect(conn)
 #' }
 db_connection <- function(schema = "PRU_PROD") {
 
@@ -61,6 +64,11 @@ db_connection <- function(schema = "PRU_PROD") {
 #' @examples
 #' \dontrun{
 #' arl <- airlines_tbl()
+#' # other operations on arl, i.e. filtering,
+#' # followed by a collect() to retrieve the concrete data frame
+#' arl_filtered <- arl |> dplyr::filter(AO_ISO_CTRY_CODE == "IT") |> collect()
+#' # IMPORTANT: close the DB connection
+#' DBI::dbDisconnect(arl$src$con)
 #' }
 airlines_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
@@ -89,7 +97,12 @@ airlines_tbl <- function(conn = NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' arl <- flights_tbl()
+#' flt <- flights_tbl()
+#' # other operations on arl, i.e. filtering,
+#' # followed by a collect() to retrieve the concrete data frame
+#' flt_filtered <- flt |> dplyr::filter(AO_ISO_CTRY_CODE == "IT") |> collect()
+#' # IMPORTANT: close the DB connection
+#' DBI::dbDisconnect(flt$src$con)
 #' }
 #'
 flights_tbl <- function(conn = NULL) {

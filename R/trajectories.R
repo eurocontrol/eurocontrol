@@ -250,17 +250,16 @@ point_profile_tbl <- function(conn = NULL) {
 #' PRU_DEV to establish a [db_connection()].
 #'
 #'
-#' @inheritParams flights_tidy
+#' @inheritParams airspace_profiles_tidy
 #'
-#' @param model the model of the profile: one of
-#'              CPF, CTFM, DCT, FTFM, SCR, SRR, SUR
-#'              \[default: "CFTM"\].
 #' @param bbox (Optional) axis aligned bounding box
 #'             (xmin, ymin, xmax, ymax)
 #'
 #' @return a dataframe with trajectory data
 #'
 #' @family read/export
+#'
+#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -280,10 +279,10 @@ point_profile_tbl <- function(conn = NULL) {
 point_profiles_tidy <- function(
     conn = NULL,
     wef, til,
-    model = "CTFM",
+    profile = "CTFM",
     bbox = NULL
     ) {
-  stopifnot(model %in% c("CPF", "CTFM", "DCT", "FTFM", "SCR", "SRR", "SUR"))
+  stopifnot(profile %in% c("CPF", "CTFM", "DCT", "FTFM", "SCR", "SRR", "SUR"))
   if (!is.null(bbox)) {
     stopifnot(names(bbox) %in% c("xmin", "xmax", "ymin", "ymax"))
     stopifnot(is.numeric(bbox))
@@ -310,99 +309,181 @@ point_profiles_tidy <- function(
     conn <- db_connection(schema = "PRU_DEV")
   }
 
-  p <- point_profile_tbl(conn = conn) |>
-    dplyr::filter(
-      # lobt within interval with margin
-      TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
-      .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss"),
-      # time over within interval
-      TO_DATE(wef, "yyyy-mm-dd hh24:mi:ss") <= .data$TIME_OVER,
-      .data$TIME_OVER < TO_DATE(til, "yyyy-mm-dd hh24:mi:ss"),
-      .data$MODEL_TYPE %in% model,
-      # # non null LON/LAT: it can happen when ADEP/ADES are unknown, i.e. 'ZZZZ'
-      !is.na(.data$LON),
-      !is.na(.data$LAT),
-      !is.na(.data$TIME_OVER)
-    )
-  f <- dplyr::tbl(conn, dbplyr::in_schema("FLX", "FLIGHT")) |>
-    dplyr::filter(
-      TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
-      .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss")
+  export_model_trajectory(
+    conn,
+    wef, til,
+    profile = profile,
+    bbox = bbox
     )
 
-
-  ids <- p |>
-    dplyr::inner_join(
-      f,
-      dplyr::join_by(
-        x$SAM_ID == y$ID,
-        x$LOBT == y$LOBT)) |>
-    select(.data$SAM_ID) |>
-    dplyr::distinct(.data$SAM_ID)
-
-    # dplyr::select(
-    #   "ID",
-    #   "AIRCRAFT_ID",
-    #   "REGISTRATION",
-    #   "AIRCRAFT_TYPE_ICAO_ID",
-    #   "AIRCRAFT_OPERATOR",
-    #   "AIRCRAFT_ADDRESS",
-    #   "ADEP",
-    #   "ADES")
+}
 
 
-  prf <- point_profile_tbl(conn = conn) |>
-    dplyr::filter(
-      TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
-      .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss"),
-      .data$MODEL_TYPE %in% model,
-      # # non null LON/LAT: it can happen when ADEP/ADES are unknown, i.e. 'ZZZZ'
-      !is.na(.data$LON),
-      !is.na(.data$LAT),
-      !is.na(.data$TIME_OVER)
-    ) |>
-    dplyr::left_join(f)
+#' Export point trajectories for different flight models.
+#'
+#' @description
+#' The returned [dplyr::tbl()] includes point profiles for flights
+#' departing in the right-opened interval `[wef, til)`.
+#'
+#' # Note
+#' You need to either provide a connection `conn` that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`,
+#' `PRUDEV.V_COVID_DIM_AO` and `SWH_FCT.FAC_FLIGHT` or go with the default which uses
+#' PRU_DEV to establish a [db_connection()].
+#'
+#' @inheritParams airspace_profiles_tidy
+#' @param bbox (Optional) axis aligned bounding box (xmin, ymin, xmax, ymax)
+#' @param lobt_buffer (Optional) (portion of) hours before/after
+#'             `wef` and `til` (before, after) used to query LOBT.
+#'             This is to cater for flights crossing `wef` and `til`.
+#'             For example `c(before = 24, after = 2.25)` allows to retrieve flights with LOBT
+#'             24H before `wef` and 1H15M after `til`.
+#' @param timeover_buffer (Optional) (portion of) hours before (after) `wef` (`til`).
+#'                        This is to cater for flights crossing `wef` and `til`.
+#'                        For example `c(before = 2, after = 0.25)` allows to retrieve
+#'                        points whose TIME_OVER is 2H before `wef` and 15M after `til`.
+#'
+#' @return a `tbl`
+#'
+export_model_trajectory <- function(
+    conn,
+    wef, til, profile = "CTFM",
+    bbox = NULL,
+    lobt_buffer = c(before = 28, after = 24),
+    timeover_buffer = NULL) {
 
 
+  wef <- wef |> lubridate::as_datetime(tz = "UTC")
+  til <- til |> lubridate::as_datetime(tz = "UTC")
+  wef <- format(wef, "%Y-%m-%dT%H:%M:%SZ")
+  til <- format(til, "%Y-%m-%dT%H:%M:%SZ")
 
+  where_bbox <- ""
+  where_timeover_buffer <- ""
+  lobt_before <- 0
+  lobt_after  <- 0
+
+  stopifnot(profile %in% c("CPF", "CTFM", "DCT", "FTFM", "SCR", "SRR", "SUR"))
 
   if (!is.null(bbox)) {
-    prf <- prf |>
-      dplyr::filter(
-        bbox["xmin"] <= .data$p.LON, .data$p.LON <=bbox["xmax"],
-        bbox["ymin"] <= .data$p.LAT, .data$p.LAT <=bbox["ymax"]
-      )
+    stopifnot(names(bbox) %in% c("xmin", "xmax", "ymin", "ymax"))
+    stopifnot(is.numeric(bbox))
+
+    where_bbox <- stringr::str_glue(
+      "AND (({lon_min} <= p.LON AND p.LON <={lon_max}) AND ({lat_min} <= p.LAT AND p.LAT <={lat_max}))",
+      lon_min = bbox["xmin"],
+      lon_max = bbox["xmax"],
+      lat_min = bbox["ymin"],
+      lat_max = bbox["ymax"])
   }
 
-  pp <- prf |>
-    dplyr::select(
-      .data$SAM_ID,
-      .data$TIME_OVER,
-      .data$LON,
-      .data$LAT,
-      .data$FLIGHT_LEVEL,
-      .data$POINT_ID,
-      .data$AIR_ROUTE,
-      .data$LOBT,
-      .data$SEQ_ID,
-      .data$AIRCRAFT_ID,
-      .data$REGISTRATION,
-      .data$MODEL_TYPE,
-      .data$AIRCRAFT_TYPE_ICAO_ID,
-      .data$AIRCRAFT_OPERATOR,
-      .data$AIRCRAFT_ADDRESS,
-      .data$ADEP,
-      .data$ADES
-    ) |>
-    dplyr::rename(
-      FLIGHT_ID = .data$SAM_ID,
-      LONGITUDE = .data$LON,
-      LATITUDE  = .data$LAT,
-      CALLSIGN  = .data$AIRCRAFT_ID,
-      AIRCRAFT_TYPE = .data$AIRCRAFT_TYPE_ICAO_ID,
-      ICAO24    = .data$AIRCRAFT_ADDRESS
-    )
+  if (!is.null(lobt_buffer)) {
+    stopifnot(names(lobt_buffer) %in% c("before", "after"))
+    stopifnot(is.numeric(lobt_buffer))
 
-  # pp
-  ids
+    lobt_before <- lobt_buffer["before"]
+    lobt_after  <- lobt_buffer["after"]
+  }
+
+  if (!is.null(timeover_buffer)) {
+    stopifnot(names(timeover_buffer) %in% c("before", "after"))
+    stopifnot(is.numeric(timeover_buffer))
+
+    timeover_before <- timeover_buffer["before"]
+    timeover_after  <- timeover_buffer["after"]
+
+    where_timeover_buffer <- stringr::str_glue(
+      "AND (((SELECT LOBT_WEF FROM ARGS) - ({before} / 24) <= p.TIME_OVER) AND (p.TIME_OVER < (SELECT LOBT_TIL FROM ARGS) + ({after} / 24)))",
+      before = timeover_before,
+      after  = timeover_after)
+  }
+
+  # NOTE: to be set before you create your ROracle connection!
+  # See http://www.oralytics.com/2015/05/r-roracle-and-oracle-date-formats_27.html
+  withr::local_envvar(c("TZ" = "UTC",
+                        "ORA_SDTZ" = "UTC"))
+  withr::local_namespace("ROracle")
+  con <- conn
+  query <- "
+    WITH
+        ARGS
+        AS
+            (SELECT TO_DATE (?WEF,
+                             'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')
+                        LOBT_WEF,
+                    TO_DATE (?TIL,
+                             'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')
+                        LOBT_TIL
+               FROM DUAL),
+        -- Flight IDs for the time and BBOX interval of interest,
+        -- i.e.take all IDs where TIME_OVER and POSITION (LON, LAT) fit
+        -- WEF / TIL and BBOX respectively
+        -- NOTE: be slack with LOBT due to data hydiorincrasies
+        FIDS
+        AS (
+          SELECT DISTINCT P.SAM_ID AS FLIGHT_ID
+          FROM FSD.ALL_FT_POINT_PROFILE  P
+          JOIN FLX.FLIGHT F ON (F.ID = P.SAM_ID AND F.LOBT = P.LOBT)
+          WHERE     F.LOBT >= (SELECT LOBT_WEF FROM ARGS) - ({BEFORE} / 24)
+                AND F.LOBT <  (SELECT LOBT_TIL FROM ARGS) + ({AFTER} / 24)
+                AND P.LOBT >= (SELECT LOBT_WEF FROM ARGS) - ({BEFORE} / 24)
+                AND P.LOBT <  (SELECT LOBT_TIL FROM ARGS) + ({AFTER} / 24)
+                AND P.MODEL_TYPE = ?MODEL
+               -- it can happen when ADEP/ADES are unknown, i.e. 'ZZZ'
+               AND P.LON IS NOT NULL
+               AND P.LAT IS NOT NULL
+               AND P.TIME_OVER IS NOT NULL
+               {WHERE_BBOX}
+               AND (((SELECT LOBT_WEF FROM ARGS) <= P.TIME_OVER) AND (P.TIME_OVER < (SELECT LOBT_TIL FROM ARGS) ))
+               )
+    SELECT
+      P.SAM_ID                 AS FLIGHT_ID,
+      P.TIME_OVER,
+      P.LON                    AS LONGITUDE,
+      P.LAT                    AS LATITUDE,
+      P.FLIGHT_LEVEL,
+      P.POINT_ID,
+      P.AIR_ROUTE,
+      P.LOBT,
+      P.SEQ_ID,
+      F.AIRCRAFT_ID            AS CALLSIGN,
+      F.REGISTRATION,
+      P.MODEL_TYPE,
+      F.AIRCRAFT_TYPE_ICAO_ID  AS AIRCRAFT_TYPE,
+      F.AIRCRAFT_OPERATOR,
+      F.AIRCRAFT_ADDRESS       AS ICAO24,
+      F.ADEP,
+      F.ADES
+    FROM FSD.ALL_FT_POINT_PROFILE  P
+         JOIN FLX.FLIGHT F ON (F.ID = P.SAM_ID AND F.LOBT = P.LOBT)
+   WHERE     F.LOBT >= (SELECT LOBT_WEF FROM ARGS) - ({BEFORE} / 24)
+         AND F.LOBT <  (SELECT LOBT_TIL FROM ARGS) + ({AFTER} / 24)
+         AND P.LOBT >= (SELECT LOBT_WEF FROM ARGS) - ({BEFORE} / 24)
+         AND P.LOBT <  (SELECT LOBT_TIL FROM ARGS) + ({AFTER} / 24)
+         AND P.MODEL_TYPE = ?MODEL
+         -- it can happen when ADEP/ADES are unknown, 'ZZZ'
+         AND P.LON IS NOT NULL
+         AND P.LAT IS NOT NULL
+         AND P.TIME_OVER IS NOT NULL
+        {WHERE_BBOX}
+        {WHERE_TIMEOVER_BUFFER}
+  "
+
+  query <- stringr::str_glue(query,
+                             WHERE_BBOX   = where_bbox,
+                             WHERE_TIMEOVER_BUFFER = where_timeover_buffer,
+                             BEFORE       = lobt_before,
+                             AFTER        = lobt_after)
+  query <- DBI::sqlInterpolate(
+    con, query,
+    WEF = wef, TIL = til,
+    MODEL = profile)
+
+  fltq <- dplyr::tbl(con, dplyr::sql(query))
+  pnts <- fltq |>
+    dplyr::mutate(
+      POINT_ID  = dplyr::if_else(is.na(.data$POINT_ID),  "NO_POINT", .data$POINT_ID),
+      AIR_ROUTE = dplyr::if_else(is.na(.data$AIR_ROUTE), "NO_ROUTE", .data$AIR_ROUTE))
+
+  pnts
 }
+

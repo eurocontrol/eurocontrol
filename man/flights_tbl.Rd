@@ -24,7 +24,12 @@ go with the default which uses PRU_DEV to establish a \code{\link[=db_connection
 
 \examples{
 \dontrun{
-arl <- flights_tbl()
+flt <- flights_tbl()
+# other operations on arl, i.e. filtering,
+# followed by a collect() to retrieve the concrete data frame
+flt_filtered <- flt |> dplyr::filter(AO_ISO_CTRY_CODE == "IT") |> collect()
+# IMPORTANT: close the DB connection
+DBI::dbDisconnect(flt$src$con)
 }
 
 }

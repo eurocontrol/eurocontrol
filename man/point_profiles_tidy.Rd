@@ -4,7 +4,7 @@
 \alias{point_profiles_tidy}
 \title{Export point profile from NM trajectories}
 \usage{
-point_profiles_tidy(conn = NULL, wef, til, model = "CTFM", bbox = NULL)
+point_profiles_tidy(conn = NULL, wef, til, profile = "CTFM", bbox = NULL)
 }
 \arguments{
 \item{conn}{Database connection or instantiate the default one.}
@@ -15,9 +15,18 @@ in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime(
 \item{til}{un\strong{TIL}l date (excluded) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
-\item{model}{the model of the profile: one of
-CPF, CTFM, DCT, FTFM, SCR, SRR, SUR
-[default: "CFTM"].}
+\item{profile}{the \href{https://ansperformance.eu/definition/flight-models/}{model of the trajectory}
+profile (default: 'CTFM'), one of:
+\itemize{
+\item 'FTFM', Filed Tactical Flight Model
+\item 'RTFM', Regulated Tactical Flight Model
+\item 'CTFM', Current Tactical Flight Model
+\item 'CPF', Correlated Position reports for a Flight
+\item 'DCT', Direct route
+\item 'SCR', Shortest Constrained Route
+\item 'SRR', Shortest RAD restrictions applied Route
+\item 'SUR', Shortest Unconstrained Route
+}}
 
 \item{bbox}{(Optional) axis aligned bounding box
 (xmin, ymin, xmax, ymax)}
