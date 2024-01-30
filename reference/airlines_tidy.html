@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,9 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -48,12 +51,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">airlines_tidy</span><span class="op">(</span>con <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">airlines_tidy</span><span class="op">(</span>conn <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>con</dt>
+    <dl><dt>conn</dt>
 <dd><p>Optional connection to the PRU_DEV schema.</p></dd>
 
 </dl></div>
@@ -61,17 +64,17 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A data frame with airline info such as:</p><ul><li><p><code>AO_CODE</code>: the the <a href="https://en.wikipedia.org/wiki/List_of_airline_codes" class="external-link">ICAO Airline Designator</a>, i.e. OAL</p></li>
-<li><p><code>AO_NAME</code>: the airline's name, i.e. Olympic</p></li>
-<li><p><code>AO_GRP_CODE</code>: the airline's affiliation group code, i.e.</p></li>
-<li><p><code>AO_GRP_NAME</code>: the airline's affiliation group, i.e. AEGEAN Group</p></li>
-<li><p><code>AO_ISO_CTRY_CODE</code>: the ISO2C code of the airline's country, i.e. GR,</p></li>
-<li><p><code>EU</code>: whether the airlines is in a EUROCONTROL's Member State (full, comprehensive or
-transition plus Kosovo), i.e. TRUE.</p></li>
+<p>A <code><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">dplyr::tbl()</a></code> with the following columns:</p><ul><li><p><code>AO_CODE</code>: the the <a href="https://en.wikipedia.org/wiki/List_of_airline_codes" class="external-link">ICAO Airline Designator</a>, i.e. 'OAL'</p></li>
+<li><p><code>AO_NAME</code>: the airline's name, i.e. 'Olympic'</p></li>
+<li><p><code>AO_GRP_CODE</code>: the airline's affiliation group code, i.e. 'AEE_GRP'</p></li>
+<li><p><code>AO_GRP_NAME</code>: the airline's affiliation group, i.e. 'AEGEAN Group'</p></li>
+<li><p><code>AO_ISO_CTRY_CODE</code>: the ISO2C code of the airline's country, i.e. 'GR'</p></li>
+<li><p><code>EU</code>: (a character) whether the airlines is in a EUROCONTROL's Member State
+(full, comprehensive or transition plus Kosovo), i.e. 'TRUE'</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>You need to either provide a connection <code>con</code> that has access to <code>PRUDEV.V_COVID_DIM_AO</code>
+    <p>You need to either provide a connection <code>conn</code> that has access to <code>PRUDEV.V_COVID_DIM_AO</code>
 or go with the default which uses PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></code>.</p>
     </div>
 

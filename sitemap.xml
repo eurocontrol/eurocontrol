@@ -16,6 +16,9 @@
     <loc>https://eurocontrol.github.io/eurocontrol/index.html</loc>
   </url>
   <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/news/index.html</loc>
+  </url>
+  <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/aircraft_model.html</loc>
   </url>
   <url>
@@ -32,6 +35,12 @@
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/airspace_profiles_tidy.html</loc>
+  </url>
+  <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/aodf_tbl.html</loc>
+  </url>
+  <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/aodf_tidy.html</loc>
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/db_connection.html</loc>
@@ -53,6 +62,12 @@
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/member_state.html</loc>
+  </url>
+  <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/point_profile_tbl.html</loc>
+  </url>
+  <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/point_profiles_tidy.html</loc>
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/tidyeval.html</loc>

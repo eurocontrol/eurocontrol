@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,9 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -105,6 +108,11 @@
         <dd>Provide all airspace profile segments intersecting an interval of interest</dd>
       </dl><dl><dt>
           
+          <code><a href="aodf_tidy.html">aodf_tidy()</a></code> 
+        </dt>
+        <dd>Extract a clean airport operator data flow list in an interval</dd>
+      </dl><dl><dt>
+          
           <code><a href="flights_airspace_profiles_tidy.html">flights_airspace_profiles_tidy()</a></code> 
         </dt>
         <dd>Extract the flights list for the airspace profile segments intersecting an interval of interest</dd>
@@ -113,6 +121,11 @@
           <code><a href="flights_tidy.html">flights_tidy()</a></code> 
         </dt>
         <dd>Extract a clean flights list in an interval</dd>
+      </dl><dl><dt>
+          
+          <code><a href="point_profiles_tidy.html">point_profiles_tidy()</a></code> 
+        </dt>
+        <dd>Export point profile from NM trajectories</dd>
       </dl></div><div class="section level2">
       
       <h3 id="tables">Tables<a class="anchor" aria-label="anchor" href="#tables"></a></h3>
@@ -131,14 +144,24 @@
         <dd>Return a reference to the Airlines table</dd>
       </dl><dl><dt>
           
+          <code><a href="airspace_profile_tbl.html">airspace_profile_tbl()</a></code> 
+        </dt>
+        <dd>Return a reference to the Airspace Profile table</dd>
+      </dl><dl><dt>
+          
+          <code><a href="aodf_tbl.html">aodf_tbl()</a></code> 
+        </dt>
+        <dd>Return a reference to the Airport Operator Data Flow table</dd>
+      </dl><dl><dt>
+          
           <code><a href="flights_tbl.html">flights_tbl()</a></code> 
         </dt>
         <dd>Return a reference to the Flights table</dd>
       </dl><dl><dt>
           
-          <code><a href="airspace_profile_tbl.html">airspace_profile_tbl()</a></code> 
+          <code><a href="point_profile_tbl.html">point_profile_tbl()</a></code> 
         </dt>
-        <dd>Return a reference to the Airspace Profile table</dd>
+        <dd>Return a reference to the Point Profile table</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
