@@ -343,6 +343,7 @@ point_profiles_tidy <- function(
 #'                        points whose TIME_OVER is 2H before `wef` and 15M after `til`.
 #'
 #' @return a `tbl`
+#' @noRd
 #'
 export_model_trajectory <- function(
     conn,
