@@ -242,7 +242,9 @@ point_profile_tbl <- function(conn = NULL) {
 
 #' Export point profile from NM trajectories
 #'
-#' Extract NM point profile trajectories from PRISME database
+#' Extract NM point profile trajectories from PRISME database.
+#' When a bbox is defined, we return only the (full) point profiles for
+#' the flights flying thru the region.
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to as noted in
@@ -320,6 +322,11 @@ point_profiles_tidy <- function(
 
 
 #' Export point trajectories for different flight models.
+#'
+#' Export the full trajectory.
+#' When a bbox is defined we return only the trajectories of the
+#' the flights flying thru the region.
+#'
 #'
 #' @description
 #' The returned [dplyr::tbl()] includes point profiles for flights
@@ -465,7 +472,6 @@ export_model_trajectory <- function(
          AND P.LON IS NOT NULL
          AND P.LAT IS NOT NULL
          AND P.TIME_OVER IS NOT NULL
-        {WHERE_BBOX}
         {WHERE_TIMEOVER_BUFFER}
   "
 
