@@ -35,7 +35,9 @@ profile (default: 'CTFM'), one of:
 a dataframe with trajectory data
 }
 \description{
-Extract NM point profile trajectories from PRISME database
+Extract NM point profile trajectories from PRISME database.
+When a bbox is defined, we return only the (full) point profiles for
+the flights flying thru the region.
 }
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to as noted in
