@@ -136,6 +136,8 @@ flights_tbl <- function(conn = NULL) {
 #'            in a format recognized by [lubridate::as_datetime()]
 #' @param til un**TIL**l date (excluded) at Zulu time
 #'            in a format recognized by [lubridate::as_datetime()]
+#' @param icao_flt_types the types of flights as defined by ICAO_FLT_TYPE 
+#'            as defined below [array()].
 #'
 #' @return A [dplyr::tbl()] with the following columns:
 #'
@@ -214,7 +216,7 @@ flights_tbl <- function(conn = NULL) {
 #' \dontrun{
 #' my_flts <- flights_tidy(wef = "2023-01-01", til = "2023-04-01")
 #' }
-flights_tidy <- function(conn = NULL, wef, til) {
+flights_tidy <- function(conn = NULL, wef, til, icao_flt_types = c('S', 'N')) {
 
   columns <- c(
     "FLT_UID",
@@ -287,7 +289,7 @@ flights_tidy <- function(conn = NULL, wef, til) {
       TO_DATE(wef, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
       .data$LOBT < TO_DATE(til, "yyyy-mm-dd hh24:mi:ss"),
       # only commercial flights (scheduled and non-scheduled), i.e. General Aviation, Military and Other excluded
-      .data$ICAO_FLT_TYPE %in% c('S', 'N'),
+      .data$ICAO_FLT_TYPE %in% icao_flt_types,
       # make sure military flights are excluded
       .data$SK_FLT_TYPE_RULE_ID != 1L,
       # exclude sensitive flights
