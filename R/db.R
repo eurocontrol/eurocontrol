@@ -137,7 +137,7 @@ flights_tbl <- function(conn = NULL) {
 #' @param til un**TIL**l date (excluded) at Zulu time
 #'            in a format recognized by [lubridate::as_datetime()]
 #' @param icao_flt_types the types of flights as defined by ICAO_FLT_TYPE 
-#'            as defined below [array()].
+#'            as defined below (military is always excluded) [c('S', 'N')].
 #'
 #' @return A [dplyr::tbl()] with the following columns:
 #'
@@ -162,7 +162,7 @@ flights_tbl <- function(conn = NULL) {
 #'   flight type. Possible values (but G, M aand X shouldn't appear):
 #'   - `S` for scheduled air service
 #'   - `N` for non-scheduled air service
-#'   - `G` for general aviation (note: filtered out)
+#'   - `G` for general aviation 
 #'   - `M` for military (note: filtered out)
 #'   - `X` for other than the preceding categories
 #'
