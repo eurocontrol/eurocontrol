@@ -106,6 +106,7 @@ aodf_tidy <- function(conn = NULL, wef, til) {
     ) |>
     dplyr::select(
       "APDS_ID",
+      "IM_SAMAD_ID",
       "AP_C_FLTID",
       "AP_C_FLTRUL",
       "AP_C_REG",
