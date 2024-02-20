@@ -19,6 +19,7 @@ in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime(
 A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns:
 \itemize{
 \item APDS_ID: the airport operator dataflow unique record id.
+\item IM_SAMAD_ID: the SAMAD ID.
 \item AP_C_FLTID: flight identifier (aource Airport)
 \item AP_C_FLTRUL: which sets of regulations the flight is operated under.
 Possible values are:

@@ -49,6 +49,7 @@ aodf_tbl <- function(conn = NULL) {
 #' @return A [dplyr::tbl()] with the following columns:
 #'
 #'  * APDS_ID: the airport operator dataflow unique record id.
+#'  * IM_SAMAD_ID: the SAMAD ID.
 #'  * AP_C_FLTID: flight identifier (aource Airport)
 #'  * AP_C_FLTRUL: which sets of regulations the flight is operated under.
 #'   Possible values are:
