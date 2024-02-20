@@ -4,7 +4,7 @@
 \alias{flights_tidy}
 \title{Extract a clean flights list in an interval}
 \usage{
-flights_tidy(conn = NULL, wef, til)
+flights_tidy(conn = NULL, wef, til, icao_flt_types = c("S", "N"))
 }
 \arguments{
 \item{conn}{Database connection or instantiate the default one.}
@@ -14,6 +14,9 @@ in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime(
 
 \item{til}{un\strong{TIL}l date (excluded) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+
+\item{icao_flt_types}{the types of flights as defined by ICAO_FLT_TYPE
+as defined below (military is always excluded), default \code{c('S', 'N')}.}
 }
 \value{
 A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns:
@@ -41,7 +44,7 @@ flight type. Possible values (but G, M aand X shouldn't appear):
 \itemize{
 \item \code{S} for scheduled air service
 \item \code{N} for non-scheduled air service
-\item \code{G} for general aviation (note: filtered out)
+\item \code{G} for general aviation
 \item \code{M} for military (note: filtered out)
 \item \code{X} for other than the preceding categories
 }
