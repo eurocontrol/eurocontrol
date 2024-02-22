@@ -17,6 +17,9 @@
 #' @examples
 #' \dontrun{
 #' aodf <- aodf_tbl()
+#' # ...
+#' # IMPORTANT: close the DB connection when done with `aodf`
+#' DBI::dbDisconnect(aodf$src$con)
 #' }
 #'
 aodf_tbl <- function(conn = NULL) {
