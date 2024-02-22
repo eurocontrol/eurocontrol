@@ -107,7 +107,7 @@ aodf_tidy <- function(conn = NULL, wef, til) {
     ) |>
     dplyr::select(
       "APDS_ID",
-      "IM_SAMAD_ID",
+      "ID" = "IM_SAMAD_ID",
       "AP_C_FLTID",
       "AP_C_FLTRUL",
       "AP_C_REG",
@@ -127,8 +127,7 @@ aodf_tidy <- function(conn = NULL, wef, til) {
       -dplyr::ends_with("_IN_FRONT"),
       -dplyr::ends_with("_CTFM"),
       -dplyr::ends_with("_CPF"),
-      -dplyr::contains("TRANSIT")) |>
-    dplyr::rename(ID = "IM_SAMAD_ID")
+      -dplyr::contains("TRANSIT"))
 
   return(aa)
 }
