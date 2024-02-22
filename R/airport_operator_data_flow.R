@@ -49,6 +49,7 @@ aodf_tbl <- function(conn = NULL) {
 #' @return A [dplyr::tbl()] with the following columns:
 #'
 #'  * APDS_ID: the airport operator dataflow unique record id.
+#'  * ID: the so called `SAM ID`, used internally by PRISME
 #'  * AP_C_FLTID: flight identifier (aource Airport)
 #'  * AP_C_FLTRUL: which sets of regulations the flight is operated under.
 #'   Possible values are:
@@ -106,6 +107,7 @@ aodf_tidy <- function(conn = NULL, wef, til) {
     ) |>
     dplyr::select(
       "APDS_ID",
+      "ID" = "IM_SAMAD_ID",
       "AP_C_FLTID",
       "AP_C_FLTRUL",
       "AP_C_REG",
@@ -126,6 +128,7 @@ aodf_tidy <- function(conn = NULL, wef, til) {
       -dplyr::ends_with("_CTFM"),
       -dplyr::ends_with("_CPF"),
       -dplyr::contains("TRANSIT"))
+
   return(aa)
 }
 
