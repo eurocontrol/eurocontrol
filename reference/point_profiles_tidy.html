@@ -57,7 +57,13 @@ the flights flying thru the region.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>conn <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">wef</span>, <span class="va">til</span>, profile <span class="op">=</span> <span class="st">"CTFM"</span>, bbox <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">point_profiles_tidy</span><span class="op">(</span></span>
+<span>  conn <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">wef</span>,</span>
+<span>  til <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/now.html" class="external-link">today</a></span><span class="op">(</span>tzone <span class="op">=</span> <span class="st">"UTC"</span><span class="op">)</span>,</span>
+<span>  profile <span class="op">=</span> <span class="st">"CTFM"</span>,</span>
+<span>  bbox <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -98,8 +104,25 @@ profile (default: 'CTFM'), one of:</p><ul><li><p>'FTFM', Filed Tactical Flight M
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>a dataframe with trajectory data</p>
-    </div>
+<p>a dataframe representing a flight trajectory with the
+following columns:</p><ul><li><p>FLIGHT_ID: a unique identifier for the flight</p></li>
+<li><p>TIME_OVER: the time over llon/lat</p></li>
+<li><p>LONGITUDE: the longitude</p></li>
+<li><p>LATITUDE: the latitude</p></li>
+<li><p>FLIGHT_LEVEL: the <a href="https://ansperformance.eu/acronym/fl/" class="external-link">flight level</a></p></li>
+<li><p>POINT_ID: the published point ID ('NO_POINT' otherwise)</p></li>
+<li><p>AIR_ROUTE: the air rout name ('DCT' otherwise)</p></li>
+<li><p>LOBT: the <a href="(https://ansperformance.eu/acronym/lobt/)" class="external-link">last off-block time</a></p></li>
+<li><p>SEQ_ID: the progressive sequence number in the trajectory points</p></li>
+<li><p>CALLSIGN: the <a href="https://w.wiki/9XN6" class="external-link">callsign</a> of the flight</p></li>
+<li><p>REGISTRATION: the aircraft <a href="https://w.wiki/9XN7" class="external-link">registration</a></p></li>
+<li><p>MODEL_TYPE: the trajectory model as per <code>profile</code> input parameter</p></li>
+<li><p>AIRCRAFT_TYPE: the ICAO aircraft type</p></li>
+<li><p>AIRCRAFT_OPERATOR: the flight operator</p></li>
+<li><p>ICAO24: the ICAO 24-bit address of the aircraft</p></li>
+<li><p>ADEP: the Aerodrom of Departure</p></li>
+<li><p>ADES: the aerodrome of Destination</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p>You need to either provide a connection <code>conn</code> that has access to as noted in
@@ -110,18 +133,28 @@ PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></c
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="co"># export 1 day worth of NM (planned) trajectories</span></span></span>
-<span class="r-in"><span><span class="fu">export_model_trajectory</span><span class="op">(</span><span class="st">"2019-07-14"</span>, <span class="st">"2019-07-15"</span>, model <span class="op">=</span> <span class="st">"FTFM"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># export 1 day of NM (planned) trajectories</span></span></span>
+<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14"</span>, til <span class="op">=</span> <span class="st">"2019-07-15"</span>, profile <span class="op">=</span> <span class="st">"FTFM"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># export 2 hours of NM (flown) trajectories</span></span></span>
-<span class="r-in"><span><span class="fu">export_model_trajectory</span><span class="op">(</span><span class="st">"2019-07-14 22:00"</span>, <span class="st">"2019-07-15"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14 22:00"</span>, til <span class="op">=</span> <span class="st">"2019-07-15"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># export 1 day of NM (flown) trajectories</span></span></span>
-<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span><span class="st">"2019-07-14"</span>, <span class="st">"2019-07-15"</span>, lobt_buffer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>before <span class="op">=</span> <span class="fl">24</span>, after <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14"</span>, til <span class="op">=</span> <span class="st">"2019-07-15"</span>, profile <span class="op">=</span> <span class="st">"CTFM"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># export all CTFM trajectories within a bounding box 40 NM around EDDF</span></span></span>
 <span class="r-in"><span><span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">7.536746</span>, xmax <span class="op">=</span> <span class="fl">9.604390</span>, ymin <span class="op">=</span> <span class="fl">49.36732</span>, ymax <span class="op">=</span> <span class="fl">50.69920</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span><span class="st">"2019-01-01 00:00"</span>, <span class="st">"2019-01-02 00:00"</span>, bbox <span class="op">=</span> <span class="va">bb</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-01-01 00:00"</span>, til <span class="op">=</span> <span class="st">"2019-01-02 00:00"</span>, bbox <span class="op">=</span> <span class="va">bb</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># if you re-use DB connections</span></span></span>
+<span class="r-in"><span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">eurocontrol</span><span class="fu">::</span><span class="fu"><a href="db_connection.html">db_connection</a></span><span class="op">(</span><span class="st">"PRU_DEV"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>conn <span class="op">=</span> <span class="va">conn</span>, <span class="st">"2020-01-01"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># ... do something else with conn</span></span></span>
+<span class="r-in"><span><span class="co"># ...</span></span></span>
+<span class="r-in"><span><span class="co"># then manually close the connection to the DB</span></span></span>
+<span class="r-in"><span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
