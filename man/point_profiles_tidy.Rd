@@ -4,7 +4,13 @@
 \alias{point_profiles_tidy}
 \title{Export point profile from NM trajectories}
 \usage{
-point_profiles_tidy(conn = NULL, wef, til, profile = "CTFM", bbox = NULL)
+point_profiles_tidy(
+  conn = NULL,
+  wef,
+  til = lubridate::today(tzone = "UTC"),
+  profile = "CTFM",
+  bbox = NULL
+)
 }
 \arguments{
 \item{conn}{Database connection or instantiate the default one.}
@@ -32,7 +38,27 @@ profile (default: 'CTFM'), one of:
 (xmin, ymin, xmax, ymax)}
 }
 \value{
-a dataframe with trajectory data
+a dataframe representing a flight trajectory with the
+following columns:
+\itemize{
+\item FLIGHT_ID: a unique identifier for the flight
+\item TIME_OVER: the time over llon/lat
+\item LONGITUDE: the longitude
+\item LATITUDE: the latitude
+\item FLIGHT_LEVEL: the \href{https://ansperformance.eu/acronym/fl/}{flight level}
+\item POINT_ID: the published point ID ('NO_POINT' otherwise)
+\item AIR_ROUTE: the air rout name ('DCT' otherwise)
+\item LOBT: the \href{(https://ansperformance.eu/acronym/lobt/)}{last off-block time}
+\item SEQ_ID: the progressive sequence number in the trajectory points
+\item CALLSIGN: the \href{https://w.wiki/9XN6}{callsign} of the flight
+\item REGISTRATION: the aircraft \href{https://w.wiki/9XN7}{registration}
+\item MODEL_TYPE: the trajectory model as per \code{profile} input parameter
+\item AIRCRAFT_TYPE: the ICAO aircraft type
+\item AIRCRAFT_OPERATOR: the flight operator
+\item ICAO24: the ICAO 24-bit address of the aircraft
+\item ADEP: the Aerodrom of Departure
+\item ADES: the aerodrome of Destination
+}
 }
 \description{
 Extract NM point profile trajectories from PRISME database.
@@ -47,18 +73,28 @@ PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 
 \examples{
 \dontrun{
-# export 1 day worth of NM (planned) trajectories
-export_model_trajectory("2019-07-14", "2019-07-15", model = "FTFM")
+# export 1 day of NM (planned) trajectories
+point_profiles_tidy(wef = "2019-07-14", til = "2019-07-15", profile = "FTFM")
 
 # export 2 hours of NM (flown) trajectories
-export_model_trajectory("2019-07-14 22:00", "2019-07-15")
+point_profiles_tidy(wef = "2019-07-14 22:00", til = "2019-07-15")
 
 # export 1 day of NM (flown) trajectories
-point_profiles_tidy("2019-07-14", "2019-07-15", lobt_buffer = c(before = 24, after = 1.25))
+point_profiles_tidy(wef = "2019-07-14", til = "2019-07-15", profile = "CTFM")
 
 # export all CTFM trajectories within a bounding box 40 NM around EDDF
 bb <- c(xmin = 7.536746, xmax = 9.604390, ymin = 49.36732, ymax = 50.69920)
-point_profiles_tidy("2019-01-01 00:00", "2019-01-02 00:00", bbox = bb)
+point_profiles_tidy(wef = "2019-01-01 00:00", til = "2019-01-02 00:00", bbox = bb)
+
+
+# if you re-use DB connections
+conn <- eurocontrol::db_connection("PRU_DEV")
+point_profiles_tidy(conn = conn, "2020-01-01")
+
+# ... do something else with conn
+# ...
+# then manually close the connection to the DB
+DBI::dbDisconnect(conn)
 }
 }
 \concept{read/export}

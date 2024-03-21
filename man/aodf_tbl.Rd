@@ -25,6 +25,9 @@ go with the default which uses PRU_ATMAP to establish a \code{\link[=db_connecti
 \examples{
 \dontrun{
 aodf <- aodf_tbl()
+# ...
+# IMPORTANT: close the DB connection when done with `aodf`
+DBI::dbDisconnect(aodf$src$con)
 }
 
 }

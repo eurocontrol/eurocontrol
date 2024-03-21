@@ -257,7 +257,26 @@ point_profile_tbl <- function(conn = NULL) {
 #' @param bbox (Optional) axis aligned bounding box
 #'             (xmin, ymin, xmax, ymax)
 #'
-#' @return a dataframe with trajectory data
+#' @return a dataframe representing a flight trajectory with the
+#'         following columns:
+#'
+#' * FLIGHT_ID: a unique identifier for the flight
+#' * TIME_OVER: the time over llon/lat
+#' * LONGITUDE: the longitude
+#' * LATITUDE: the latitude
+#' * FLIGHT_LEVEL: the [flight level](https://ansperformance.eu/acronym/fl/)
+#' * POINT_ID: the published point ID ('NO_POINT' otherwise)
+#' * AIR_ROUTE: the air rout name ('DCT' otherwise)
+#' * LOBT: the [last off-block time]((https://ansperformance.eu/acronym/lobt/))
+#' * SEQ_ID: the progressive sequence number in the trajectory points
+#' * CALLSIGN: the [callsign](https://w.wiki/9XN6) of the flight
+#' * REGISTRATION: the aircraft [registration](https://w.wiki/9XN7)
+#' * MODEL_TYPE: the trajectory model as per `profile` input parameter
+#' * AIRCRAFT_TYPE: the ICAO aircraft type
+#' * AIRCRAFT_OPERATOR: the flight operator
+#' * ICAO24: the ICAO 24-bit address of the aircraft
+#' * ADEP: the Aerodrom of Departure
+#' * ADES: the aerodrome of Destination
 #'
 #' @family read/export
 #'
@@ -265,22 +284,33 @@ point_profile_tbl <- function(conn = NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' # export 1 day worth of NM (planned) trajectories
-#' export_model_trajectory("2019-07-14", "2019-07-15", model = "FTFM")
+#' # export 1 day of NM (planned) trajectories
+#' point_profiles_tidy(wef = "2019-07-14", til = "2019-07-15", profile = "FTFM")
 #'
 #' # export 2 hours of NM (flown) trajectories
-#' export_model_trajectory("2019-07-14 22:00", "2019-07-15")
+#' point_profiles_tidy(wef = "2019-07-14 22:00", til = "2019-07-15")
 #'
 #' # export 1 day of NM (flown) trajectories
-#' point_profiles_tidy("2019-07-14", "2019-07-15", lobt_buffer = c(before = 24, after = 1.25))
+#' point_profiles_tidy(wef = "2019-07-14", til = "2019-07-15", profile = "CTFM")
 #'
 #' # export all CTFM trajectories within a bounding box 40 NM around EDDF
 #' bb <- c(xmin = 7.536746, xmax = 9.604390, ymin = 49.36732, ymax = 50.69920)
-#' point_profiles_tidy("2019-01-01 00:00", "2019-01-02 00:00", bbox = bb)
+#' point_profiles_tidy(wef = "2019-01-01 00:00", til = "2019-01-02 00:00", bbox = bb)
+#'
+#'
+#' # if you re-use DB connections
+#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' point_profiles_tidy(conn = conn, "2020-01-01")
+#'
+#' # ... do something else with conn
+#' # ...
+#' # then manually close the connection to the DB
+#' DBI::dbDisconnect(conn)
 #' }
 point_profiles_tidy <- function(
     conn = NULL,
-    wef, til,
+    wef,
+    til = lubridate::today(tzone = "UTC"),
     profile = "CTFM",
     bbox = NULL
     ) {
