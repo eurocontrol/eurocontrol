@@ -24,6 +24,19 @@ go with the default which uses PRU_DEV to establish a \code{\link[=db_connection
 
 \examples{
 \dontrun{
-prf <- airspace_profile_tbl()
+pp <- airspace_profile_tbl()
+# other operations on pp, i.e. filtering,
+# followed by a collect() to retrieve the concrete data frame
+# IMPORTANT: close the DB connection when done
+DBI::dbDisconnect(pp$src$con)
+
+# if you use a DB connection for many different APIs
+conn <- eurocontrol::db_connection("PRU_DEV")
+pp <- airspace_profile_tbl(conn = conn)
+
+# ... do something else with conn
+# ...
+# then manually close the connection to the DB
+DBI::dbDisconnect(conn)
 }
 }

@@ -25,6 +25,15 @@ PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 
 \examples{
 \dontrun{
-prf <- point_profile_tbl()
+pt <- point_profile_tbl()
+
+# if you re-use DB connections
+conn <- eurocontrol::db_connection("PRU_DEV")
+pt <- point_profile_tbl(conn = conn)
+
+# ... do something else with conn
+# ...
+# then manually close the connection to the DB
+DBI::dbDisconnect(conn)
 }
 }

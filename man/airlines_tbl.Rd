@@ -28,8 +28,14 @@ default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connect
 arl <- airlines_tbl()
 # other operations on arl, i.e. filtering,
 # followed by a collect() to retrieve the concrete data frame
-arl_filtered <- arl |> dplyr::filter(AO_ISO_CTRY_CODE == "IT") |> collect()
-# IMPORTANT: close the DB connection
+arl_filtered <- arl |>
+   dplyr::filter(AO_ISO_CTRY_CODE == "IT") |>
+   collect()
+
+# NOTE: you can reuse the connection for other API calls
+arl$src$con
+
+# IMPORTANT: at the end close the DB connection
 DBI::dbDisconnect(arl$src$con)
 }
 }

@@ -16,7 +16,20 @@
 #'
 #' @examples
 #' \dontrun{
-#' prf <- airspace_profile_tbl()
+#' pp <- airspace_profile_tbl()
+#' # other operations on pp, i.e. filtering,
+#' # followed by a collect() to retrieve the concrete data frame
+#' # IMPORTANT: close the DB connection when done
+#' DBI::dbDisconnect(pp$src$con)
+#'
+#' # if you use a DB connection for many different APIs
+#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' pp <- airspace_profile_tbl(conn = conn)
+#'
+#' # ... do something else with conn
+#' # ...
+#' # then manually close the connection to the DB
+#' DBI::dbDisconnect(conn)
 #' }
 airspace_profile_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
@@ -81,7 +94,18 @@ airspace_profile_tbl <- function(conn = NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' asp_profs <- airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+#' ps <- airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+#' # IMPORTANT: always close the DB connection when done
+#' DBI::dbDisconnect(ps$src$con)
+#'
+#' # if you re-use DB connections
+#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' ps <- airspace_profiles_tidy(conn = conn)
+#'
+#' # ... do something else with conn
+#' # ...
+#' # then manually close the connection to the DB
+#' DBI::dbDisconnect(conn)
 #' }
 airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
   # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
@@ -174,7 +198,18 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
 #'
 #' @examples
 #' \dontrun{
-#' asp_profs <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+#' aa <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+#'
+#' # if you re-use DB connections
+#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' flights_airspace_profiles_tidy(conn = conn,
+#'                                wef = "2023-01-01",
+#'                                til = "2023-04-01")
+#'
+#' # ... do something else with conn
+#' # ...
+#' # then manually close the connection to the DB
+#' DBI::dbDisconnect(conn)
 #' }
 flights_airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
   # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
@@ -229,7 +264,16 @@ flights_airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FI
 #'
 #' @examples
 #' \dontrun{
-#' prf <- point_profile_tbl()
+#' pt <- point_profile_tbl()
+#'
+#' # if you re-use DB connections
+#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' pt <- point_profile_tbl(conn = conn)
+#'
+#' # ... do something else with conn
+#' # ...
+#' # then manually close the connection to the DB
+#' DBI::dbDisconnect(conn)
 #' }
 point_profile_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
@@ -285,22 +329,31 @@ point_profile_tbl <- function(conn = NULL) {
 #' @examples
 #' \dontrun{
 #' # export 1 day of NM (planned) trajectories
-#' point_profiles_tidy(wef = "2019-07-14", til = "2019-07-15", profile = "FTFM")
+#' pf1 <- point_profiles_tidy(wef = "2019-07-14",
+#'                            til = "2019-07-15",
+#'                            profile = "FTFM")
 #'
 #' # export 2 hours of NM (flown) trajectories
-#' point_profiles_tidy(wef = "2019-07-14 22:00", til = "2019-07-15")
+#' pf2 <- point_profiles_tidy(wef = "2019-07-14 22:00",
+#'                            til = "2019-07-15")
 #'
 #' # export 1 day of NM (flown) trajectories
-#' point_profiles_tidy(wef = "2019-07-14", til = "2019-07-15", profile = "CTFM")
+#' pf3 <- point_profiles_tidy(wef = "2019-07-14",
+#'                            til = "2019-07-15",
+#'                            profile = "CTFM")
 #'
 #' # export all CTFM trajectories within a bounding box 40 NM around EDDF
 #' bb <- c(xmin = 7.536746, xmax = 9.604390, ymin = 49.36732, ymax = 50.69920)
-#' point_profiles_tidy(wef = "2019-01-01 00:00", til = "2019-01-02 00:00", bbox = bb)
+#' pf4 <- point_profiles_tidy(wef = "2019-01-01 00:00",
+#'                            til = "2019-01-02 00:00",
+#'                            bbox = bb)
 #'
 #'
 #' # if you re-use DB connections
 #' conn <- eurocontrol::db_connection("PRU_DEV")
-#' point_profiles_tidy(conn = conn, "2020-01-01")
+#' pf <- point_profiles_tidy(conn = conn,
+#'                           wef = "2020-01-01",
+#'                           til = "2020-01-10")
 #'
 #' # ... do something else with conn
 #' # ...

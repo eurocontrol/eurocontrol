@@ -58,6 +58,17 @@ PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 
 \examples{
 \dontrun{
-asp_profs <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+aa <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
+
+# if you re-use DB connections
+conn <- eurocontrol::db_connection("PRU_DEV")
+flights_airspace_profiles_tidy(conn = conn,
+                               wef = "2023-01-01",
+                               til = "2023-04-01")
+
+# ... do something else with conn
+# ...
+# then manually close the connection to the DB
+DBI::dbDisconnect(conn)
 }
 }

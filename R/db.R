@@ -66,8 +66,14 @@ db_connection <- function(schema = "PRU_PROD") {
 #' arl <- airlines_tbl()
 #' # other operations on arl, i.e. filtering,
 #' # followed by a collect() to retrieve the concrete data frame
-#' arl_filtered <- arl |> dplyr::filter(AO_ISO_CTRY_CODE == "IT") |> collect()
-#' # IMPORTANT: close the DB connection
+#' arl_filtered <- arl |>
+#'    dplyr::filter(AO_ISO_CTRY_CODE == "IT") |>
+#'    collect()
+#'
+#' # NOTE: you can reuse the connection for other API calls
+#' arl$src$con
+#'
+#' # IMPORTANT: at the end close the DB connection
 #' DBI::dbDisconnect(arl$src$con)
 #' }
 airlines_tbl <- function(conn = NULL) {
@@ -98,9 +104,16 @@ airlines_tbl <- function(conn = NULL) {
 #' @examples
 #' \dontrun{
 #' flt <- flights_tbl()
-#' # other operations on arl, i.e. filtering,
+#' # other operations on flt, i.e. filtering,
 #' # followed by a collect() to retrieve the concrete data frame
-#' flt_filtered <- flt |> dplyr::filter(AO_ISO_CTRY_CODE == "IT") |> collect()
+#' flt_filtered <- flt |>
+#'    filter(TO_DATE("2023-06-01 10:00", "YYYY-MM-DD HH24:MI") <= IOBT,
+#'                   IOBT < TO_DATE("2023-06-02 10:30", "YYYY-MM-DD HH24:MI")) |>
+#'
+#'
+#' # NOTE: you can reuse the connection for other API calls
+#' arl$src$con
+#'
 #' # IMPORTANT: close the DB connection
 #' DBI::dbDisconnect(flt$src$con)
 #' }

@@ -74,22 +74,31 @@ PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 \examples{
 \dontrun{
 # export 1 day of NM (planned) trajectories
-point_profiles_tidy(wef = "2019-07-14", til = "2019-07-15", profile = "FTFM")
+pf1 <- point_profiles_tidy(wef = "2019-07-14",
+                           til = "2019-07-15",
+                           profile = "FTFM")
 
 # export 2 hours of NM (flown) trajectories
-point_profiles_tidy(wef = "2019-07-14 22:00", til = "2019-07-15")
+pf2 <- point_profiles_tidy(wef = "2019-07-14 22:00",
+                           til = "2019-07-15")
 
 # export 1 day of NM (flown) trajectories
-point_profiles_tidy(wef = "2019-07-14", til = "2019-07-15", profile = "CTFM")
+pf3 <- point_profiles_tidy(wef = "2019-07-14",
+                           til = "2019-07-15",
+                           profile = "CTFM")
 
 # export all CTFM trajectories within a bounding box 40 NM around EDDF
 bb <- c(xmin = 7.536746, xmax = 9.604390, ymin = 49.36732, ymax = 50.69920)
-point_profiles_tidy(wef = "2019-01-01 00:00", til = "2019-01-02 00:00", bbox = bb)
+pf4 <- point_profiles_tidy(wef = "2019-01-01 00:00",
+                           til = "2019-01-02 00:00",
+                           bbox = bb)
 
 
 # if you re-use DB connections
 conn <- eurocontrol::db_connection("PRU_DEV")
-point_profiles_tidy(conn = conn, "2020-01-01")
+pf <- point_profiles_tidy(conn = conn,
+                          wef = "2020-01-01",
+                          til = "2020-01-10")
 
 # ... do something else with conn
 # ...
