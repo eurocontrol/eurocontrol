@@ -311,7 +311,7 @@ point_profile_tbl <- function(conn = NULL) {
 #' * FLIGHT_LEVEL: the [flight level](https://ansperformance.eu/acronym/fl/)
 #' * POINT_ID: the published point ID ('NO_POINT' otherwise)
 #' * AIR_ROUTE: the air rout name ('DCT' otherwise)
-#' * LOBT: the [last off-block time]((https://ansperformance.eu/acronym/lobt/))
+#' * LOBT: the [last off-block time](https://ansperformance.eu/acronym/lobt/)
 #' * SEQ_ID: the progressive sequence number in the trajectory points
 #' * CALLSIGN: the [callsign](https://w.wiki/9XN6) of the flight
 #' * REGISTRATION: the aircraft [registration](https://w.wiki/9XN7)

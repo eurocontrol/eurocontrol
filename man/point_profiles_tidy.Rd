@@ -48,7 +48,7 @@ following columns:
 \item FLIGHT_LEVEL: the \href{https://ansperformance.eu/acronym/fl/}{flight level}
 \item POINT_ID: the published point ID ('NO_POINT' otherwise)
 \item AIR_ROUTE: the air rout name ('DCT' otherwise)
-\item LOBT: the \href{(https://ansperformance.eu/acronym/lobt/)}{last off-block time}
+\item LOBT: the \href{https://ansperformance.eu/acronym/lobt/}{last off-block time}
 \item SEQ_ID: the progressive sequence number in the trajectory points
 \item CALLSIGN: the \href{https://w.wiki/9XN6}{callsign} of the flight
 \item REGISTRATION: the aircraft \href{https://w.wiki/9XN7}{registration}
