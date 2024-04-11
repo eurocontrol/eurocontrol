@@ -89,7 +89,7 @@ flights_tbl <- function(conn = NULL) {
 #'   - `Z` first VFR thereafter IFR
 #'
 #' * ICAO_FLT_TYPE (see [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)):
-#'   flight type. Possible values (but G, M aand X shouldn't appear):
+#'   flight type. Possible values:
 #'   - `S` for scheduled air service
 #'   - `N` for non-scheduled air service
 #'   - `G` for general aviation

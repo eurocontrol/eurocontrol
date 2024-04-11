@@ -57,7 +57,7 @@ Possible values are:
 \item \code{Z} first VFR thereafter IFR
 }
 \item ICAO_FLT_TYPE (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}):
-flight type. Possible values (but G, M aand X shouldn't appear):
+flight type. Possible values:
 \itemize{
 \item \code{S} for scheduled air service
 \item \code{N} for non-scheduled air service
