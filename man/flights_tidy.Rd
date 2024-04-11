@@ -25,7 +25,10 @@ in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime(
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
 \item{icao_flt_types}{the types of flights as described below in
-\code{ICAO_FLT_TYPE}, default \code{c('S', 'N')}.}
+\code{ICAO_FLT_TYPE}, default \code{c('S', 'N')}, NULL includes all
+notwithstanding other argument options.
+When including military via \code{include_military} you should
+either pass NULL or make sure 'M' is included}
 
 \item{ids}{list of \code{ID}s (aka \verb{SAM ID}) to return, default NULL for all flights}
 
@@ -129,7 +132,8 @@ One of:
 The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} includes scheduled and non-scheduled flight
 departing in the right-opened interval \verb{[wef, til)}.
 
-General aviation, State, military and sensitive flight are excluded.
+General aviation, State, military and sensitive flight are by default excluded,
+but can be retrieved via special arguments.
 }
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to \code{SWH_FCT.DIM_FLIGHT_TYPE_RULE},

@@ -49,7 +49,8 @@ flights_tbl <- function(conn = NULL) {
 #' The returned [dplyr::tbl()] includes scheduled and non-scheduled flight
 #' departing in the right-opened interval `[wef, til)`.
 #'
-#' General aviation, State, military and sensitive flight are excluded.
+#' General aviation, State, military and sensitive flight are by default excluded,
+#' but can be retrieved via special arguments.
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`,
@@ -63,7 +64,10 @@ flights_tbl <- function(conn = NULL) {
 #' @param til un**TIL**l date (excluded) at Zulu time
 #'            in a format recognized by [lubridate::as_datetime()]
 #' @param icao_flt_types the types of flights as described below in
-#'                       `ICAO_FLT_TYPE`, default `c('S', 'N')`.
+#'                       `ICAO_FLT_TYPE`, default `c('S', 'N')`, NULL includes all
+#'                       notwithstanding other argument options.
+#'                       When including military via `include_military` you should
+#'                       either pass NULL or make sure 'M' is included
 #' @param ids list of `ID`s (aka `SAM ID`) to return, default NULL for all flights
 #' @param include_sensitive include sensitive flights, default FALSE
 #' @param include_military include military flights, default FALSE
@@ -235,10 +239,26 @@ flights_tidy <- function(
   fff <- flt |>
     dplyr::filter(
       TO_DATE(wef, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
-      .data$LOBT < TO_DATE(til, "yyyy-mm-dd hh24:mi:ss"),
-      # only commercial flights (scheduled and non-scheduled), i.e. General Aviation, Military and Other excluded
-      .data$ICAO_FLT_TYPE %in% icao_flt_types
+      .data$LOBT < TO_DATE(til, "yyyy-mm-dd hh24:mi:ss")
     )
+
+  if (!is.null(icao_flt_types)) {
+    fff <- fff |>
+      dplyr::filter(
+        # only commercial flights (scheduled and non-scheduled), i.e. General Aviation, Military and Other excluded
+        .data$ICAO_FLT_TYPE %in% icao_flt_types
+      )
+  }
+
+
+  if (!is.null(ids)) {
+    fff <- fff |>
+      dplyr::filter(
+        # include only certain IDs
+        .data$ID %in% ids
+      )
+  }
+
 
   if (include_sensitive == FALSE) {
     fff <- fff |>
