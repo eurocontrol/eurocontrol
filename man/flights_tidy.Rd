@@ -24,12 +24,12 @@ in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime(
 \item{til}{un\strong{TIL}l date (excluded) at Zulu time
 in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
 
-\item{icao_flt_types}{the types of flights as defined by ICAO_FLT_TYPE
-as defined below (military is always excluded), default \code{c('S', 'N')}.}
+\item{icao_flt_types}{the types of flights as described below in
+\code{ICAO_FLT_TYPE}, default \code{c('S', 'N')}.}
 
-\item{ids}{list of \code{ID}s (aka \verb{SAM ID}) to return, all id NULL}
+\item{ids}{list of \code{ID}s (aka \verb{SAM ID}) to return, default NULL for all flights}
 
-\item{include_sensitive}{include sensitive flight, default FALSE}
+\item{include_sensitive}{include sensitive flights, default FALSE}
 
 \item{include_military}{include military flights, default FALSE}
 
@@ -108,26 +108,16 @@ it can be:
 \item "Not classified"
 }
 \item SENSITIVE: 'Y' if sensitive
-\item SPECIAL_EXEMPT: reasons for special handling by ATS
-(    (see \href{https://contentzone.eurocontrol.int/fpl/}{Flight Plan Guide} for
-details of info submitted in flight plans).
+\item SPECIAL_EXEMPT: reasons for special handling by ATS.
 One of:
 \itemize{
-\item "ALTRV" flight operating in accordance with an altitude reservation
-\item "ATFMX" flight approved for exemption from flow regulations by the appropriate
-ATS authority
-\item "HUM" flight operating on a humanitarian mission
-\item "FFR" flight engaged in a fire-fighting mission
-\item "FLTCK" flight check for calibration of navaids
-\item "HAZMAT" flight carrying hazardous material
+\item "AEAP" ATFM exemption approved
+\item "EMER" emergency
+\item "FIRE" fire fighting
 \item "HEAD" flights with Head of State status
-\item "HOSP" medical flight declared by medical authorities
-\item "MARSA" flight for which a military entity assumes responsibility for
-separation of military aircraft
-\item "MEDEVAC" flight for a life critical emergency evacuation
-\item "NONRVSM" non-RVSM capable flight intending to operate in RVSM airspace
-\item "SAR" flight engaged in a search and rescue mission
-\item "STATE" flight engaged in military, customs or police services
+\item "MEDE" medical evacuation
+\item "NEXE" not exempted
+\item "SERE" search & rescue
 }
 \item AO_GRP_CODE: Aircraft Operator group (code), i.e.
 \item AO_GRP_NAME: : Aircraft Operator group (name), i.e. AEGEAN Group

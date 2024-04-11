@@ -62,10 +62,10 @@ flights_tbl <- function(conn = NULL) {
 #'            in a format recognized by [lubridate::as_datetime()]
 #' @param til un**TIL**l date (excluded) at Zulu time
 #'            in a format recognized by [lubridate::as_datetime()]
-#' @param icao_flt_types the types of flights as defined by ICAO_FLT_TYPE
-#'            as defined below (military is always excluded), default `c('S', 'N')`.
-#' @param ids list of `ID`s (aka `SAM ID`) to return, all id NULL
-#' @param include_sensitive include sensitive flight, default FALSE
+#' @param icao_flt_types the types of flights as described below in
+#'                       `ICAO_FLT_TYPE`, default `c('S', 'N')`.
+#' @param ids list of `ID`s (aka `SAM ID`) to return, default NULL for all flights
+#' @param include_sensitive include sensitive flights, default FALSE
 #' @param include_military include military flights, default FALSE
 #' @param include_head include Head of State flights, default FALSE
 #'
@@ -136,26 +136,15 @@ flights_tbl <- function(conn = NULL) {
 #'   - “Other”
 #'   - "Not classified"
 #' * SENSITIVE: 'Y' if sensitive
-#' * SPECIAL_EXEMPT: reasons for special handling by ATS
-#' (    (see [Flight Plan Guide](https://contentzone.eurocontrol.int/fpl/) for
-#'       details of info submitted in flight plans).
-#'      One of:
-#'   - "ALTRV" flight operating in accordance with an altitude reservation
-#'   - "ATFMX" flight approved for exemption from flow regulations by the appropriate
-#'             ATS authority
-#'   - "HUM" flight operating on a humanitarian mission
-#'   - "FFR" flight engaged in a fire-fighting mission
-#'   - "FLTCK" flight check for calibration of navaids
-#'   - "HAZMAT" flight carrying hazardous material
+#' * SPECIAL_EXEMPT: reasons for special handling by ATS.
+#'   One of:
+#'   - "AEAP" ATFM exemption approved
+#'   - "EMER" emergency
+#'   - "FIRE" fire fighting
 #'   - "HEAD" flights with Head of State status
-#'   - "HOSP" medical flight declared by medical authorities
-#'   - "MARSA" flight for which a military entity assumes responsibility for
-#'            separation of military aircraft
-#'   - "MEDEVAC" flight for a life critical emergency evacuation
-#'   - "NONRVSM" non-RVSM capable flight intending to operate in RVSM airspace
-#'   - "SAR" flight engaged in a search and rescue mission
-#'   - "STATE" flight engaged in military, customs or police services
-#'
+#'   - "MEDE" medical evacuation
+#'   - "NEXE" not exempted
+#'   - "SERE" search & rescue
 #' * AO_GRP_CODE: Aircraft Operator group (code), i.e.
 #' * AO_GRP_NAME: : Aircraft Operator group (name), i.e. AEGEAN Group
 #' * RTE_LEN_1: route length (in Nautical Miles) for FPL-based (M1) trajectory

@@ -32,6 +32,7 @@ reference:
   - flights_airspace_profiles_tidy
   - flights_tidy
   - point_profiles_tidy
+  - airports_oa
 
 - subtitle: Tables
   desc: >
