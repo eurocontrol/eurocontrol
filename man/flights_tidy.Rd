@@ -108,7 +108,10 @@ it can be:
 \item "Not classified"
 }
 \item SENSITIVE: 'Y' if sensitive
-\item SPECIAL_EXEMPT: reasons for special handling by ATS (). One of:
+\item SPECIAL_EXEMPT: reasons for special handling by ATS
+(    (see \href{https://contentzone.eurocontrol.int/fpl/}{Flight Plan Guide} for
+details of info submitted in flight plans).
+One of:
 \itemize{
 \item "ALTRV" flight operating in accordance with an altitude reservation
 \item "ATFMX" flight approved for exemption from flow regulations by the appropriate

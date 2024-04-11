@@ -136,7 +136,10 @@ flights_tbl <- function(conn = NULL) {
 #'   - “Other”
 #'   - "Not classified"
 #' * SENSITIVE: 'Y' if sensitive
-#' * SPECIAL_EXEMPT: reasons for special handling by ATS (). One of:
+#' * SPECIAL_EXEMPT: reasons for special handling by ATS
+#' (    (see [Flight Plan Guide](https://contentzone.eurocontrol.int/fpl/) for
+#'       details of info submitted in flight plans).
+#'      One of:
 #'   - "ALTRV" flight operating in accordance with an altitude reservation
 #'   - "ATFMX" flight approved for exemption from flow regulations by the appropriate
 #'             ATS authority
