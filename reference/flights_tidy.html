@@ -10,11 +10,11 @@ General aviation, State, military and sensitive flight are excluded."><!-- mathj
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@ General aviation, State, military and sensitive flight are excluded."><!-- mathj
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Extract a clean flights list in an interval</h1>
-      <small class="dont-index">Source: <a href="https://github.com/eurocontrol/eurocontrol/blob/HEAD/R/db.R" class="external-link"><code>R/db.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/eurocontrol/eurocontrol/blob/HEAD/R/flights.R" class="external-link"><code>R/flights.R</code></a></small>
       <div class="d-none name"><code>flights_tidy.Rd</code></div>
     </div>
 
@@ -57,7 +57,16 @@ departing in the right-opened interval <code>[wef, til)</code>.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flights_tidy</span><span class="op">(</span>conn <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">wef</span>, <span class="va">til</span>, icao_flt_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S"</span>, <span class="st">"N"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flights_tidy</span><span class="op">(</span></span>
+<span>  conn <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">wef</span>,</span>
+<span>  <span class="va">til</span>,</span>
+<span>  icao_flt_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S"</span>, <span class="st">"N"</span><span class="op">)</span>,</span>
+<span>  ids <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  include_sensitive <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  include_military <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  include_head <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,8 +86,24 @@ in a format recognized by <code><a href="https://lubridate.tidyverse.org/referen
 
 
 <dt>icao_flt_types</dt>
-<dd><p>the types of flights as defined by ICAO_FLT_TYPE
-as defined below (military is always excluded), default <code>c('S', 'N')</code>.</p></dd>
+<dd><p>the types of flights as described below in
+<code>ICAO_FLT_TYPE</code>, default <code>c('S', 'N')</code>.</p></dd>
+
+
+<dt>ids</dt>
+<dd><p>list of <code>ID</code>s (aka <code>SAM ID</code>) to return, default NULL for all flights</p></dd>
+
+
+<dt>include_sensitive</dt>
+<dd><p>include sensitive flights, default FALSE</p></dd>
+
+
+<dt>include_military</dt>
+<dd><p>include military flights, default FALSE</p></dd>
+
+
+<dt>include_head</dt>
+<dd><p>include Head of State flights, default FALSE</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -144,6 +169,17 @@ it can be:</p><ul><li><p>“Mainline”</p></li>
 <li><p>“Charter” (Non-Scheduled)</p></li>
 <li><p>“Military”</p></li>
 <li><p>“Other”</p></li>
+<li><p>"Not classified"</p></li>
+</ul></li>
+<li><p>SENSITIVE: 'Y' if sensitive</p></li>
+<li><p>SPECIAL_EXEMPT: reasons for special handling by ATS.
+One of:</p><ul><li><p>"AEAP" ATFM exemption approved</p></li>
+<li><p>"EMER" emergency</p></li>
+<li><p>"FIRE" fire fighting</p></li>
+<li><p>"HEAD" flights with Head of State status</p></li>
+<li><p>"MEDE" medical evacuation</p></li>
+<li><p>"NEXE" not exempted</p></li>
+<li><p>"SERE" search &amp; rescue</p></li>
 </ul></li>
 <li><p>AO_GRP_CODE: Aircraft Operator group (code), i.e.</p></li>
 <li><p>AO_GRP_NAME: : Aircraft Operator group (name), i.e. AEGEAN Group</p></li>
@@ -173,7 +209,7 @@ PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></c
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>

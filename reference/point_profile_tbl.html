@@ -10,11 +10,11 @@ datasets."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/m
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,16 @@ PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></c
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">prf</span> <span class="op">&lt;-</span> <span class="fu">point_profile_tbl</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pt</span> <span class="op">&lt;-</span> <span class="fu">point_profile_tbl</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># if you re-use DB connections</span></span></span>
+<span class="r-in"><span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">eurocontrol</span><span class="fu">::</span><span class="fu"><a href="db_connection.html">db_connection</a></span><span class="op">(</span><span class="st">"PRU_DEV"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pt</span> <span class="op">&lt;-</span> <span class="fu">point_profile_tbl</span><span class="op">(</span>conn <span class="op">=</span> <span class="va">conn</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># ... do something else with conn</span></span></span>
+<span class="r-in"><span><span class="co"># ...</span></span></span>
+<span class="r-in"><span><span class="co"># then manually close the connection to the DB</span></span></span>
+<span class="r-in"><span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
@@ -95,7 +104,7 @@ PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></c
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>

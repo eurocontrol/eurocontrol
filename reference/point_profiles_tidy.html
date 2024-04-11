@@ -10,11 +10,11 @@ the flights flying thru the region."><!-- mathjax --><script src="https://cdnjs.
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,7 +112,7 @@ following columns:</p><ul><li><p>FLIGHT_ID: a unique identifier for the flight</
 <li><p>FLIGHT_LEVEL: the <a href="https://ansperformance.eu/acronym/fl/" class="external-link">flight level</a></p></li>
 <li><p>POINT_ID: the published point ID ('NO_POINT' otherwise)</p></li>
 <li><p>AIR_ROUTE: the air rout name ('DCT' otherwise)</p></li>
-<li><p>LOBT: the <a href="(https://ansperformance.eu/acronym/lobt/)" class="external-link">last off-block time</a></p></li>
+<li><p>LOBT: the <a href="https://ansperformance.eu/acronym/lobt/" class="external-link">last off-block time</a></p></li>
 <li><p>SEQ_ID: the progressive sequence number in the trajectory points</p></li>
 <li><p>CALLSIGN: the <a href="https://w.wiki/9XN6" class="external-link">callsign</a> of the flight</p></li>
 <li><p>REGISTRATION: the aircraft <a href="https://w.wiki/9XN7" class="external-link">registration</a></p></li>
@@ -134,22 +134,31 @@ PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></c
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co"># export 1 day of NM (planned) trajectories</span></span></span>
-<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14"</span>, til <span class="op">=</span> <span class="st">"2019-07-15"</span>, profile <span class="op">=</span> <span class="st">"FTFM"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pf1</span> <span class="op">&lt;-</span> <span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14"</span>,</span></span>
+<span class="r-in"><span>                           til <span class="op">=</span> <span class="st">"2019-07-15"</span>,</span></span>
+<span class="r-in"><span>                           profile <span class="op">=</span> <span class="st">"FTFM"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># export 2 hours of NM (flown) trajectories</span></span></span>
-<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14 22:00"</span>, til <span class="op">=</span> <span class="st">"2019-07-15"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pf2</span> <span class="op">&lt;-</span> <span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14 22:00"</span>,</span></span>
+<span class="r-in"><span>                           til <span class="op">=</span> <span class="st">"2019-07-15"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># export 1 day of NM (flown) trajectories</span></span></span>
-<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14"</span>, til <span class="op">=</span> <span class="st">"2019-07-15"</span>, profile <span class="op">=</span> <span class="st">"CTFM"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pf3</span> <span class="op">&lt;-</span> <span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-07-14"</span>,</span></span>
+<span class="r-in"><span>                           til <span class="op">=</span> <span class="st">"2019-07-15"</span>,</span></span>
+<span class="r-in"><span>                           profile <span class="op">=</span> <span class="st">"CTFM"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># export all CTFM trajectories within a bounding box 40 NM around EDDF</span></span></span>
 <span class="r-in"><span><span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">7.536746</span>, xmax <span class="op">=</span> <span class="fl">9.604390</span>, ymin <span class="op">=</span> <span class="fl">49.36732</span>, ymax <span class="op">=</span> <span class="fl">50.69920</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-01-01 00:00"</span>, til <span class="op">=</span> <span class="st">"2019-01-02 00:00"</span>, bbox <span class="op">=</span> <span class="va">bb</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pf4</span> <span class="op">&lt;-</span> <span class="fu">point_profiles_tidy</span><span class="op">(</span>wef <span class="op">=</span> <span class="st">"2019-01-01 00:00"</span>,</span></span>
+<span class="r-in"><span>                           til <span class="op">=</span> <span class="st">"2019-01-02 00:00"</span>,</span></span>
+<span class="r-in"><span>                           bbox <span class="op">=</span> <span class="va">bb</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># if you re-use DB connections</span></span></span>
 <span class="r-in"><span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">eurocontrol</span><span class="fu">::</span><span class="fu"><a href="db_connection.html">db_connection</a></span><span class="op">(</span><span class="st">"PRU_DEV"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">point_profiles_tidy</span><span class="op">(</span>conn <span class="op">=</span> <span class="va">conn</span>, <span class="st">"2020-01-01"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pf</span> <span class="op">&lt;-</span> <span class="fu">point_profiles_tidy</span><span class="op">(</span>conn <span class="op">=</span> <span class="va">conn</span>,</span></span>
+<span class="r-in"><span>                          wef <span class="op">=</span> <span class="st">"2020-01-01"</span>,</span></span>
+<span class="r-in"><span>                          til <span class="op">=</span> <span class="st">"2020-01-10"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ... do something else with conn</span></span></span>
 <span class="r-in"><span><span class="co"># ...</span></span></span>
@@ -167,7 +176,7 @@ PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></c
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>
