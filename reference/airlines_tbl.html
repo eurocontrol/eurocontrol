@@ -14,7 +14,7 @@ datasets."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/m
     
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,10 +90,13 @@ default which uses PRU_DEV to establish a <code><a href="db_connection.html">db_
 <span class="r-in"><span>   <span class="fu">collect</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># NOTE: you can reuse the connection for other API calls</span></span></span>
-<span class="r-in"><span><span class="va">arl</span><span class="op">$</span><span class="va">src</span><span class="op">$</span><span class="va">con</span></span></span>
+<span class="r-in"><span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="va">arl</span><span class="op">$</span><span class="va">src</span><span class="op">$</span><span class="va">con</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># IMPORTANT: at the end close the DB connection</span></span></span>
-<span class="r-in"><span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">arl</span><span class="op">$</span><span class="va">src</span><span class="op">$</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># other ops requiring conn</span></span></span>
+<span class="r-in"><span><span class="co"># ...</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># IMPORTANT: close the DB connection</span></span></span>
+<span class="r-in"><span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
