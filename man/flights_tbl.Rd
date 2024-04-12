@@ -30,13 +30,17 @@ flt <- flights_tbl()
 flt_filtered <- flt |>
    filter(TO_DATE("2023-06-01 10:00", "YYYY-MM-DD HH24:MI") <= IOBT,
                   IOBT < TO_DATE("2023-06-02 10:30", "YYYY-MM-DD HH24:MI")) |>
+   collect()
 
 
 # NOTE: you can reuse the connection for other API calls
-arl$src$con
+conn <- flt$src$con
+
+# other ops requiring conn
+# ...
 
 # IMPORTANT: close the DB connection
-DBI::dbDisconnect(flt$src$con)
+DBI::dbDisconnect(conn)
 }
 
 }

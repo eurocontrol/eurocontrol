@@ -39,17 +39,17 @@ either pass NULL or make sure 'M' is included}
 \item{include_head}{include Head of State flights, default FALSE}
 }
 \value{
-A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns:
+A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns (grouped here by
+flight details, aircraft info, aircraft operator info and operational
+details):
+\subsection{Flight details}{
 \itemize{
-\item FLT_UID: the flight unique id.
-\item LOBT: \strong{L}ast received \strong{O}ff-\strong{B}lock \strong{T}ime.
-\item IOBT: \strong{I}nitial \strong{O}ff-\strong{B}lock \strong{T}ime.
+\item FLT_UID: flight unique id.
+\item ID: the so called \verb{SAM ID}, used internally by PRISME
 \item AIRCRAFT_ID: the \href{https://www.skybrary.aero/articles/aircraft-call-sign}{callsign}
 of the relevant flight, e.g. BAW6VB.
-\item REGISTRATION: the \href{https://en.wikipedia.org/wiki/Aircraft_registration}{aircraft registration}
-(with spaces, dashes, ... stripped), e.g. GEUUU.
-\item AIRCRAFT_TYPE_ICAO_ID: the \href{https://www.icao.int/publications/doc8643/pages/search.aspx}{ICAO code for the aircraft type}, for example A30B for an
-Airbus A-300B2-200.
+\item LOBT: \strong{L}ast received \strong{O}ff-\strong{B}lock \strong{T}ime.
+\item IOBT: \strong{I}nitial \strong{O}ff-\strong{B}lock \strong{T}ime.
 \item FLT_RULES (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}):
 which sets of regulations the flight is operated under.
 Possible values are:
@@ -68,19 +68,6 @@ flight type. Possible values:
 \item \code{M} for military (note: filtered out)
 \item \code{X} for other than the preceding categories
 }
-\item WK_TBL_CAT (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 9}): wake turbulence category, can be
-\itemize{
-\item \code{L} LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.
-\item \code{M} MEDIUM, i.e maximum certificated takeoff mass less than 136_000 kg (300_000 lbs),
-but more than 7_000 kg (15_500 lbs)
-\item \code{H} HEAVY, i.e. maximum certificated takeoff mass of 136_000 kg (300_000 lbs) or more
-(except those specified as \code{J})
-\item \code{J} SUPER, presently the only the AIRBUS A-380-800
-}
-\item AIRCRAFT_OPERATOR: the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator},
-i.e. \code{OAL} for \code{Olympic}
-\item AIRCRAFT_ADDRESS: the \href{https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address}{ICAO 24-bit address}
-of the airframe for ADS-B/Mode S broadcasting.
 \item ADEP: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the \strong{A}erodrome of \strong{DEP}arture
 \item NAME_ADEP: the (AIU) name of the departing airport
 \item COUNTRY_CODE_ADEP: the ISO 2-alpha country code for the ADEP
@@ -89,13 +76,6 @@ of the airframe for ADS-B/Mode S broadcasting.
 \item NAME_ADES: the (AIU) name of the airport
 \item COUNTRY_CODE_ADES: the ISO 2-alpha country code for the ADES
 \item COUNTRY_NAME_ADES: the country name for the ADES
-\item ID: the so called \verb{SAM ID}, used internally by PRISME
-\item EOBT_1: \strong{E}stimated \strong{O}ff-\strong{B}lock \strong{T}ime for FPL-based (M1) trajectory
-\item ARVT_1: \strong{AR}ri\strong{V}al \strong{T}ime for FPL-based (M1) trajectory
-\item TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
-\item AOBT_3: \strong{A}ctual \strong{O}ff-\strong{B}lock \strong{T}ime for flown (M3) trajectory
-\item ARVT_3: \strong{ARV}ival \strong{T}ime for flown (M3) trajectory
-\item TAXI_TIME_3: Taxi time for flown (M3) trajectory
 \item RULE_NAME: market segment type as defined on the
 \href{https://www.eurocontrol.int/publication/market-segment-rules}{Market Segment Rules},
 it can be:
@@ -122,18 +102,61 @@ One of:
 \item "NEXE" not exempted
 \item "SERE" search & rescue
 }
-\item AO_GRP_CODE: Aircraft Operator group (code), i.e.
+}
+}
+
+\subsection{Aircraft info}{
+\itemize{
+\item REGISTRATION: the \href{https://en.wikipedia.org/wiki/Aircraft_registration}{aircraft registration}
+(with spaces, dashes, ... stripped), e.g. GEUUU.
+\item AIRCRAFT_ADDRESS: the \href{https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address}{ICAO 24-bit address}
+of the airframe for ADS-B/Mode S broadcasting.
+\item AIRCRAFT_TYPE_ICAO_ID: the \href{https://www.icao.int/publications/doc8643/pages/search.aspx}{ICAO code for the aircraft type}, for example A30B for an
+Airbus A-300B2-200.
+\item WK_TBL_CAT (see \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 9}): wake turbulence category, can be
+\itemize{
+\item \code{L} LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.
+\item \code{M} MEDIUM, i.e maximum certificated takeoff mass less than 136_000 kg (300_000 lbs),
+but more than 7_000 kg (15_500 lbs)
+\item \code{H} HEAVY, i.e. maximum certificated takeoff mass of 136_000 kg (300_000 lbs) or more
+(except those specified as \code{J})
+\item \code{J} SUPER, presently the only the AIRBUS A-380-800
+}
+}
+}
+
+\subsection{Aircraft operator details}{
+\itemize{
+\item AIRCRAFT_OPERATOR: the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator},
+i.e. \code{OAL} for \code{Olympic}
+\item AO_GRP_CODE: Aircraft Operator group (code), i.e. AEE_GRP
 \item AO_GRP_NAME: : Aircraft Operator group (name), i.e. AEGEAN Group
+\item AO_ISO_CTRY_CODE: ISO country code for AO
+}
+}
+
+\subsection{Operational details}{
+\itemize{
+\item EOBT_1: \strong{E}stimated \strong{O}ff-\strong{B}lock \strong{T}ime for FPL-based (M1) trajectory
+\item ARVT_1: \strong{AR}ri\strong{V}al \strong{T}ime for FPL-based (M1) trajectory
+\item TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
+\item AOBT_3: \strong{A}ctual \strong{O}ff-\strong{B}lock \strong{T}ime for flown (M3) trajectory
+\item ARVT_3: \strong{ARV}ival \strong{T}ime for flown (M3) trajectory
+\item TAXI_TIME_3: Taxi time for flown (M3) trajectory
 \item RTE_LEN_1: route length (in Nautical Miles) for FPL-based (M1) trajectory
 \item RTE_LEN_3: route length (in Nautical Miles) for for flown (M3) trajectory
+\item FLT_DUR_1: route duration (in minutes) for FPL-based (M1) trajectory
+\item FLT_DUR_3: route length (in minutes) for flown (M3) trajectory
+}
 }
 }
 \description{
 The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} includes scheduled and non-scheduled flight
 departing in the right-opened interval \verb{[wef, til)}.
 
-General aviation, State, military and sensitive flight are by default excluded,
-but can be retrieved via special arguments.
+Defaults values will assure that General aviation, State, military and
+sensitive flight will excluded.
+They can be retrieved via the other function call arguments in case of need.
 }
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to \code{SWH_FCT.DIM_FLIGHT_TYPE_RULE},
@@ -143,6 +166,21 @@ PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 
 \examples{
 \dontrun{
-my_flts <- flights_tidy(wef = "2023-01-01", til = "2023-04-01")
+flts <- flights_tidy(wef = "2023-01-01", til = "2023-01-05")
+# other operations on flts, i.e. filtering,
+# followed by a collect() to retrieve the concrete data frame
+flts_filtered <- flts |>
+   filter(TO_DATE("2023-06-01 10:00", "YYYY-MM-DD HH24:MI") <= IOBT,
+                  IOBT < TO_DATE("2023-01-02 10:30", "YYYY-MM-DD HH24:MI")) |>
+   collect()
+
+# NOTE: you can reuse the connection for other API calls
+conn <- flts$src$con
+
+# other ops requiring conn
+# ...
+
+# IMPORTANT: close the DB connection
+DBI::dbDisconnect(conn)
 }
 }

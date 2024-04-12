@@ -33,9 +33,12 @@ arl_filtered <- arl |>
    collect()
 
 # NOTE: you can reuse the connection for other API calls
-arl$src$con
+conn <- arl$src$con
 
-# IMPORTANT: at the end close the DB connection
-DBI::dbDisconnect(arl$src$con)
+# other ops requiring conn
+# ...
+
+# IMPORTANT: close the DB connection
+DBI::dbDisconnect(conn)
 }
 }

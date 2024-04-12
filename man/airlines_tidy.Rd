@@ -31,6 +31,20 @@ or go with the default which uses PRU_DEV to establish a \code{\link[=db_connect
 
 \examples{
 \dontrun{
-airlines_tidy()
+arls <- airlines_tidy()
+# other operations on arls, i.e. filtering,
+# followed by a collect() to retrieve the concrete data frame
+arls_filtered <- arls |>
+   filter(stringr::str_starts("A")) |>
+   collect()
+
+# NOTE: you can reuse the connection for other API calls
+conn <- arls$src$con
+
+# other ops requiring conn
+# ...
+
+# IMPORTANT: close the DB connection
+DBI::dbDisconnect(conn)
 }
 }

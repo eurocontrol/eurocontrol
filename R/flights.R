@@ -22,13 +22,17 @@
 #' flt_filtered <- flt |>
 #'    filter(TO_DATE("2023-06-01 10:00", "YYYY-MM-DD HH24:MI") <= IOBT,
 #'                   IOBT < TO_DATE("2023-06-02 10:30", "YYYY-MM-DD HH24:MI")) |>
+#'    collect()
 #'
 #'
 #' # NOTE: you can reuse the connection for other API calls
-#' arl$src$con
+#' conn <- flt$src$con
+#'
+#' # other ops requiring conn
+#' # ...
 #'
 #' # IMPORTANT: close the DB connection
-#' DBI::dbDisconnect(flt$src$con)
+#' DBI::dbDisconnect(conn)
 #' }
 #'
 flights_tbl <- function(conn = NULL) {
@@ -49,8 +53,9 @@ flights_tbl <- function(conn = NULL) {
 #' The returned [dplyr::tbl()] includes scheduled and non-scheduled flight
 #' departing in the right-opened interval `[wef, til)`.
 #'
-#' General aviation, State, military and sensitive flight are by default excluded,
-#' but can be retrieved via special arguments.
+#' Defaults values will assure that General aviation, State, military and
+#' sensitive flight will excluded.
+#' They can be retrieved via the other function call arguments in case of need.
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`,
@@ -73,17 +78,16 @@ flights_tbl <- function(conn = NULL) {
 #' @param include_military include military flights, default FALSE
 #' @param include_head include Head of State flights, default FALSE
 #'
-#' @return A [dplyr::tbl()] with the following columns:
-#'
-#' * FLT_UID: the flight unique id.
-#' * LOBT: **L**ast received **O**ff-**B**lock **T**ime.
-#' * IOBT: **I**nitial **O**ff-**B**lock **T**ime.
+#' @return A [dplyr::tbl()] with the following columns (grouped here by
+#'         flight details, aircraft info, aircraft operator info and operational
+#'         details):
+#' ## Flight details
+#' * FLT_UID: flight unique id.
+#' * ID: the so called `SAM ID`, used internally by PRISME
 #' * AIRCRAFT_ID: the [callsign](https://www.skybrary.aero/articles/aircraft-call-sign)
 #'                of the relevant flight, e.g. BAW6VB.
-#' * REGISTRATION: the [aircraft registration](https://en.wikipedia.org/wiki/Aircraft_registration)
-#'   (with spaces, dashes, ... stripped), e.g. GEUUU.
-#' * AIRCRAFT_TYPE_ICAO_ID: the [ICAO code for the aircraft type](https://www.icao.int/publications/doc8643/pages/search.aspx), for example A30B for an
-#'   Airbus A-300B2-200.
+#' * LOBT: **L**ast received **O**ff-**B**lock **T**ime.
+#' * IOBT: **I**nitial **O**ff-**B**lock **T**ime.
 #' * FLT_RULES (see [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)):
 #'   which sets of regulations the flight is operated under.
 #'   Possible values are:
@@ -91,7 +95,6 @@ flights_tbl <- function(conn = NULL) {
 #'   - `V` for VFR
 #'   - `Y` first IFR thereafter VFR
 #'   - `Z` first VFR thereafter IFR
-#'
 #' * ICAO_FLT_TYPE (see [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)):
 #'   flight type. Possible values:
 #'   - `S` for scheduled air service
@@ -99,19 +102,6 @@ flights_tbl <- function(conn = NULL) {
 #'   - `G` for general aviation
 #'   - `M` for military (note: filtered out)
 #'   - `X` for other than the preceding categories
-#'
-#' * WK_TBL_CAT (see [FPL Item 9](https://www.skybrary.aero/articles/flight-plan-completion)): wake turbulence category, can be
-#'   - `L` LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.
-#'   - `M` MEDIUM, i.e maximum certificated takeoff mass less than 136_000 kg (300_000 lbs),
-#'     but more than 7_000 kg (15_500 lbs)
-#'   - `H` HEAVY, i.e. maximum certificated takeoff mass of 136_000 kg (300_000 lbs) or more
-#'     (except those specified as `J`)
-#'   - `J` SUPER, presently the only the AIRBUS A-380-800
-#'
-#' * AIRCRAFT_OPERATOR: the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes),
-#'   i.e. `OAL` for `Olympic`
-#' * AIRCRAFT_ADDRESS: the [ICAO 24-bit address](https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address)
-#'   of the airframe for ADS-B/Mode S broadcasting.
 #' * ADEP: [ICAO code](https://observablehq.com/@openaviation/airports) of the **A**erodrome of **DEP**arture
 #' * NAME_ADEP: the (AIU) name of the departing airport
 #' * COUNTRY_CODE_ADEP: the ISO 2-alpha country code for the ADEP
@@ -120,13 +110,6 @@ flights_tbl <- function(conn = NULL) {
 #' * NAME_ADES: the (AIU) name of the airport
 #' * COUNTRY_CODE_ADES: the ISO 2-alpha country code for the ADES
 #' * COUNTRY_NAME_ADES: the country name for the ADES
-#' * ID: the so called `SAM ID`, used internally by PRISME
-#' * EOBT_1: **E**stimated **O**ff-**B**lock **T**ime for FPL-based (M1) trajectory
-#' * ARVT_1: **AR**ri**V**al **T**ime for FPL-based (M1) trajectory
-#' * TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
-#' * AOBT_3: **A**ctual **O**ff-**B**lock **T**ime for flown (M3) trajectory
-#' * ARVT_3: **ARV**ival **T**ime for flown (M3) trajectory
-#' * TAXI_TIME_3: Taxi time for flown (M3) trajectory
 #' * RULE_NAME: market segment type as defined on the
 #'   [Market Segment Rules](https://www.eurocontrol.int/publication/market-segment-rules),
 #'   it can be:
@@ -149,16 +132,61 @@ flights_tbl <- function(conn = NULL) {
 #'   - "MEDE" medical evacuation
 #'   - "NEXE" not exempted
 #'   - "SERE" search & rescue
-#' * AO_GRP_CODE: Aircraft Operator group (code), i.e.
+#'
+#' ## Aircraft info
+#' * REGISTRATION: the [aircraft registration](https://en.wikipedia.org/wiki/Aircraft_registration)
+#'   (with spaces, dashes, ... stripped), e.g. GEUUU.
+#' * AIRCRAFT_ADDRESS: the [ICAO 24-bit address](https://en.wikipedia.org/wiki/Aviation_transponder_interrogation_modes#ICAO_24-bit_address)
+#'   of the airframe for ADS-B/Mode S broadcasting.
+#' * AIRCRAFT_TYPE_ICAO_ID: the [ICAO code for the aircraft type](https://www.icao.int/publications/doc8643/pages/search.aspx), for example A30B for an
+#'   Airbus A-300B2-200.
+#' * WK_TBL_CAT (see [FPL Item 9](https://www.skybrary.aero/articles/flight-plan-completion)): wake turbulence category, can be
+#'   - `L` LIGHT, i.e. maximum certificated takeoff mass of 7000 kg (15_500 lbs) or less.
+#'   - `M` MEDIUM, i.e maximum certificated takeoff mass less than 136_000 kg (300_000 lbs),
+#'     but more than 7_000 kg (15_500 lbs)
+#'   - `H` HEAVY, i.e. maximum certificated takeoff mass of 136_000 kg (300_000 lbs) or more
+#'     (except those specified as `J`)
+#'   - `J` SUPER, presently the only the AIRBUS A-380-800
+#'
+#' ## Aircraft operator details
+#' * AIRCRAFT_OPERATOR: the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes),
+#'   i.e. `OAL` for `Olympic`
+#' * AO_GRP_CODE: Aircraft Operator group (code), i.e. AEE_GRP
 #' * AO_GRP_NAME: : Aircraft Operator group (name), i.e. AEGEAN Group
+#' * AO_ISO_CTRY_CODE: ISO country code for AO
+#'
+#' ## Operational details
+#' * EOBT_1: **E**stimated **O**ff-**B**lock **T**ime for FPL-based (M1) trajectory
+#' * ARVT_1: **AR**ri**V**al **T**ime for FPL-based (M1) trajectory
+#' * TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
+#' * AOBT_3: **A**ctual **O**ff-**B**lock **T**ime for flown (M3) trajectory
+#' * ARVT_3: **ARV**ival **T**ime for flown (M3) trajectory
+#' * TAXI_TIME_3: Taxi time for flown (M3) trajectory
 #' * RTE_LEN_1: route length (in Nautical Miles) for FPL-based (M1) trajectory
 #' * RTE_LEN_3: route length (in Nautical Miles) for for flown (M3) trajectory
+#' * FLT_DUR_1: route duration (in minutes) for FPL-based (M1) trajectory
+#' * FLT_DUR_3: route length (in minutes) for flown (M3) trajectory
 #'
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' my_flts <- flights_tidy(wef = "2023-01-01", til = "2023-04-01")
+#' flts <- flights_tidy(wef = "2023-01-01", til = "2023-01-05")
+#' # other operations on flts, i.e. filtering,
+#' # followed by a collect() to retrieve the concrete data frame
+#' flts_filtered <- flts |>
+#'    filter(TO_DATE("2023-06-01 10:00", "YYYY-MM-DD HH24:MI") <= IOBT,
+#'                   IOBT < TO_DATE("2023-01-02 10:30", "YYYY-MM-DD HH24:MI")) |>
+#'    collect()
+#'
+#' # NOTE: you can reuse the connection for other API calls
+#' conn <- flts$src$con
+#'
+#' # other ops requiring conn
+#' # ...
+#'
+#' # IMPORTANT: close the DB connection
+#' DBI::dbDisconnect(conn)
 #' }
 flights_tidy <- function(
     conn = NULL,
@@ -171,26 +199,10 @@ flights_tidy <- function(
     ) {
 
   columns <- c(
-    "FLT_UID",
+    #-- flight
+    "ID",
     "LOBT",
-    "IOBT",
     "AIRCRAFT_ID",
-    # "CRCO_FLT_ID",
-    # "ACARS_CALLSIGN",
-    "REGISTRATION",
-    # "CRCO_REGISTRATION",
-    # "ACARS_REGISTRATION",
-    "AIRCRAFT_TYPE_ICAO_ID",
-    "FLT_RULES",
-    "ICAO_FLT_TYPE",
-    # "SK_FLT_TYPE_RULE_ID",
-    # "CRCO_ICAO_AIRCRAFT_TYPE",
-    "WK_TBL_CAT",
-    "AIRCRAFT_OPERATOR",
-    # "CRCO_USERNAME",
-    "AIRCRAFT_ADDRESS",
-    # "CRCO_AIRCRAFT_ADDRESS",
-    # "LAST_FPL_ARCADDR",
     "ADEP",
     "NAME_ADEP",
     "COUNTRY_CODE_ADEP",
@@ -199,22 +211,32 @@ flights_tidy <- function(
     "NAME_ADES",
     "COUNTRY_CODE_ADES",
     "COUNTRY_NAME_ADES",
-    "ID",
     "SENSITIVE",
     "SPECIAL_EXEMPT",
+    "RULE_NAME", # Market Segment
+    "FLT_UID",
+    "IOBT",
+    "FLT_RULES",
+    "ICAO_FLT_TYPE",
+    #-- aircraft
+    "REGISTRATION",
+    "AIRCRAFT_ADDRESS",
+    "AIRCRAFT_TYPE_ICAO_ID",
+    "WK_TBL_CAT",
+    #-- aircraft operator
+    "AIRCRAFT_OPERATOR",
+    "AO_ISO_CTRY_CODE",
+    "AO_GRP_CODE",
+    "AO_GRP_NAME",
+    #-- operational details
     "EOBT_1",
     "ARVT_1",
     "TAXI_TIME_1",
     "AOBT_3",
     "ARVT_3",
     "TAXI_TIME_3",
-    # Market Segment
-    "RULE_NAME",
-    # airline group
-    "AO_GRP_CODE",
-    "AO_GRP_NAME",
-    "AO_ISO_CTRY_CODE",
-    # route length
+    "FLT_DUR_1",
+    "FLT_DUR_3",
     "RTE_LEN_1",
     "RTE_LEN_3",
     NULL)
@@ -227,11 +249,6 @@ flights_tidy <- function(
   frl <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "DIM_FLIGHT_TYPE_RULE"))
   aog <- dplyr::tbl(conn, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO"))
   apt <- dplyr::tbl(conn, dbplyr::in_schema("PRUDEV", "V_COVID_REL_AIRPORT_AREA"))
-  # |>
-  #   dplyr::select(APT_CODE = CFMU_AP_CODE,
-  #          APT_NAME = PRU_DASHBOARD_AP_NAME,
-  #          COUNTRY_CODE,
-  #          COUNTRY_NAME)
 
   wef <- lubridate::as_datetime(wef, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
   til <- lubridate::as_datetime(til, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
@@ -245,7 +262,6 @@ flights_tidy <- function(
   if (!is.null(icao_flt_types)) {
     fff <- fff |>
       dplyr::filter(
-        # only commercial flights (scheduled and non-scheduled), i.e. General Aviation, Military and Other excluded
         .data$ICAO_FLT_TYPE %in% icao_flt_types
       )
   }
