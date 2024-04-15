@@ -13,6 +13,7 @@ airports_oa <- function() {
     dplyr::mutate(
       gps_code = stringr::str_trim(.data$gps_code),
       ident    = stringr::str_trim(.data$ident)) |>
+    dplyr::mutate(dplyr::across(c(.data$type, .data$continent), forcats::as_factor)) |>
     dplyr::mutate(icao = dplyr::if_else(.data$ident != .data$gps_code,
                                         .data$gps_code,
                                         .data$ident)) |>
