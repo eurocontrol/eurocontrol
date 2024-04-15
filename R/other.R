@@ -9,7 +9,7 @@
 #' }
 airports_oa <- function() {
   oa_url <- "https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/airports.csv"
-  oa <- readr::read_csv(oa_url) |>
+  readr::read_csv(oa_url) |>
     dplyr::mutate(
       gps_code = stringr::str_trim(.data$gps_code),
       ident    = stringr::str_trim(.data$ident)) |>
@@ -88,7 +88,6 @@ airports_oa <- function() {
         "ENWS",   "",    3.26278,  56.37361,      400.0, "heliport",        "Eldfisk S",         "NO",           "",       "EU",
         "ENWV",   "",        3.4,  56.28333,      400.0, "heliport",       "Valhall PH",         "NO",           "",       "EU"
       )
-    )
-
-
+    ) |>
+    dplyr::mutate(last_updated = lubridate::today())
 }
