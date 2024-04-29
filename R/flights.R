@@ -6,8 +6,10 @@
 #' datasets.
 #'
 #' # Note
-#' You need to either provide a connection `conn` that has access to `SWH_FCT.FAC_FLIGHT` or
+#' You need to either provide a connection `conn` that has access to
+#' `SWH_FCT.V_FAC_FLIGHT_MS` or
 #' go with the default which uses PRU_DEV to establish a [db_connection()].
+#' Market Segment is not available before 2004.
 #'
 #' @inheritParams airlines_tbl
 #'
@@ -39,7 +41,7 @@ flights_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
     conn <- db_connection(schema = "PRU_DEV")
   }
-  flt <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "FAC_FLIGHT"))
+  flt <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "V_FAC_FLIGHT_MS"))
   flt
 }
 

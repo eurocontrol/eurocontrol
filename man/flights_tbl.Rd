@@ -18,8 +18,10 @@ You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }
 \section{Note}{
-You need to either provide a connection \code{conn} that has access to \code{SWH_FCT.FAC_FLIGHT} or
+You need to either provide a connection \code{conn} that has access to
+\code{SWH_FCT.V_FAC_FLIGHT_MS} or
 go with the default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+Market Segment is not available before 2004.
 }
 
 \examples{
