@@ -168,6 +168,7 @@ flights_tbl <- function(conn = NULL) {
 #' * RTE_LEN_3: route length (in Nautical Miles) for for flown (M3) trajectory
 #' * FLT_DUR_1: route duration (in minutes) for FPL-based (M1) trajectory
 #' * FLT_DUR_3: route length (in minutes) for flown (M3) trajectory
+#' * FLT_TOW: takeoff weight
 #'
 #' @export
 #'
@@ -241,6 +242,7 @@ flights_tidy <- function(
     "FLT_DUR_3",
     "RTE_LEN_1",
     "RTE_LEN_3",
+    "FLT_TOW",
     NULL)
 
   if (is.null(conn)) {

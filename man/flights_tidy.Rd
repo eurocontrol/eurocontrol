@@ -147,6 +147,7 @@ i.e. \code{OAL} for \code{Olympic}
 \item RTE_LEN_3: route length (in Nautical Miles) for for flown (M3) trajectory
 \item FLT_DUR_1: route duration (in minutes) for FPL-based (M1) trajectory
 \item FLT_DUR_3: route length (in minutes) for flown (M3) trajectory
+\item FLT_TOW: takeoff weight
 }
 }
 }
