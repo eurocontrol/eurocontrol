@@ -10,6 +10,7 @@
 #'
 #' @return an interval for the season definition, end/start dates are inclusive
 #'
+#' @export
 #' @examples
 #' \dontrun{
 #' season_iata(2019)
