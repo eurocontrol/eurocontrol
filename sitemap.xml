@@ -61,6 +61,9 @@
     <loc>https://eurocontrol.github.io/eurocontrol/reference/flights_tidy.html</loc>
   </url>
   <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/iata_season_for_date.html</loc>
+  </url>
+  <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/index.html</loc>
   </url>
   <url>
@@ -71,6 +74,9 @@
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/point_profiles_tidy.html</loc>
+  </url>
+  <url>
+    <loc>https://eurocontrol.github.io/eurocontrol/reference/season_iata.html</loc>
   </url>
   <url>
     <loc>https://eurocontrol.github.io/eurocontrol/reference/tidyeval.html</loc>
