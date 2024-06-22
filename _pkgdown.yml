@@ -34,6 +34,13 @@ reference:
   - point_profiles_tidy
   - airports_oa
 
+- subtitle: IATA season
+  desc: >
+    Helpers for IATA season.
+  contents:
+  - season_iata
+  - iata_season_for_date
+
 - subtitle: Tables
   desc: >
     Access to typical tables.
