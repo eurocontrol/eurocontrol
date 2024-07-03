@@ -60,9 +60,11 @@ flights_tbl <- function(conn = NULL) {
 #' They can be retrieved via the other function call arguments in case of need.
 #'
 #' # Note
-#' You need to either provide a connection `conn` that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`,
-#' `PRUDEV.V_COVID_DIM_AO` and `SWH_FCT.FAC_FLIGHT` or go with the default which uses
-#' PRU_DEV to establish a [db_connection()].
+#' You need to either provide a connection `conn` that has access to
+#' `SWH_FCT.DIM_FLIGHT_TYPE_RULE` (for `FLT_RULES`),
+#' `PRUDEV.V_COVID_DIM_AO` (for aircraft and aircraft group info) and
+#' `SWH_FCT.V_FAC_FLIGHT_MS` (for market segment info) or go with the default
+#' which uses PRU_DEV to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
