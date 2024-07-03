@@ -18,7 +18,7 @@ They can be retrieved via the other function call arguments in case of need."><!
     
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.15</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -230,9 +230,11 @@ i.e. <code>OAL</code> for <code>Olympic</code></p></li>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>You need to either provide a connection <code>conn</code> that has access to <code>SWH_FCT.DIM_FLIGHT_TYPE_RULE</code>,
-<code>PRUDEV.V_COVID_DIM_AO</code> and <code>SWH_FCT.FAC_FLIGHT</code> or go with the default which uses
-PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></code>.</p>
+    <p>You need to either provide a connection <code>conn</code> that has access to
+<code>SWH_FCT.DIM_FLIGHT_TYPE_RULE</code> (for <code>FLT_RULES</code>),
+<code>PRUDEV.V_COVID_DIM_AO</code> (for aircraft and aircraft group info) and
+<code>SWH_FCT.V_FAC_FLIGHT_MS</code> (for market segment info) or go with the default
+which uses PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></code>.</p>
     </div>
 
     <div class="section level2">
