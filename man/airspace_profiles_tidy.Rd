@@ -43,7 +43,7 @@ profile (default: 'CTFM'), one of:
 }}
 }
 \value{
-a \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns
+a \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns
 \itemize{
 \item ID: the so called \verb{SAM ID}, used internally by PRISME
 \item SEQ_ID: the sequence number of the segment for the relevant airspace profile
@@ -61,7 +61,7 @@ a \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns
 }
 }
 \description{
-The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} includes segments for scheduled and non-scheduled flights
+The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} includes segments for scheduled and non-scheduled flights
 temporally intersecting the right-opened interval \verb{[wef, til)}.
 
 General aviation, State, military and sensitive flight are excluded.

@@ -39,7 +39,7 @@ either pass NULL or make sure 'M' is included}
 \item{include_head}{include Head of State flights, default FALSE}
 }
 \value{
-A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns (grouped here by
+A \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns (grouped here by
 flight details, aircraft info, aircraft operator info and operational
 details):
 \subsection{Flight details}{
@@ -152,7 +152,7 @@ i.e. \code{OAL} for \code{Olympic}
 }
 }
 \description{
-The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} includes scheduled and non-scheduled flight
+The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} includes scheduled and non-scheduled flight
 departing in the right-opened interval \verb{[wef, til)}.
 
 Defaults values will assure that General aviation, State, military and

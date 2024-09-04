@@ -1,7 +1,7 @@
 #' Return a reference to the Flights table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the flights table in PRISME.
+#' The returned [dbplyr::tbl_dbi()] is referencing the flights table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
@@ -13,7 +13,7 @@
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a [dplyr::tbl()] referencing the Oracle table for flights.
+#' @return a [dbplyr::tbl_dbi()] object referencing the Oracle table for flights.
 #' @export
 #'
 #' @examples
@@ -52,7 +52,7 @@ flights_tbl <- function(conn = NULL) {
 #' Extract a clean flights list in an interval
 #'
 #' @description
-#' The returned [dplyr::tbl()] includes scheduled and non-scheduled flight
+#' The returned [dbplyr::tbl_dbi()] includes scheduled and non-scheduled flight
 #' departing in the right-opened interval `[wef, til)`.
 #'
 #' Defaults values will assure that General aviation, State, military and
@@ -82,7 +82,7 @@ flights_tbl <- function(conn = NULL) {
 #' @param include_military include military flights, default FALSE
 #' @param include_head include Head of State flights, default FALSE
 #'
-#' @return A [dplyr::tbl()] with the following columns (grouped here by
+#' @return A [dbplyr::tbl_dbi()] with the following columns (grouped here by
 #'         flight details, aircraft info, aircraft operator info and operational
 #'         details):
 #' ## Flight details

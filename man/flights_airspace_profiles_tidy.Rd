@@ -43,10 +43,10 @@ profile (default: 'CTFM'), one of:
 }}
 }
 \value{
-a \code{\link[dplyr:tbl]{dplyr::tbl()}} with the same columns as \code{\link[=flights_tidy]{flights_tidy()}}
+a \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the same columns as \code{\link[=flights_tidy]{flights_tidy()}}
 }
 \description{
-The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} includes scheduled and non-scheduled flights whose airspace segments
+The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} includes scheduled and non-scheduled flights whose airspace segments
 temporally intersecting the right-opened interval \verb{[wef, til)}.
 General aviation, State, military and sensitive flight are excluded.
 }

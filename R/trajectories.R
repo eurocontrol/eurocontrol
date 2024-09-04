@@ -1,7 +1,7 @@
 #' Return a reference to the Airspace Profile table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the airspace profiles table in PRISME.
+#' The returned [dbplyr::tbl_dbi()] is referencing the airspace profiles table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
@@ -11,7 +11,7 @@
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a [dplyr::tbl()] referencing the Oracle table for airspace profiles.
+#' @return a [dbplyr::tbl_dbi()] referencing the Oracle table for airspace profiles.
 #' @export
 #'
 #' @examples
@@ -44,7 +44,7 @@ airspace_profile_tbl <- function(conn = NULL) {
 #' Provide all airspace profile segments intersecting an interval of interest
 #'
 #' @description
-#' The returned [dplyr::tbl()] includes segments for scheduled and non-scheduled flights
+#' The returned [dbplyr::tbl_dbi()] includes segments for scheduled and non-scheduled flights
 #' temporally intersecting the right-opened interval `[wef, til)`.
 #'
 #' General aviation, State, military and sensitive flight are excluded.
@@ -73,7 +73,7 @@ airspace_profile_tbl <- function(conn = NULL) {
 #'  * 'SRR', Shortest RAD restrictions applied Route
 #'  * 'SUR', Shortest Unconstrained Route
 #'
-#' @return a [dplyr::tbl()] with the following columns
+#' @return a [dbplyr::tbl_dbi()] with the following columns
 #'
 #' * ID: the so called `SAM ID`, used internally by PRISME
 #' * SEQ_ID: the sequence number of the segment for the relevant airspace profile
@@ -181,7 +181,7 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
 #' Extract the flights list for the airspace profile segments intersecting an interval of interest
 #'
 #' @description
-#' The returned [dplyr::tbl()] includes scheduled and non-scheduled flights whose airspace segments
+#' The returned [dbplyr::tbl_dbi()] includes scheduled and non-scheduled flights whose airspace segments
 #' temporally intersecting the right-opened interval `[wef, til)`.
 #' General aviation, State, military and sensitive flight are excluded.
 #'
@@ -192,7 +192,7 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
 #'
 #' @inheritParams airspace_profiles_tidy
 #'
-#' @return a [dplyr::tbl()] with the same columns as [flights_tidy()]
+#' @return a [dbplyr::tbl_dbi()] with the same columns as [flights_tidy()]
 #'
 #' @export
 #'
@@ -248,7 +248,7 @@ flights_airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FI
 #' Return a reference to the Point Profile table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the point profiles table in PRISME.
+#' The returned [dbplyr::tbl_dbi()] is referencing the point profiles table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
@@ -259,7 +259,7 @@ flights_airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FI
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a [dplyr::tbl()] referencing the Oracle table for point profiles.
+#' @return a [dbplyr::tbl_dbi()] referencing the Oracle table for point profiles.
 #' @export
 #'
 #' @examples
@@ -412,7 +412,7 @@ point_profiles_tidy <- function(
 #'
 #'
 #' @description
-#' The returned [dplyr::tbl()] includes point profiles for flights
+#' The returned [dbplyr::tbl_dbi()] includes point profiles for flights
 #' departing in the right-opened interval `[wef, til)`.
 #'
 #' # Note

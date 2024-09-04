@@ -1,7 +1,7 @@
 #' Return a reference to the Airlines table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the airlines table in PRISME.
+#' The returned [dbplyr::tbl_dbi()] is referencing the airlines table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
@@ -12,7 +12,7 @@
 #'
 #' @param conn Database connection or instantiate the default one.
 #'
-#' @return a [dplyr::tbl()] referencing the Oracle table for airlines.
+#' @return a [dbplyr::tbl_dbi()] referencing the Oracle table for airlines.
 #' @export
 #'
 #' @examples
@@ -50,7 +50,7 @@ airlines_tbl <- function(conn = NULL) {
 #'
 #' @param conn Optional connection to the PRU_DEV schema.
 #'
-#' @return A [dplyr::tbl()] with the following columns:
+#' @return A [dbplyr::tbl_dbi()] with the following columns:
 #'
 #' * `AO_CODE`: the the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes), i.e. 'OAL'
 #' * `AO_NAME`: the airline's name, i.e. 'Olympic'

@@ -1,7 +1,7 @@
 #' Return a reference to the Airport Operator Data Flow table
 #'
 #' @description
-#' The returned [dplyr::tbl()] is referencing the airport operator data flow table in PRISME.
+#' The returned [dbplyr::tbl_dbi()] is referencing the airport operator data flow table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
@@ -11,7 +11,7 @@
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a [dplyr::tbl()] referencing the Oracle table for airport operator data flow.
+#' @return a [dbplyr::tbl_dbi()] referencing the Oracle table for airport operator data flow.
 #' @export
 #'
 #' @examples
@@ -36,7 +36,7 @@ aodf_tbl <- function(conn = NULL) {
 #' Extract a clean airport operator data flow list in an interval
 #'
 #' @description
-#' The returned [dplyr::tbl()] includes movements information in the
+#' The returned [dbplyr::tbl_dbi()] includes movements information in the
 #' interval `[wef, til)`.
 #' **NOTE**: it can only cover ONE month at a time
 #'
@@ -49,7 +49,7 @@ aodf_tbl <- function(conn = NULL) {
 #' @inheritParams flights_tidy
 #'
 #'
-#' @return A [dplyr::tbl()] with the following columns:
+#' @return A [dbplyr::tbl_dbi()] with the following columns:
 #'
 #'  * APDS_ID: the airport operator dataflow unique record id.
 #'  * ID: the so called `SAM ID`, used internally by PRISME

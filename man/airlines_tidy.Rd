@@ -10,7 +10,7 @@ airlines_tidy(conn = NULL)
 \item{conn}{Optional connection to the PRU_DEV schema.}
 }
 \value{
-A \code{\link[dplyr:tbl]{dplyr::tbl()}} with the following columns:
+A \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns:
 \itemize{
 \item \code{AO_CODE}: the the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator}, i.e. 'OAL'
 \item \code{AO_NAME}: the airline's name, i.e. 'Olympic'

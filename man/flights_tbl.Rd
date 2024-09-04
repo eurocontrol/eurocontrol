@@ -10,10 +10,10 @@ flights_tbl(conn = NULL)
 \item{conn}{Database connection or instantiate the default one.}
 }
 \value{
-a \code{\link[dplyr:tbl]{dplyr::tbl()}} referencing the Oracle table for flights.
+a \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} object referencing the Oracle table for flights.
 }
 \description{
-The returned \code{\link[dplyr:tbl]{dplyr::tbl()}} is referencing the flights table in PRISME.
+The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} is referencing the flights table in PRISME.
 You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }
