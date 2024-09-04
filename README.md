@@ -61,7 +61,7 @@ In order to build the relevant `pkgdown` web pages, execute the
 following code:
 
 ``` r
-# How to build the pakgdown from behind proxied Internet
+# How to build the pkgdown from behind proxied Internet
 library(withr)
 library(pkgdown)
 

@@ -5,7 +5,7 @@ template:
 authors:
   EUROCONTROL:
     href: https://www.eurocontrol.int
-    html: "<img src='https://ansperformance.eu/nvctr/reference/figures/euctrl-logo-wide.svg' width=112 >"
+    html: "<img src='https://ansperformance.eu/nvctr/reference/figures/euctrl-logo-wide.svg' width=112 alt='EUROCONTROL logo'>"
 
 reference:
 - title: Access to Data(bases)
