@@ -432,8 +432,24 @@ point_profiles_tidy <- function(
 #'                        For example `c(before = 2, after = 0.25)` allows to retrieve
 #'                        points whose TIME_OVER is 2H before `wef` and 15M after `til`.
 #'
-#' @return a `tbl`
+#' @return a `tbl` in SO6 format
 #' @noRd
+#' @examples
+#' \dontrun{
+#'
+#' # if you re-use DB connections
+#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' # export 1 day of NM (planned) trajectories
+#' pf1 <- export_model_trajectory(conn = conn,
+#'                                wef = "2019-07-14",
+#'                                til = "2019-07-15",
+#'                                profile = "FTFM")
+#'
+#' # ... do something else with conn
+#' # ...
+#' # then manually close the connection to the DB
+#' DBI::dbDisconnect(conn)
+#' }
 #'
 export_model_trajectory <- function(
     conn,
@@ -575,5 +591,126 @@ export_model_trajectory <- function(
       AIR_ROUTE = dplyr::if_else(is.na(.data$AIR_ROUTE), "NO_ROUTE", .data$AIR_ROUTE))
 
   pnts
+}
+
+
+#' Export trajectory profiles to SO6 format
+#'
+#' @description
+#' The data frame for point trajectories needs to have the following columns:
+#'
+#' \tabular{lll}{
+#' \strong{Name}            \tab \strong{Description}            \tab \strong{Type} \cr
+#' \code{FLIGHT_ID}         \tab Flight ID                       \tab int           \cr
+#' \code{TIME_OVER}         \tab Time over point                 \tab datetime      \cr
+#' \code{LONGITUDE}         \tab Longitude (decimal degrees)     \tab double        \cr
+#' \code{LATITUDE}          \tab Latitude (decimal degrees)      \tab double        \cr
+#' \code{FLIGHT_LEVEL}      \tab Flight level                    \tab int           \cr
+#' \code{POINT_ID}          \tab Point ID or NO_POINT            \tab char          \cr
+#' \code{AIR_ROUTE}         \tab Air route or NO_ROUTE           \tab char          \cr
+#' \code{LOBT}              \tab Last Off-block Time             \tab datetime      \cr
+#' \code{SEQ_ID}            \tab Positions' sequence number      \tab int           \cr
+#' \code{CALLSIGN}          \tab Flight call sign                \tab char          \cr
+#' \code{REGISTRATION}      \tab Aircraft registration           \tab char          \cr
+#' \code{MODEL_TYPE}        \tab Aircraft model                  \tab char          \cr
+#' \code{AIRCRAFT_TYPE}     \tab Aircraft ICAO type              \tab char          \cr
+#' \code{AIRCRAFT_OPERATOR} \tab Aircraft operator               \tab char          \cr
+#' \code{ADEP}              \tab Departing aerodrome (ICAO) ID   \tab char          \cr
+#' \code{ADES}              \tab Destination aerodrome (ICAO) ID \tab char
+#' }
+#'
+#'
+#' @param trajectory A data frame for point profile trajectories.
+#'
+#' @return A data frame for trajectories in SO6 format.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' pf <- point_profiles_tidy(conn = conn,
+#'                           wef = "2020-01-01",
+#'                           til = "2020-01-10") |>
+#'   generate_so6()
+#'
+#' # ... do something else with conn
+#' # ...
+#' # then manually close the connection to the DB
+#' DBI::dbDisconnect(conn)
+#' generate_so6(trj)
+#' }
+generate_so6 <- function(trajectory) {
+  trajectory |>
+    dplyr::group_by(.data$FLIGHT_ID) |>
+    dplyr::arrange(.data$TIME_OVER) |>
+    dplyr::mutate(
+      n = dplyr::n(),
+      # n ==1 is to handle trajectories with a single point: make a lenght zero segment.
+      XX1 = ifelse(.data$n == 1,
+                   paste(.data$POINT_ID, .data$POINT_ID, sep = "_"),
+                   paste(.data$POINT_ID, dplyr::lead(.data$POINT_ID), sep = "_")),
+      XX2 = .data$ADEP,
+      XX3 = .data$ADES,
+      XX4 = .data$AIRCRAFT_TYPE,
+      XX5 = format(.data$TIME_OVER, "%H%M%S"),
+      XX6 = ifelse(.data$n == 1,
+                   .data$XX5,
+                   dplyr::lead(.data$XX5)),
+      XX7 = .data$FLIGHT_LEVEL,
+      XX8 = ifelse(.data$n == 1,
+                   .data$FLIGHT_LEVEL,
+                   dplyr::lead(.data$XX7)),
+      XX9 = dplyr::case_when(
+        (.data$XX7 <  .data$XX8) ~ 0,
+        (.data$XX7 == .data$XX8) ~ 2,
+        TRUE ~ 1),
+      XX10 = .data$CALLSIGN,
+      XX11 = format(.data$TIME_OVER, "%y%m%d"),
+      XX12 = ifelse(.data$n == 1,
+                    .data$XX11,
+                    dplyr::lead(.data$XX11)),
+      XX13 = .data$LATITUDE * 60,
+      XX14 = .data$LONGITUDE * 60,
+      XX15 = ifelse(.data$n == 1,
+                    .data$XX13,
+                    dplyr::lead(.data$XX13)),
+      XX16 = ifelse(.data$n == 1,
+                    .data$XX14,
+                    dplyr::lead(.data$XX14)),
+      XX17 = .data$FLIGHT_ID,
+      XX18 = dplyr::row_number(),
+      XX19 = geosphere::distVincentyEllipsoid(
+        cbind(.data$XX14 / 60, .data$XX13 / 60),
+        cbind(.data$XX16 / 60, .data$XX15 / 60)),  # length of segment [m]
+      XX19 = 0.000539957 * .data$XX19,             # [m] to [NM]
+      XX20 = 0
+    ) |>
+    # Filter OUT last point
+    dplyr::filter(!is.na(.data$XX19)) |>
+    dplyr::ungroup() |>
+    dplyr::select(dplyr::starts_with("XX")) |>
+    dplyr::arrange(.data$XX17, .data$XX18) |>
+    dplyr::rename(
+      SEGMENT_ID              = "XX1",
+      ADEP                    = "XX2",
+      ADES                    = "XX3",
+      AIRCRAFT_TYPE           = "XX4",
+      SEGMENT_HHMM_BEGIN      = "XX5",
+      SEGMENT_HHMM_END        = "XX6",
+      SEGMENT_FL_BEGIN        = "XX7",
+      SEGMENT_FL_END          = "XX8",
+      STATUS                  = "XX9",
+      CALLSIGN                = "XX10",
+      SEGMENT_DATE_BEGIN      = "XX11",
+      SEGMENT_DATE_END        = "XX12",
+      SEGMENT_LATITUDE_BEGIN  = "XX13",
+      SEGMENT_LONGITUDE_BEGIN = "XX14",
+      SEGMENT_LATITUDE_END    = "XX15",
+      SEGMENT_LONGITUDE_END   = "XX16",
+      FLIGHT_ID               = "XX17",
+      SEQUENCE                = "XX18",
+      SEGMENT_LENGTH          = "XX19",
+      SEGMENT_PARITY          = "XX20"
+    )
 }
 
