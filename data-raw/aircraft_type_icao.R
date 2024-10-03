@@ -28,7 +28,7 @@ atype <- jsonlite::fromJSON(r)  |>
   dplyr::mutate(last_updated = lubridate::ymd(update_date))
 
 
-aircraft_type <- atype %>%
+aircraft_type <- atype |>
   dplyr::select(designator, aircraft_description,
          description,
          wtc,
@@ -39,7 +39,7 @@ aircraft_type <- atype %>%
 
 usethis::use_data(aircraft_type, overwrite = TRUE)
 
-aircraft_model <- atype %>%
+aircraft_model <- atype |>
   dplyr::select(model_full_name, manufacturer_code, designator, last_updated)
 
 usethis::use_data(aircraft_model, overwrite = TRUE)

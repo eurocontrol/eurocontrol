@@ -6,7 +6,7 @@
 \alias{eurocontrol-package}
 \title{eurocontrol: Helper functions for EUROCONTROL useRs}
 \description{
-The helper functions in this package are designed to make it easy, homogeneus and transparent common tasks usually needed by data analysts and useRs in EUROCONTROL.
+The helper functions in this package are designed to make it easy, homogeneus and transparent to perform common tasks usually needed by data analysts and useRs in EUROCONTROL.
 }
 \seealso{
 Useful links:

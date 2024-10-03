@@ -34,6 +34,12 @@ reference:
   - point_profiles_tidy
   - airports_oa
 
+- subtitle: Formats
+  desc: >
+    Helpers for format conversions.
+  contents:
+  - generate_so6
+
 - subtitle: IATA season
   desc: >
     Helpers for IATA season.

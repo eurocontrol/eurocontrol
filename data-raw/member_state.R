@@ -4,8 +4,8 @@
 library(readr)
 library(dplyr)
 
-member_state <- read_csv(here::here("data-raw", "member_state.csv")) %>%
-  select(name, iso3c, iso2c, icao, iso3n, date, status) %>%
+member_state <- read_csv(here::here("data-raw", "member_state.csv")) |>
+  select(name, iso3c, iso2c, icao, iso3n, date, status) |>
   arrange("name")
 usethis::use_data(
   member_state,

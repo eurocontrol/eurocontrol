@@ -1,7 +1,7 @@
 Type: Package
 Package: eurocontrol
 Title: Helper functions for EUROCONTROL useRs
-Version: 0.1.16
+Version: 0.1.17
 Authors@R: c(
     person("Enrico", "Spinielli", , "enrico.spinielli@eurocontrol.int", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8584-9131")),
@@ -9,7 +9,7 @@ Authors@R: c(
   )
 Maintainer: Enrico Spinielli <enrico.spinielli@eurocontrol.int>
 Description: The helper functions in this package are designed to make it
-    easy, homogeneus and transparent common tasks usually needed by
+    easy, homogeneus and transparent to perform common tasks usually needed by
     data analysts and useRs in EUROCONTROL.
 License: MIT + file LICENSE
 Imports: 
@@ -18,6 +18,7 @@ Imports:
     dbplyr,
     dplyr,
     forcats,
+    geosphere,
     lubridate,
     magrittr,
     readr,
@@ -34,4 +35,4 @@ Suggests:
 Roxygen: list(markdown = TRUE)
 URL: https://eurocontrol.github.io/eurocontrol/, https://github.com/eurocontrol/eurocontrol
 Depends: 
-    R (>= 2.10)
+    R (>= 4.1.0)
