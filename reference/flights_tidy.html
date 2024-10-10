@@ -15,7 +15,7 @@ They can be retrieved via the other function call arguments in case of need."></
 
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.18</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,8 +108,8 @@ either pass NULL or make sure 'M' is included</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code><a href="https://dbplyr.tidyverse.org/reference/tbl.src_dbi.html" class="external-link">dbplyr::tbl_dbi()</a></code> with the following columns (grouped here by
-flight details, aircraft info, aircraft operator info and operational
-details):</p><div class="section">
+flight details, aerodrome details, aircraft info, aircraft operator
+info and operational details):</p><div class="section">
 <h3 id="flight-details">Flight details<a class="anchor" aria-label="anchor" href="#flight-details"></a></h3>
 
 <ul><li><p>FLT_UID: flight unique id.</p></li>
@@ -132,14 +132,6 @@ flight type. Possible values:</p><ul><li><p><code>S</code> for scheduled air ser
 <li><p><code>M</code> for military (note: filtered out)</p></li>
 <li><p><code>X</code> for other than the preceding categories</p></li>
 </ul></li>
-<li><p>ADEP: <a href="https://observablehq.com/@openaviation/airports" class="external-link">ICAO code</a> of the <strong>A</strong>erodrome of <strong>DEP</strong>arture</p></li>
-<li><p>NAME_ADEP: the (AIU) name of the departing airport</p></li>
-<li><p>COUNTRY_CODE_ADEP: the ISO 2-alpha country code for the ADEP</p></li>
-<li><p>COUNTRY_NAME_ADEP: the country name for the ADEP</p></li>
-<li><p>ADES: <a href="https://observablehq.com/@openaviation/airports" class="external-link">ICAO code</a> of the <strong>A</strong>erodrome of <strong>DES</strong>tination</p></li>
-<li><p>NAME_ADES: the (AIU) name of the airport</p></li>
-<li><p>COUNTRY_CODE_ADES: the ISO 2-alpha country code for the ADES</p></li>
-<li><p>COUNTRY_NAME_ADES: the country name for the ADES</p></li>
 <li><p>RULE_NAME: market segment type as defined on the
 <a href="https://www.eurocontrol.int/publication/market-segment-rules" class="external-link">Market Segment Rules</a>,
 it can be:</p><ul><li><p>“Mainline”</p></li>
@@ -162,6 +154,28 @@ One of:</p><ul><li><p>"AEAP" ATFM exemption approved</p></li>
 <li><p>"NEXE" not exempted</p></li>
 <li><p>"SERE" search &amp; rescue</p></li>
 </ul></li>
+</ul></div>
+
+<div class="section">
+<h3 id="aerodrome-details">Aerodrome details<a class="anchor" aria-label="anchor" href="#aerodrome-details"></a></h3>
+
+<ul><li><p>ADEP: <a href="https://observablehq.com/@openaviation/airports" class="external-link">ICAO code</a> of the
+<strong>A</strong>erodrome of <strong>DEP</strong>arture</p></li>
+<li><p>NAME_ADEP: the (AIU) name of the <code>ADEP</code> airport</p></li>
+<li><p>COUNTRY_CODE_ADEP: the ISO 2-alpha country code for <code>ADEP</code></p></li>
+<li><p>COUNTRY_NAME_ADEP: the country name for <code>ADEP</code></p></li>
+<li><p>ADES: <a href="https://observablehq.com/@openaviation/airports" class="external-link">ICAO code</a> of the
+<strong>A</strong>erodrome of <strong>DES</strong>tination (different from <code>ADES_FILED</code> in case of
+diversion)</p></li>
+<li><p>NAME_ADES: the (AIU) name of the <code>ADES</code> airport</p></li>
+<li><p>COUNTRY_CODE_ADES: the ISO 2-alpha country code for <code>ADES</code></p></li>
+<li><p>COUNTRY_NAME_ADES: the country name for <code>ADES</code></p></li>
+<li><p>ADES_FILED: <a href="https://observablehq.com/@openaviation/airports" class="external-link">ICAO code</a> of
+the <strong>A</strong>erodrome of <strong>DES</strong>tination filed in the Flight Plan.
+<strong>Note</strong>: it can be different from <code>ADES</code> in case of diversion</p></li>
+<li><p>NAME_ADES_FILED: the (AIU) name of the <code>ADES_FILED</code> airport</p></li>
+<li><p>COUNTRY_CODE_ADES_FILED: the ISO 2-alpha country code for <code>ADES_FILED</code></p></li>
+<li><p>COUNTRY_NAME_ADES_FILED: the country name for <code>ADES_FILED</code></p></li>
 </ul></div>
 
 <div class="section">
