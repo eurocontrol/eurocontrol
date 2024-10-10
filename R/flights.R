@@ -83,8 +83,8 @@ flights_tbl <- function(conn = NULL) {
 #' @param include_head include Head of State flights, default FALSE
 #'
 #' @return A [dbplyr::tbl_dbi()] with the following columns (grouped here by
-#'         flight details, aircraft info, aircraft operator info and operational
-#'         details):
+#'         flight details, aerodrome details, aircraft info, aircraft operator
+#'         info and operational details):
 #' ## Flight details
 #' * FLT_UID: flight unique id.
 #' * ID: the so called `SAM ID`, used internally by PRISME
@@ -106,14 +106,6 @@ flights_tbl <- function(conn = NULL) {
 #'   - `G` for general aviation
 #'   - `M` for military (note: filtered out)
 #'   - `X` for other than the preceding categories
-#' * ADEP: [ICAO code](https://observablehq.com/@openaviation/airports) of the **A**erodrome of **DEP**arture
-#' * NAME_ADEP: the (AIU) name of the departing airport
-#' * COUNTRY_CODE_ADEP: the ISO 2-alpha country code for the ADEP
-#' * COUNTRY_NAME_ADEP: the country name for the ADEP
-#' * ADES: [ICAO code](https://observablehq.com/@openaviation/airports) of the **A**erodrome of **DES**tination
-#' * NAME_ADES: the (AIU) name of the airport
-#' * COUNTRY_CODE_ADES: the ISO 2-alpha country code for the ADES
-#' * COUNTRY_NAME_ADES: the country name for the ADES
 #' * RULE_NAME: market segment type as defined on the
 #'   [Market Segment Rules](https://www.eurocontrol.int/publication/market-segment-rules),
 #'   it can be:
@@ -136,6 +128,25 @@ flights_tbl <- function(conn = NULL) {
 #'   - "MEDE" medical evacuation
 #'   - "NEXE" not exempted
 #'   - "SERE" search & rescue
+#'
+#' ## Aerodrome details
+#' * ADEP: [ICAO code](https://observablehq.com/@openaviation/airports) of the
+#'   **A**erodrome of **DEP**arture
+#' * NAME_ADEP: the (AIU) name of the `ADEP` airport
+#' * COUNTRY_CODE_ADEP: the ISO 2-alpha country code for `ADEP`
+#' * COUNTRY_NAME_ADEP: the country name for `ADEP`
+#' * ADES: [ICAO code](https://observablehq.com/@openaviation/airports) of the
+#'   **A**erodrome of **DES**tination (different from `ADES_FILED` in case of
+#'   diversion)
+#' * NAME_ADES: the (AIU) name of the `ADES` airport
+#' * COUNTRY_CODE_ADES: the ISO 2-alpha country code for `ADES`
+#' * COUNTRY_NAME_ADES: the country name for `ADES`
+#' * ADES_FILED: [ICAO code](https://observablehq.com/@openaviation/airports) of
+#'   the **A**erodrome of **DES**tination filed in the Flight Plan.
+#'   **Note**: it can be different from `ADES` in case of diversion
+#' * NAME_ADES_FILED: the (AIU) name of the `ADES_FILED` airport
+#' * COUNTRY_CODE_ADES_FILED: the ISO 2-alpha country code for `ADES_FILED`
+#' * COUNTRY_NAME_ADES_FILED: the country name for `ADES_FILED`
 #'
 #' ## Aircraft info
 #' * REGISTRATION: the [aircraft registration](https://en.wikipedia.org/wiki/Aircraft_registration)
@@ -216,6 +227,10 @@ flights_tidy <- function(
     "NAME_ADES",
     "COUNTRY_CODE_ADES",
     "COUNTRY_NAME_ADES",
+    "ADES_FILED",
+    "NAME_ADES_FILED",
+    "COUNTRY_CODE_ADES_FILED",
+    "COUNTRY_NAME_ADES_FILED",
     "SENSITIVE",
     "SPECIAL_EXEMPT",
     "RULE_NAME", # Market Segment
@@ -310,17 +325,25 @@ flights_tidy <- function(
   fff <- fff |>
     dplyr::left_join(frl, by = "SK_FLT_TYPE_RULE_ID") |>
     dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
+    # ADEP
     dplyr::left_join(apt, by = c("ADEP" = "CFMU_AP_CODE")) |>
     dplyr::rename(
       SPECIAL_EXEMPT = .data$EXMP_RSN_LH,
       NAME_ADEP = .data$PRU_DASHBOARD_AP_NAME,
       COUNTRY_CODE_ADEP = .data$COUNTRY_CODE,
       COUNTRY_NAME_ADEP = .data$COUNTRY_NAME) |>
+    # ADES
     dplyr::left_join(apt, by = c("ADES" = "CFMU_AP_CODE")) |>
     dplyr::rename(
       NAME_ADES = .data$PRU_DASHBOARD_AP_NAME,
       COUNTRY_CODE_ADES = .data$COUNTRY_CODE,
       COUNTRY_NAME_ADES = .data$COUNTRY_NAME) |>
+    # ADES_FILED
+    dplyr::left_join(apt, by = c("ADES_FILED" = "CFMU_AP_CODE")) |>
+    dplyr::rename(
+      NAME_ADES_FILED = .data$PRU_DASHBOARD_AP_NAME,
+      COUNTRY_CODE_ADES_FILED = .data$COUNTRY_CODE,
+      COUNTRY_NAME_ADES_FILED = .data$COUNTRY_NAME) |>
     dplyr::select(dplyr::all_of(columns))
   fff
 }

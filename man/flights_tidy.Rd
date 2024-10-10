@@ -40,8 +40,8 @@ either pass NULL or make sure 'M' is included}
 }
 \value{
 A \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns (grouped here by
-flight details, aircraft info, aircraft operator info and operational
-details):
+flight details, aerodrome details, aircraft info, aircraft operator
+info and operational details):
 \subsection{Flight details}{
 \itemize{
 \item FLT_UID: flight unique id.
@@ -68,14 +68,6 @@ flight type. Possible values:
 \item \code{M} for military (note: filtered out)
 \item \code{X} for other than the preceding categories
 }
-\item ADEP: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the \strong{A}erodrome of \strong{DEP}arture
-\item NAME_ADEP: the (AIU) name of the departing airport
-\item COUNTRY_CODE_ADEP: the ISO 2-alpha country code for the ADEP
-\item COUNTRY_NAME_ADEP: the country name for the ADEP
-\item ADES: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the \strong{A}erodrome of \strong{DES}tination
-\item NAME_ADES: the (AIU) name of the airport
-\item COUNTRY_CODE_ADES: the ISO 2-alpha country code for the ADES
-\item COUNTRY_NAME_ADES: the country name for the ADES
 \item RULE_NAME: market segment type as defined on the
 \href{https://www.eurocontrol.int/publication/market-segment-rules}{Market Segment Rules},
 it can be:
@@ -102,6 +94,28 @@ One of:
 \item "NEXE" not exempted
 \item "SERE" search & rescue
 }
+}
+}
+
+\subsection{Aerodrome details}{
+\itemize{
+\item ADEP: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the
+\strong{A}erodrome of \strong{DEP}arture
+\item NAME_ADEP: the (AIU) name of the \code{ADEP} airport
+\item COUNTRY_CODE_ADEP: the ISO 2-alpha country code for \code{ADEP}
+\item COUNTRY_NAME_ADEP: the country name for \code{ADEP}
+\item ADES: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the
+\strong{A}erodrome of \strong{DES}tination (different from \code{ADES_FILED} in case of
+diversion)
+\item NAME_ADES: the (AIU) name of the \code{ADES} airport
+\item COUNTRY_CODE_ADES: the ISO 2-alpha country code for \code{ADES}
+\item COUNTRY_NAME_ADES: the country name for \code{ADES}
+\item ADES_FILED: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of
+the \strong{A}erodrome of \strong{DES}tination filed in the Flight Plan.
+\strong{Note}: it can be different from \code{ADES} in case of diversion
+\item NAME_ADES_FILED: the (AIU) name of the \code{ADES_FILED} airport
+\item COUNTRY_CODE_ADES_FILED: the ISO 2-alpha country code for \code{ADES_FILED}
+\item COUNTRY_NAME_ADES_FILED: the country name for \code{ADES_FILED}
 }
 }
 
