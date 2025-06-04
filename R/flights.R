@@ -46,9 +46,6 @@ flights_tbl <- function(conn = NULL) {
 }
 
 
-
-
-
 #' Extract a clean flights list in an interval
 #'
 #' @description
@@ -205,15 +202,15 @@ flights_tbl <- function(conn = NULL) {
 #' DBI::dbDisconnect(conn)
 #' }
 flights_tidy <- function(
-    conn = NULL,
-    wef, til,
-    icao_flt_types = c('S', 'N'),
-    ids = NULL,
-    include_sensitive = FALSE,
-    include_military = FALSE,
-    include_head = FALSE
-    ) {
-
+  conn = NULL,
+  wef,
+  til,
+  icao_flt_types = c('S', 'N'),
+  ids = NULL,
+  include_sensitive = FALSE,
+  include_military = FALSE,
+  include_head = FALSE
+) {
   columns <- c(
     #-- flight
     "ID",
@@ -260,7 +257,8 @@ flights_tidy <- function(
     "RTE_LEN_1",
     "RTE_LEN_3",
     "FLT_TOW",
-    NULL)
+    NULL
+  )
 
   if (is.null(conn)) {
     conn <- db_connection(schema = "PRU_DEV")
@@ -269,7 +267,10 @@ flights_tidy <- function(
   flt <- flights_tbl(conn)
   frl <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "DIM_FLIGHT_TYPE_RULE"))
   aog <- dplyr::tbl(conn, dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO"))
-  apt <- dplyr::tbl(conn, dbplyr::in_schema("PRUDEV", "V_COVID_REL_AIRPORT_AREA"))
+  apt <- dplyr::tbl(
+    conn,
+    dbplyr::in_schema("PRUDEV", "V_COVID_REL_AIRPORT_AREA")
+  )
 
   wef <- lubridate::as_datetime(wef, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
   til <- lubridate::as_datetime(til, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
@@ -287,7 +288,6 @@ flights_tidy <- function(
       )
   }
 
-
   if (!is.null(ids)) {
     fff <- fff |>
       dplyr::filter(
@@ -295,7 +295,6 @@ flights_tidy <- function(
         .data$ID %in% ids
       )
   }
-
 
   if (include_sensitive == FALSE) {
     fff <- fff |>
@@ -321,7 +320,6 @@ flights_tidy <- function(
       )
   }
 
-
   fff <- fff |>
     dplyr::left_join(frl, by = "SK_FLT_TYPE_RULE_ID") |>
     dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
@@ -331,19 +329,22 @@ flights_tidy <- function(
       SPECIAL_EXEMPT = .data$EXMP_RSN_LH,
       NAME_ADEP = .data$PRU_DASHBOARD_AP_NAME,
       COUNTRY_CODE_ADEP = .data$COUNTRY_CODE,
-      COUNTRY_NAME_ADEP = .data$COUNTRY_NAME) |>
+      COUNTRY_NAME_ADEP = .data$COUNTRY_NAME
+    ) |>
     # ADES
     dplyr::left_join(apt, by = c("ADES" = "CFMU_AP_CODE")) |>
     dplyr::rename(
       NAME_ADES = .data$PRU_DASHBOARD_AP_NAME,
       COUNTRY_CODE_ADES = .data$COUNTRY_CODE,
-      COUNTRY_NAME_ADES = .data$COUNTRY_NAME) |>
+      COUNTRY_NAME_ADES = .data$COUNTRY_NAME
+    ) |>
     # ADES_FILED
     dplyr::left_join(apt, by = c("ADES_FILED" = "CFMU_AP_CODE")) |>
     dplyr::rename(
       NAME_ADES_FILED = .data$PRU_DASHBOARD_AP_NAME,
       COUNTRY_CODE_ADES_FILED = .data$COUNTRY_CODE,
-      COUNTRY_NAME_ADES_FILED = .data$COUNTRY_NAME) |>
+      COUNTRY_NAME_ADES_FILED = .data$COUNTRY_NAME
+    ) |>
     dplyr::select(dplyr::all_of(columns))
   fff
 }
