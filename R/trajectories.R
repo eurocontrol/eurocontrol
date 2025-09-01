@@ -76,6 +76,7 @@ airspace_profile_tbl <- function(conn = NULL) {
 #' @return a [dbplyr::tbl_dbi()] with the following columns
 #'
 #' * ID: the so called `SAM ID`, used internally by PRISME
+#' * FLT_UID: flight unique id.
 #' * SEQ_ID: the sequence number of the segment for the relevant airspace profile
 #' * ENTRY_TIME: the time of entry into the relevant airspace
 #' * ENTRY_LON:  the longitude of entry into the relevant airspace
@@ -107,7 +108,13 @@ airspace_profile_tbl <- function(conn = NULL) {
 #' # then manually close the connection to the DB
 #' DBI::dbDisconnect(conn)
 #' }
-airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
+airspace_profiles_tidy <- function(
+  conn = NULL,
+  wef,
+  til,
+  airspace = "FIR",
+  profile = "CTFM"
+) {
   # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
   #                capture actual flight events, so we need some buffers.
   before_hours <- 28
@@ -115,7 +122,6 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
 
   wef <- lubridate::as_datetime(wef)
   til <- lubridate::as_datetime(til)
-
 
   wef_before <- (wef - lubridate::dhours(before_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
@@ -131,7 +137,7 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
 
   flt <- flights_tidy(conn = conn, wef = wef_before, til = til_after)
   ids <- flt |>
-    dplyr::select(.data$ID) |>
+    dplyr::select(.data$ID, .data$FLT_UID) |>
     dplyr::distinct()
 
   prf <- airspace_profile_tbl(conn = conn) |>
@@ -164,10 +170,19 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
     # ) |>
     dplyr::select(
       .data$SAM_ID,
+      .data$FLT_UID,
       .data$SEQ_ID,
-      .data$ENTRY_TIME, .data$ENTRY_LON, .data$ENTRY_LAT, .data$ENTRY_FL,
-      .data$EXIT_TIME, .data$EXIT_LON, .data$EXIT_LAT, .data$EXIT_FL,
-      .data$AIRSPACE_ID, .data$AIRSPACE_TYPE, .data$MODEL_TYPE
+      .data$ENTRY_TIME,
+      .data$ENTRY_LON,
+      .data$ENTRY_LAT,
+      .data$ENTRY_FL,
+      .data$EXIT_TIME,
+      .data$EXIT_LON,
+      .data$EXIT_LAT,
+      .data$EXIT_FL,
+      .data$AIRSPACE_ID,
+      .data$AIRSPACE_TYPE,
+      .data$MODEL_TYPE
     ) |>
     dplyr::rename(
       ID = .data$SAM_ID
@@ -175,7 +190,6 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
 
   prf
 }
-
 
 
 #' Extract the flights list for the airspace profile segments intersecting an interval of interest
@@ -211,18 +225,31 @@ airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", prof
 #' # then manually close the connection to the DB
 #' DBI::dbDisconnect(conn)
 #' }
-flights_airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FIR", profile = "CTFM") {
+flights_airspace_profiles_tidy <- function(
+  conn = NULL,
+  wef,
+  til,
+  airspace = "FIR",
+  profile = "CTFM"
+) {
   # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
   #                capture actual flight events, so we need some buffers.
   before_hours <- 28
   after_hours <- 24
 
-  wef_before <- (lubridate::as_datetime(wef) - lubridate::dhours(before_hours)) |>
+  wef_before <- (lubridate::as_datetime(wef) -
+    lubridate::dhours(before_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
   til_after <- (lubridate::as_date(til) + lubridate::dhours(after_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
 
-  prf <- airspace_profiles_tidy(conn = conn, wef, til, airspace = airspace, profile = profile)
+  prf <- airspace_profiles_tidy(
+    conn = conn,
+    wef,
+    til,
+    airspace = airspace,
+    profile = profile
+  )
   ids <- prf |>
     dplyr::select(.data$ID) |>
     dplyr::distinct()
@@ -242,7 +269,6 @@ flights_airspace_profiles_tidy <- function(conn = NULL, wef, til, airspace = "FI
 
   flt
 }
-
 
 
 #' Return a reference to the Point Profile table
@@ -361,12 +387,12 @@ point_profile_tbl <- function(conn = NULL) {
 #' DBI::dbDisconnect(conn)
 #' }
 point_profiles_tidy <- function(
-    conn = NULL,
-    wef,
-    til = lubridate::today(tzone = "UTC"),
-    profile = "CTFM",
-    bbox = NULL
-    ) {
+  conn = NULL,
+  wef,
+  til = lubridate::today(tzone = "UTC"),
+  profile = "CTFM",
+  bbox = NULL
+) {
   stopifnot(profile %in% c("CPF", "CTFM", "DCT", "FTFM", "SCR", "SRR", "SUR"))
   if (!is.null(bbox)) {
     stopifnot(names(bbox) %in% c("xmin", "xmax", "ymin", "ymax"))
@@ -376,11 +402,10 @@ point_profiles_tidy <- function(
   # magic numbers: tables are indexed on LOBT, but LOBT is not precise to
   #                capture actual flight events, so we need some buffers.
   before_hours <- 28
-  after_hours  <- 24
+  after_hours <- 24
 
   wef <- wef |> lubridate::as_datetime(tz = "UTC")
   til <- til |> lubridate::as_datetime(tz = "UTC")
-
 
   wef_before <- (wef - lubridate::dhours(before_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
@@ -396,11 +421,11 @@ point_profiles_tidy <- function(
 
   export_model_trajectory(
     conn,
-    wef, til,
+    wef,
+    til,
     profile = profile,
     bbox = bbox
-    )
-
+  )
 }
 
 
@@ -452,13 +477,14 @@ point_profiles_tidy <- function(
 #' }
 #'
 export_model_trajectory <- function(
-    conn,
-    wef, til, profile = "CTFM",
-    bbox = NULL,
-    lobt_buffer = c(before = 28, after = 24),
-    timeover_buffer = NULL) {
-
-
+  conn,
+  wef,
+  til,
+  profile = "CTFM",
+  bbox = NULL,
+  lobt_buffer = c(before = 28, after = 24),
+  timeover_buffer = NULL
+) {
   wef <- wef |> lubridate::as_datetime(tz = "UTC")
   til <- til |> lubridate::as_datetime(tz = "UTC")
   wef <- format(wef, "%Y-%m-%dT%H:%M:%SZ")
@@ -467,7 +493,7 @@ export_model_trajectory <- function(
   where_bbox <- ""
   where_timeover_buffer <- ""
   lobt_before <- 0
-  lobt_after  <- 0
+  lobt_after <- 0
 
   stopifnot(profile %in% c("CPF", "CTFM", "DCT", "FTFM", "SCR", "SRR", "SUR"))
 
@@ -480,7 +506,8 @@ export_model_trajectory <- function(
       lon_min = bbox["xmin"],
       lon_max = bbox["xmax"],
       lat_min = bbox["ymin"],
-      lat_max = bbox["ymax"])
+      lat_max = bbox["ymax"]
+    )
   }
 
   if (!is.null(lobt_buffer)) {
@@ -488,7 +515,7 @@ export_model_trajectory <- function(
     stopifnot(is.numeric(lobt_buffer))
 
     lobt_before <- lobt_buffer["before"]
-    lobt_after  <- lobt_buffer["after"]
+    lobt_after <- lobt_buffer["after"]
   }
 
   if (!is.null(timeover_buffer)) {
@@ -496,18 +523,18 @@ export_model_trajectory <- function(
     stopifnot(is.numeric(timeover_buffer))
 
     timeover_before <- timeover_buffer["before"]
-    timeover_after  <- timeover_buffer["after"]
+    timeover_after <- timeover_buffer["after"]
 
     where_timeover_buffer <- stringr::str_glue(
       "AND (((SELECT LOBT_WEF FROM ARGS) - ({before} / 24) <= p.TIME_OVER) AND (p.TIME_OVER < (SELECT LOBT_TIL FROM ARGS) + ({after} / 24)))",
       before = timeover_before,
-      after  = timeover_after)
+      after = timeover_after
+    )
   }
 
   # NOTE: to be set before you create your ROracle connection!
   # See http://www.oralytics.com/2015/05/r-roracle-and-oracle-date-formats_27.html
-  withr::local_envvar(c("TZ" = "UTC",
-                        "ORA_SDTZ" = "UTC"))
+  withr::local_envvar(c("TZ" = "UTC", "ORA_SDTZ" = "UTC"))
   withr::local_namespace("ROracle")
   con <- conn
   query <- "
@@ -574,21 +601,35 @@ export_model_trajectory <- function(
         {WHERE_TIMEOVER_BUFFER}
   "
 
-  query <- stringr::str_glue(query,
-                             WHERE_BBOX   = where_bbox,
-                             WHERE_TIMEOVER_BUFFER = where_timeover_buffer,
-                             BEFORE       = lobt_before,
-                             AFTER        = lobt_after)
+  query <- stringr::str_glue(
+    query,
+    WHERE_BBOX = where_bbox,
+    WHERE_TIMEOVER_BUFFER = where_timeover_buffer,
+    BEFORE = lobt_before,
+    AFTER = lobt_after
+  )
   query <- DBI::sqlInterpolate(
-    con, query,
-    WEF = wef, TIL = til,
-    MODEL = profile)
+    con,
+    query,
+    WEF = wef,
+    TIL = til,
+    MODEL = profile
+  )
 
   fltq <- dplyr::tbl(con, dplyr::sql(query))
   pnts <- fltq |>
     dplyr::mutate(
-      POINT_ID  = dplyr::if_else(is.na(.data$POINT_ID),  "NO_POINT", .data$POINT_ID),
-      AIR_ROUTE = dplyr::if_else(is.na(.data$AIR_ROUTE), "NO_ROUTE", .data$AIR_ROUTE))
+      POINT_ID = dplyr::if_else(
+        is.na(.data$POINT_ID),
+        "NO_POINT",
+        .data$POINT_ID
+      ),
+      AIR_ROUTE = dplyr::if_else(
+        is.na(.data$AIR_ROUTE),
+        "NO_ROUTE",
+        .data$AIR_ROUTE
+      )
+    )
 
   pnts
 }
@@ -646,43 +687,37 @@ generate_so6 <- function(trajectory) {
     dplyr::mutate(
       n = dplyr::n(),
       # n ==1 is to handle trajectories with a single point: make a lenght zero segment.
-      XX1 = ifelse(.data$n == 1,
-                   paste(.data$POINT_ID, .data$POINT_ID, sep = "_"),
-                   paste(.data$POINT_ID, dplyr::lead(.data$POINT_ID), sep = "_")),
+      XX1 = ifelse(
+        .data$n == 1,
+        paste(.data$POINT_ID, .data$POINT_ID, sep = "_"),
+        paste(.data$POINT_ID, dplyr::lead(.data$POINT_ID), sep = "_")
+      ),
       XX2 = .data$ADEP,
       XX3 = .data$ADES,
       XX4 = .data$AIRCRAFT_TYPE,
       XX5 = format(.data$TIME_OVER, "%H%M%S"),
-      XX6 = ifelse(.data$n == 1,
-                   .data$XX5,
-                   dplyr::lead(.data$XX5)),
+      XX6 = ifelse(.data$n == 1, .data$XX5, dplyr::lead(.data$XX5)),
       XX7 = .data$FLIGHT_LEVEL,
-      XX8 = ifelse(.data$n == 1,
-                   .data$FLIGHT_LEVEL,
-                   dplyr::lead(.data$XX7)),
+      XX8 = ifelse(.data$n == 1, .data$FLIGHT_LEVEL, dplyr::lead(.data$XX7)),
       XX9 = dplyr::case_when(
-        (.data$XX7 <  .data$XX8) ~ 0,
+        (.data$XX7 < .data$XX8) ~ 0,
         (.data$XX7 == .data$XX8) ~ 2,
-        TRUE ~ 1),
+        TRUE ~ 1
+      ),
       XX10 = .data$CALLSIGN,
       XX11 = format(.data$TIME_OVER, "%y%m%d"),
-      XX12 = ifelse(.data$n == 1,
-                    .data$XX11,
-                    dplyr::lead(.data$XX11)),
+      XX12 = ifelse(.data$n == 1, .data$XX11, dplyr::lead(.data$XX11)),
       XX13 = .data$LATITUDE * 60,
       XX14 = .data$LONGITUDE * 60,
-      XX15 = ifelse(.data$n == 1,
-                    .data$XX13,
-                    dplyr::lead(.data$XX13)),
-      XX16 = ifelse(.data$n == 1,
-                    .data$XX14,
-                    dplyr::lead(.data$XX14)),
+      XX15 = ifelse(.data$n == 1, .data$XX13, dplyr::lead(.data$XX13)),
+      XX16 = ifelse(.data$n == 1, .data$XX14, dplyr::lead(.data$XX14)),
       XX17 = .data$FLIGHT_ID,
       XX18 = dplyr::row_number(),
       XX19 = geosphere::distVincentyEllipsoid(
         cbind(.data$XX14 / 60, .data$XX13 / 60),
-        cbind(.data$XX16 / 60, .data$XX15 / 60)),  # length of segment [m]
-      XX19 = 0.000539957 * .data$XX19,             # [m] to [NM]
+        cbind(.data$XX16 / 60, .data$XX15 / 60)
+      ), # length of segment [m]
+      XX19 = 0.000539957 * .data$XX19, # [m] to [NM]
       XX20 = 0
     ) |>
     # Filter OUT last point
@@ -691,26 +726,25 @@ generate_so6 <- function(trajectory) {
     dplyr::select(dplyr::starts_with("XX")) |>
     dplyr::arrange(.data$XX17, .data$XX18) |>
     dplyr::rename(
-      SEGMENT_ID              = "XX1",
-      ADEP                    = "XX2",
-      ADES                    = "XX3",
-      AIRCRAFT_TYPE           = "XX4",
-      SEGMENT_HHMM_BEGIN      = "XX5",
-      SEGMENT_HHMM_END        = "XX6",
-      SEGMENT_FL_BEGIN        = "XX7",
-      SEGMENT_FL_END          = "XX8",
-      STATUS                  = "XX9",
-      CALLSIGN                = "XX10",
-      SEGMENT_DATE_BEGIN      = "XX11",
-      SEGMENT_DATE_END        = "XX12",
-      SEGMENT_LATITUDE_BEGIN  = "XX13",
+      SEGMENT_ID = "XX1",
+      ADEP = "XX2",
+      ADES = "XX3",
+      AIRCRAFT_TYPE = "XX4",
+      SEGMENT_HHMM_BEGIN = "XX5",
+      SEGMENT_HHMM_END = "XX6",
+      SEGMENT_FL_BEGIN = "XX7",
+      SEGMENT_FL_END = "XX8",
+      STATUS = "XX9",
+      CALLSIGN = "XX10",
+      SEGMENT_DATE_BEGIN = "XX11",
+      SEGMENT_DATE_END = "XX12",
+      SEGMENT_LATITUDE_BEGIN = "XX13",
       SEGMENT_LONGITUDE_BEGIN = "XX14",
-      SEGMENT_LATITUDE_END    = "XX15",
-      SEGMENT_LONGITUDE_END   = "XX16",
-      FLIGHT_ID               = "XX17",
-      SEQUENCE                = "XX18",
-      SEGMENT_LENGTH          = "XX19",
-      SEGMENT_PARITY          = "XX20"
+      SEGMENT_LATITUDE_END = "XX15",
+      SEGMENT_LONGITUDE_END = "XX16",
+      FLIGHT_ID = "XX17",
+      SEQUENCE = "XX18",
+      SEGMENT_LENGTH = "XX19",
+      SEGMENT_PARITY = "XX20"
     )
 }
-

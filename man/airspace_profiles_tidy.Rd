@@ -46,6 +46,7 @@ profile (default: 'CTFM'), one of:
 a \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns
 \itemize{
 \item ID: the so called \verb{SAM ID}, used internally by PRISME
+\item FLT_UID: flight unique id.
 \item SEQ_ID: the sequence number of the segment for the relevant airspace profile
 \item ENTRY_TIME: the time of entry into the relevant airspace
 \item ENTRY_LON:  the longitude of entry into the relevant airspace
