@@ -28,7 +28,7 @@ reference:
   contents:
   - airlines_tidy
   - airspace_profiles_tidy
-  - aodf_tidy
+  - apdf_tidy
   - flights_airspace_profiles_tidy
   - flights_tidy
   - point_profiles_tidy
@@ -53,6 +53,6 @@ reference:
   contents:
   - airlines_tbl
   - airspace_profile_tbl
-  - aodf_tbl
+  - apdf_tbl
   - flights_tbl
   - point_profile_tbl

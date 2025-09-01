@@ -1,36 +1,40 @@
 #' Return a reference to the Airport Operator Data Flow table
 #'
 #' @description
-#' The returned [dbplyr::tbl_dbi()] is referencing the airport operator data flow table in PRISME.
+#' The returned [dbplyr::tbl_dbi()] is referencing the airport operator data
+#' flow table in PRISME.
 #' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
 #' # Note
-#' You need to either provide a connection `conn` that has access to `SWH_FCT.FAC_APDS_FLIGHT_IR691` or
-#' go with the default which uses PRU_ATMAP to establish a [db_connection()].
+#' You need to either provide a connection `conn` that has access to
+#' `SWH_FCT.FAC_APDS_FLIGHT_IR691` or go with the default which uses PRU_ATMAP
+#' to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @return a [dbplyr::tbl_dbi()] referencing the Oracle table for airport operator data flow.
+#' @return a [dbplyr::tbl_dbi()] referencing the Oracle table for airport
+#'         operator data flow.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' aodf <- aodf_tbl()
+#' apdf <- apdf_tbl()
 #' # ...
 #' # IMPORTANT: close the DB connection when done with `aodf`
-#' DBI::dbDisconnect(aodf$src$con)
+#' DBI::dbDisconnect(apdf$src$con)
 #' }
 #'
-aodf_tbl <- function(conn = NULL) {
+apdf_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
     conn <- db_connection(schema = "PRU_ATMAP")
   }
-  aodf <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "FAC_APDS_FLIGHT_IR691"))
-  aodf
+  apdf <- dplyr::tbl(
+    conn,
+    dbplyr::in_schema("SWH_FCT", "FAC_APDS_FLIGHT_IR691")
+  )
+  apdf
 }
-
-
 
 
 #' Extract a clean airport operator data flow list in an interval
@@ -41,8 +45,9 @@ aodf_tbl <- function(conn = NULL) {
 #' **NOTE**: it can only cover ONE month at a time
 #'
 #' # Note
-#' You need to either provide a connection `conn` that has access to `SWH_FCT.FAC_APDS_FLIGHT_IR691`,
-#' or go with the default which uses PRU_ATMAP to establish a [db_connection()].
+#' You need to either provide a connection `conn` that has access to
+#' `SWH_FCT.FAC_APDS_FLIGHT_IR691`, or go with the default which uses PRU_ATMAP
+#' to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
@@ -56,9 +61,9 @@ aodf_tbl <- function(conn = NULL) {
 #'  * AP_C_FLTID: flight identifier (aource Airport)
 #'  * AP_C_FLTRUL: which sets of regulations the flight is operated under.
 #'   Possible values are:
-#'   - `IFR` for IFR
-#'   - `VFR` for VFR
-#'   - `NA` if unknown
+#'    - `IFR` for IFR
+#'    - `VFR` for VFR
+#'    - `NA` if unknown
 #'  * AP_C_REG: the [aircraft registration](https://en.wikipedia.org/wiki/Aircraft_registration)
 #'   (with spaces, dashes, ... stripped), e.g. GEUUU.
 #'  * ADEP_ICAO: ([ICAO code](https://observablehq.com/@openaviation/airports) of the)
@@ -91,17 +96,17 @@ aodf_tbl <- function(conn = NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' my_aodf <- aodf_tidy(wef = "2023-01-01", til = "2023-01-02")
+#' my_apdf <- apdf_tidy(wef = "2023-01-01", til = "2023-01-02")
 #' # ...
-#' DBI::dbDisconnect(my_aodf$src$con)
+#' DBI::dbDisconnect(my_apdf$src$con)
 #' }
-aodf_tidy <- function(conn = NULL, wef, til) {
-  aodf <- aodf_tbl(conn)
+apdf_tidy <- function(conn = NULL, wef, til) {
+  apdf <- apdf_tbl(conn)
 
   wef <- lubridate::as_datetime(wef, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
   til <- lubridate::as_datetime(til, tz = "UTC") |> format("%Y-%m-%d %H:%M:%S")
 
-  aa <- aodf |>
+  aa <- apdf |>
     dplyr::filter(
       TO_DATE(wef, "yyyy-mm-dd hh24:mi:ss") <= .data$MVT_TIME_UTC,
       .data$MVT_TIME_UTC < TO_DATE(til, "yyyy-mm-dd hh24:mi:ss"),
@@ -124,15 +129,14 @@ aodf_tidy <- function(conn = NULL, wef, til) {
       "AP_C_STND",
       dplyr::starts_with("C40_"),
       dplyr::starts_with("C100_")
-    )  |>
+    ) |>
     dplyr::select(
       -dplyr::ends_with("_MIN"),
       -dplyr::ends_with("_IN_FRONT"),
       -dplyr::ends_with("_CTFM"),
       -dplyr::ends_with("_CPF"),
-      -dplyr::contains("TRANSIT"))
+      -dplyr::contains("TRANSIT")
+    )
 
   return(aa)
 }
-
-
