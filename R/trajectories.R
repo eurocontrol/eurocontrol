@@ -1,13 +1,14 @@
 #' Return a reference to the Airspace Profile table
 #'
 #' @description
-#' The returned [dbplyr::tbl_dbi()] is referencing the airspace profiles table in PRISME.
-#' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
+#' The returned [dbplyr::tbl_dbi()] is referencing the airspace profiles table
+#' in PRISME. You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
 #' # Note
-#' You need to either provide a connection `conn` that has access to `FSD.ALL_FT_ASP_PROFILE` or
-#' go with the default which uses PRU_DEV to establish a [db_connection()].
+#' You need to either provide a connection `conn` that has access to
+#' `FSD.ALL_FT_ASP_PROFILE` or go with the default which uses PRU_READ
+#' to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
@@ -33,7 +34,7 @@
 #' }
 airspace_profile_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_DEV")
+    conn <- db_connection(schema = "PRU_READ")
   }
   prof <- dplyr::tbl(conn, dbplyr::in_schema("FSD", "ALL_FT_ASP_PROFILE"))
 
@@ -132,7 +133,7 @@ airspace_profiles_tidy <- function(
   til <- til |> format("%Y-%m-%d %H:%M:%S")
 
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_DEV")
+    conn <- db_connection(schema = "PRU_READ")
   }
 
   flt <- flights_tidy(conn = conn, wef = wef_before, til = til_after)
@@ -192,17 +193,19 @@ airspace_profiles_tidy <- function(
 }
 
 
-#' Extract the flights list for the airspace profile segments intersecting an interval of interest
+#' Extract the flights list for the airspace profile segments intersecting
+#' an interval of interest
 #'
 #' @description
-#' The returned [dbplyr::tbl_dbi()] includes scheduled and non-scheduled flights whose airspace segments
-#' temporally intersecting the right-opened interval `[wef, til)`.
+#' The returned [dbplyr::tbl_dbi()] includes scheduled and non-scheduled flights
+#' whose airspace segments temporally intersecting the right-opened interval
+#' `[wef, til)`.
 #' General aviation, State, military and sensitive flight are excluded.
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to as noted in
-#' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which uses
-#' PRU_DEV to establish a [db_connection()].
+#' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which
+#' uses PRU_READ to establish a [db_connection()].
 #'
 #' @inheritParams airspace_profiles_tidy
 #'
@@ -274,14 +277,14 @@ flights_airspace_profiles_tidy <- function(
 #' Return a reference to the Point Profile table
 #'
 #' @description
-#' The returned [dbplyr::tbl_dbi()] is referencing the point profiles table in PRISME.
-#' You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
+#' The returned [dbplyr::tbl_dbi()] is referencing the point profiles table
+#' in PRISME. You can use `dplyr`/`dbplyr` verbs to filter, join, ... with other
 #' datasets.
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to
 #' `FSD.ALL_FT_POINT_PROFILE` or go with the default which uses
-#' PRU_DEV to establish a [db_connection()].
+#' PRU_READ to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
@@ -303,7 +306,7 @@ flights_airspace_profiles_tidy <- function(
 #' }
 point_profile_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_DEV")
+    conn <- db_connection(schema = "PRU_READ")
   }
   prof <- dplyr::tbl(conn, dbplyr::in_schema("FSD", "ALL_FT_POINT_PROFILE"))
 
@@ -318,8 +321,8 @@ point_profile_tbl <- function(conn = NULL) {
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to as noted in
-#' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which uses
-#' PRU_DEV to establish a [db_connection()].
+#' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which
+#' uses PRU_READ to establish a [db_connection()].
 #'
 #'
 #' @inheritParams airspace_profiles_tidy
@@ -416,7 +419,7 @@ point_profiles_tidy <- function(
   til <- til |> format("%Y-%m-%d %H:%M:%S")
 
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_DEV")
+    conn <- db_connection(schema = "PRU_READ")
   }
 
   export_model_trajectory(
@@ -441,21 +444,23 @@ point_profiles_tidy <- function(
 #' departing in the right-opened interval `[wef, til)`.
 #'
 #' # Note
-#' You need to either provide a connection `conn` that has access to `SWH_FCT.DIM_FLIGHT_TYPE_RULE`,
-#' `PRUDEV.V_COVID_DIM_AO` and `SWH_FCT.FAC_FLIGHT` or go with the default which uses
-#' PRU_DEV to establish a [db_connection()].
+#' You need to either provide a connection `conn` that has access to
+#' `SWH_FCT.DIM_FLIGHT_TYPE_RULE`, `PRUDEV.V_COVID_DIM_AO` and
+#' `SWH_FCT.FAC_FLIGHT` or go with the default which uses PRU_READ to establish
+#' a [db_connection()].
 #'
 #' @inheritParams airspace_profiles_tidy
 #' @param bbox (Optional) axis aligned bounding box (xmin, ymin, xmax, ymax)
 #' @param lobt_buffer (Optional) (portion of) hours before/after
 #'             `wef` and `til` (before, after) used to query LOBT.
 #'             This is to cater for flights crossing `wef` and `til`.
-#'             For example `c(before = 24, after = 2.25)` allows to retrieve flights with LOBT
-#'             24H before `wef` and 1H15M after `til`.
-#' @param timeover_buffer (Optional) (portion of) hours before (after) `wef` (`til`).
-#'                        This is to cater for flights crossing `wef` and `til`.
-#'                        For example `c(before = 2, after = 0.25)` allows to retrieve
-#'                        points whose TIME_OVER is 2H before `wef` and 15M after `til`.
+#'             For example `c(before = 24, after = 2.25)` allows to retrieve
+#'             flights with LOBT 24H before `wef` and 1H15M after `til`.
+#' @param timeover_buffer (Optional) (portion of) hours before (after)
+#'             `wef` (`til`).
+#'             This is to cater for flights crossing `wef` and `til`.
+#'             For example `c(before = 2, after = 0.25)` allows to retrieve
+#'             points whose TIME_OVER is 2H before `wef` and 15M after `til`.
 #'
 #' @return a `tbl` in SO6 format
 #' @noRd
@@ -534,9 +539,12 @@ export_model_trajectory <- function(
 
   # NOTE: to be set before you create your ROracle connection!
   # See http://www.oralytics.com/2015/05/r-roracle-and-oracle-date-formats_27.html
-  withr::local_envvar(c("TZ" = "UTC", "ORA_SDTZ" = "UTC"))
+  withr::local_envvar(c(
+    "TZ" = "UTC",
+    "ORA_SDTZ" = "UTC",
+    "NLS_LANG" = ".AL32UTF8"
+  ))
   withr::local_namespace("ROracle")
-  con <- conn
   query <- "
     WITH
         ARGS
@@ -609,14 +617,14 @@ export_model_trajectory <- function(
     AFTER = lobt_after
   )
   query <- DBI::sqlInterpolate(
-    con,
+    conn,
     query,
     WEF = wef,
     TIL = til,
     MODEL = profile
   )
 
-  fltq <- dplyr::tbl(con, dplyr::sql(query))
+  fltq <- dplyr::tbl(conn, dplyr::sql(query))
   pnts <- fltq |>
     dplyr::mutate(
       POINT_ID = dplyr::if_else(
