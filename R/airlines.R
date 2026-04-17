@@ -7,8 +7,8 @@
 #'
 #' # Note
 #' You need to either provide a connection `conn`
-#' that has access to `PRU_DEV.V_COVID_DIM_AO` or go with the
-#' default which uses PRU_DEV to establish a [db_connection()].
+#' that has access to `PRUDEV.V_COVID_DIM_AO` or go with the
+#' default which uses PRU_READ to establish a [db_connection()].
 #'
 #' @param conn Database connection or instantiate the default one.
 #'
@@ -35,9 +35,12 @@
 #' }
 airlines_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_DEV")
+    conn <- db_connection(schema = "PRU_READ")
   }
-  arl <- dplyr::tbl(conn, "V_COVID_DIM_AO")
+  arl <- dplyr::tbl(
+    conn,
+    dbplyr::in_schema("PRUDEV", "V_COVID_DIM_AO")
+  )
   arl
 }
 
@@ -92,15 +95,16 @@ airlines_tidy <- function(conn = NULL) {
       "AO_NAME",
       "AO_GRP_CODE",
       "AO_GRP_NAME",
-      "AO_ISO_CTRY_CODE") |>
+      "AO_ISO_CTRY_CODE"
+    ) |>
     # default to NA and then set what is TRUE
-    dplyr::mutate(EU = dplyr::if_else(
-      .data$AO_ISO_CTRY_CODE %in% ect,
-      "TRUE",
-      "FALSE"))
+    dplyr::mutate(
+      EU = dplyr::if_else(
+        .data$AO_ISO_CTRY_CODE %in% ect,
+        "TRUE",
+        "FALSE"
+      )
+    )
 
   arl
 }
-
-
-
