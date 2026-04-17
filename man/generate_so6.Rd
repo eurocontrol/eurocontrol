@@ -37,7 +37,7 @@ The data frame for point trajectories needs to have the following columns:
 }
 \examples{
 \dontrun{
-conn <- eurocontrol::db_connection("PRU_DEV")
+conn <- eurocontrol::db_connection("PRU_READ")
 pf <- point_profiles_tidy(conn = conn,
                           wef = "2020-01-01",
                           til = "2020-01-10") |>

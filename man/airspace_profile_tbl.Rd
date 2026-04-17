@@ -13,13 +13,14 @@ airspace_profile_tbl(conn = NULL)
 a \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} referencing the Oracle table for airspace profiles.
 }
 \description{
-The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} is referencing the airspace profiles table in PRISME.
-You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
+The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} is referencing the airspace profiles table
+in PRISME. You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }
 \section{Note}{
-You need to either provide a connection \code{conn} that has access to \code{FSD.ALL_FT_ASP_PROFILE} or
-go with the default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+You need to either provide a connection \code{conn} that has access to
+\code{FSD.ALL_FT_ASP_PROFILE} or go with the default which uses PRU_READ
+to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 
 \examples{
@@ -31,7 +32,7 @@ pp <- airspace_profile_tbl()
 DBI::dbDisconnect(pp$src$con)
 
 # if you use a DB connection for many different APIs
-conn <- eurocontrol::db_connection("PRU_DEV")
+conn <- eurocontrol::db_connection("PRU_READ")
 pp <- airspace_profile_tbl(conn = conn)
 
 # ... do something else with conn

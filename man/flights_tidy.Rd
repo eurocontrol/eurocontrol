@@ -178,7 +178,7 @@ You need to either provide a connection \code{conn} that has access to
 \code{SWH_FCT.DIM_FLIGHT_TYPE_RULE} (for \code{FLT_RULES}),
 \code{PRUDEV.V_COVID_DIM_AO} (for aircraft and aircraft group info) and
 \code{SWH_FCT.V_FAC_FLIGHT_MS} (for market segment info) or go with the default
-which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+which uses PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 
 \examples{

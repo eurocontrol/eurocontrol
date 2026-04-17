@@ -64,7 +64,7 @@ interval \verb{[wef, til)}.
 }
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to
-\code{SWH_FCT.FAC_APDS_FLIGHT_IR691}, or go with the default which uses PRU_ATMAP
+\code{SWH_FCT.FAC_APDS_FLIGHT_IR691}, or go with the default which uses PRU_READ
 to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 

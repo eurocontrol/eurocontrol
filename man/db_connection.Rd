@@ -4,14 +4,14 @@
 \alias{db_connection}
 \title{Provide a connection to the relevant Oracle database}
 \usage{
-db_connection(schema = "PRU_PROD")
+db_connection(schema = "PRU_READ")
 }
 \arguments{
 \item{schema}{the Oracle DB schema to connect to.}
 }
 \value{
-A connection to a database (specifically an implementation of \link[DBI:DBIConnection-class]{DBI::DBIConnection}
-for an Oracle database.)
+A connection to a database (specifically an implementation of
+\link[DBI:DBIConnection-class]{DBI::DBIConnection} for an Oracle database.)
 }
 \description{
 Provide a connection to the relevant Oracle database
@@ -20,12 +20,19 @@ Provide a connection to the relevant Oracle database
 The \code{schema} is in fact the prefix of the environment variables
 where the credentials are stored, like \verb{<schema>_USR},
 \verb{<schema>_PWD} and \verb{<schema>_DBNAME}.
-Possible values for \code{schema} are \code{PRU_PROD}, \code{PRU_DEV},
-\code{PRU_TEST}, ...
+Possible values for \code{schema} are \code{PRU_READ}, \code{PRU_PROD},
+\code{PRU_DEV}, \code{PRU_TEST}, ...
 }
 
 \examples{
 \dontrun{
+# Within a function call (or interactive session, a restart will close the
+# `withr` calls) you should use the following snippet of code
+withr::local_envvar(c(TZ = "UTC", ORA_SDTZ = "UTC", NLS_LANG = ".AL32UTF8"))
+# connect with PRU_READ credentials
+conn <- db_connection("PRU_READ") |> withr::local_db_connection()
+# or alternativelly more basically (you need to explicitly close the
+# the DB connection):
 conn <- db_connection()
 # ... perform other API operations re-using the same connection
 # ...

@@ -4,6 +4,7 @@
 # The `eurocontrol` package
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 The goal of the `eurocontrol` package is to provide helper functions to
@@ -35,11 +36,11 @@ variables. The pattern for the environment variable names is
     XXXX_PWD
     XXXX_USR
 
-where `XXXX` is something like `PRU_DEV`, `PRU_PROD`, … as defined in
-the AIU. Of course other accounts/schemes with access to the underlying
-tables can be used and encoded in custom environment variables following
-the pattern above. The details about which tables are accessed can be
-found in the relevant functions documentation.
+where `XXXX` is something like `PRU_DEV`, `PRU_DEV`, `PRU_PROD`, … as
+defined in the AIU. Of course other accounts/schemes with access to the
+underlying tables can be used and encoded in custom environment
+variables following the pattern above. The details about which tables
+are accessed can be found in the relevant functions documentation.
 
 ## Example
 
@@ -47,7 +48,7 @@ A typical use case is to retrieve a list of flights operated in the area
 managed by EUROCONTROL’s Network Manager.
 
 For example for the flight list of March 2023 you can run (you need
-access and setup for `PRU_DEV` schema):
+access and setup for `PRU_READ` schema):
 
 ``` r
 library(eurocontrol)

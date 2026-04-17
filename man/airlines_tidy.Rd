@@ -7,7 +7,7 @@
 airlines_tidy(conn = NULL)
 }
 \arguments{
-\item{conn}{Optional connection to the PRU_DEV schema.}
+\item{conn}{Optional connection to the PRU_READ schema.}
 }
 \value{
 A \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns:
@@ -26,7 +26,7 @@ Airline info including group affiliation
 }
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to \code{PRUDEV.V_COVID_DIM_AO}
-or go with the default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+or go with the default which uses PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 
 \examples{

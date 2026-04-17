@@ -67,8 +67,8 @@ the flights flying thru the region.
 }
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to as noted in
-\code{\link[=airspace_profile_tbl]{airspace_profile_tbl()}} and \code{\link[=flights_tidy]{flights_tidy()}} or go with the default which uses
-PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+\code{\link[=airspace_profile_tbl]{airspace_profile_tbl()}} and \code{\link[=flights_tidy]{flights_tidy()}} or go with the default which
+uses PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 
 \examples{
@@ -95,7 +95,7 @@ pf4 <- point_profiles_tidy(wef = "2019-01-01 00:00",
 
 
 # if you re-use DB connections
-conn <- eurocontrol::db_connection("PRU_DEV")
+conn <- eurocontrol::db_connection("PRU_READ")
 pf <- point_profiles_tidy(conn = conn,
                           wef = "2020-01-01",
                           til = "2020-01-10")

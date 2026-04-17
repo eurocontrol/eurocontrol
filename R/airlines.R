@@ -49,9 +49,9 @@ airlines_tbl <- function(conn = NULL) {
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to `PRUDEV.V_COVID_DIM_AO`
-#' or go with the default which uses PRU_DEV to establish a [db_connection()].
+#' or go with the default which uses PRU_READ to establish a [db_connection()].
 #'
-#' @param conn Optional connection to the PRU_DEV schema.
+#' @param conn Optional connection to the PRU_READ schema.
 #'
 #' @return A [dbplyr::tbl_dbi()] with the following columns:
 #'
@@ -84,7 +84,7 @@ airlines_tbl <- function(conn = NULL) {
 #' }
 airlines_tidy <- function(conn = NULL) {
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_DEV")
+    conn <- db_connection(schema = "PRU_READ")
   }
 
   ect <- eurocontrol::member_state |> dplyr::pull(.data$iso2c)

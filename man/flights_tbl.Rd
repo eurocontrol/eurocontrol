@@ -20,7 +20,7 @@ datasets.
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to
 \code{SWH_FCT.V_FAC_FLIGHT_MS} or
-go with the default which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+go with the default which uses PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
 Market Segment is not available before 2004.
 }
 

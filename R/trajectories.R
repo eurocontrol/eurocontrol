@@ -24,7 +24,7 @@
 #' DBI::dbDisconnect(pp$src$con)
 #'
 #' # if you use a DB connection for many different APIs
-#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' conn <- eurocontrol::db_connection("PRU_READ")
 #' pp <- airspace_profile_tbl(conn = conn)
 #'
 #' # ... do something else with conn
@@ -52,8 +52,8 @@ airspace_profile_tbl <- function(conn = NULL) {
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to as noted in
-#' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which uses
-#' PRU_DEV to establish a [db_connection()].
+#' [airspace_profile_tbl()] and [flights_tidy()] or go with the default which
+#' uses PRU_READ to establish a [db_connection()].
 #'
 #' @inheritParams flights_tidy
 #'
@@ -101,7 +101,7 @@ airspace_profile_tbl <- function(conn = NULL) {
 #' DBI::dbDisconnect(ps$src$con)
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' conn <- eurocontrol::db_connection("PRU_READ")
 #' ps <- airspace_profiles_tidy(conn = conn)
 #'
 #' # ... do something else with conn
@@ -218,7 +218,7 @@ airspace_profiles_tidy <- function(
 #' aa <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' conn <- eurocontrol::db_connection("PRU_READ")
 #' flights_airspace_profiles_tidy(conn = conn,
 #'                                wef = "2023-01-01",
 #'                                til = "2023-04-01")
@@ -296,7 +296,7 @@ flights_airspace_profiles_tidy <- function(
 #' pt <- point_profile_tbl()
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' conn <- eurocontrol::db_connection("PRU_READ")
 #' pt <- point_profile_tbl(conn = conn)
 #'
 #' # ... do something else with conn
@@ -379,7 +379,7 @@ point_profile_tbl <- function(conn = NULL) {
 #'
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' conn <- eurocontrol::db_connection("PRU_READ")
 #' pf <- point_profiles_tidy(conn = conn,
 #'                           wef = "2020-01-01",
 #'                           til = "2020-01-10")
@@ -468,7 +468,7 @@ point_profiles_tidy <- function(
 #' \dontrun{
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' conn <- eurocontrol::db_connection("PRU_READ")
 #' # export 1 day of NM (planned) trajectories
 #' pf1 <- export_model_trajectory(conn = conn,
 #'                                wef = "2019-07-14",
@@ -676,7 +676,7 @@ export_model_trajectory <- function(
 #'
 #' @examples
 #' \dontrun{
-#' conn <- eurocontrol::db_connection("PRU_DEV")
+#' conn <- eurocontrol::db_connection("PRU_READ")
 #' pf <- point_profiles_tidy(conn = conn,
 #'                           wef = "2020-01-01",
 #'                           til = "2020-01-10") |>

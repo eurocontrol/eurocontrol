@@ -13,14 +13,14 @@ point_profile_tbl(conn = NULL)
 a \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} referencing the Oracle table for point profiles.
 }
 \description{
-The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} is referencing the point profiles table in PRISME.
-You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
+The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} is referencing the point profiles table
+in PRISME. You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to
 \code{FSD.ALL_FT_POINT_PROFILE} or go with the default which uses
-PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 
 \examples{
@@ -28,7 +28,7 @@ PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 pt <- point_profile_tbl()
 
 # if you re-use DB connections
-conn <- eurocontrol::db_connection("PRU_DEV")
+conn <- eurocontrol::db_connection("PRU_READ")
 pt <- point_profile_tbl(conn = conn)
 
 # ... do something else with conn

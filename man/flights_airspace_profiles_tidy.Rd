@@ -2,7 +2,8 @@
 % Please edit documentation in R/trajectories.R
 \name{flights_airspace_profiles_tidy}
 \alias{flights_airspace_profiles_tidy}
-\title{Extract the flights list for the airspace profile segments intersecting an interval of interest}
+\title{Extract the flights list for the airspace profile segments intersecting
+an interval of interest}
 \usage{
 flights_airspace_profiles_tidy(
   conn = NULL,
@@ -46,14 +47,15 @@ profile (default: 'CTFM'), one of:
 a \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the same columns as \code{\link[=flights_tidy]{flights_tidy()}}
 }
 \description{
-The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} includes scheduled and non-scheduled flights whose airspace segments
-temporally intersecting the right-opened interval \verb{[wef, til)}.
+The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} includes scheduled and non-scheduled flights
+whose airspace segments temporally intersecting the right-opened interval
+\verb{[wef, til)}.
 General aviation, State, military and sensitive flight are excluded.
 }
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to as noted in
-\code{\link[=airspace_profile_tbl]{airspace_profile_tbl()}} and \code{\link[=flights_tidy]{flights_tidy()}} or go with the default which uses
-PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
+\code{\link[=airspace_profile_tbl]{airspace_profile_tbl()}} and \code{\link[=flights_tidy]{flights_tidy()}} or go with the default which
+uses PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
 }
 
 \examples{
@@ -61,7 +63,7 @@ PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 aa <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
 
 # if you re-use DB connections
-conn <- eurocontrol::db_connection("PRU_DEV")
+conn <- eurocontrol::db_connection("PRU_READ")
 flights_airspace_profiles_tidy(conn = conn,
                                wef = "2023-01-01",
                                til = "2023-04-01")
