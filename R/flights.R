@@ -8,7 +8,7 @@
 #' # Note
 #' You need to either provide a connection `conn` that has access to
 #' `SWH_FCT.V_FAC_FLIGHT_MS` or
-#' go with the default which uses PRU_DEV to establish a [db_connection()].
+#' go with the default which uses PRU_READ to establish a [db_connection()].
 #' Market Segment is not available before 2004.
 #'
 #' @inheritParams airlines_tbl
@@ -39,7 +39,7 @@
 #'
 flights_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_DEV")
+    conn <- db_connection(schema = "PRU_READ")
   }
   flt <- dplyr::tbl(conn, dbplyr::in_schema("SWH_FCT", "V_FAC_FLIGHT_MS"))
   flt
@@ -61,7 +61,7 @@ flights_tbl <- function(conn = NULL) {
 #' `SWH_FCT.DIM_FLIGHT_TYPE_RULE` (for `FLT_RULES`),
 #' `PRUDEV.V_COVID_DIM_AO` (for aircraft and aircraft group info) and
 #' `SWH_FCT.V_FAC_FLIGHT_MS` (for market segment info) or go with the default
-#' which uses PRU_DEV to establish a [db_connection()].
+#' which uses PRU_READ to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
 #'
@@ -261,7 +261,7 @@ flights_tidy <- function(
   )
 
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_DEV")
+    conn <- db_connection(schema = "PRU_READ")
   }
 
   flt <- flights_tbl(conn)
