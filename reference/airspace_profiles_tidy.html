@@ -11,7 +11,7 @@ General aviation, State, military and sensitive flight are excluded."></head><bo
 
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,8 +113,8 @@ profile (default: 'CTFM'), one of:</p><ul><li><p>'FTFM', Filed Tactical Flight M
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p>You need to either provide a connection <code>conn</code> that has access to as noted in
-<code><a href="airspace_profile_tbl.html">airspace_profile_tbl()</a></code> and <code><a href="flights_tidy.html">flights_tidy()</a></code> or go with the default which uses
-PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></code>.</p>
+<code><a href="airspace_profile_tbl.html">airspace_profile_tbl()</a></code> and <code><a href="flights_tidy.html">flights_tidy()</a></code> or go with the default which
+uses PRU_READ to establish a <code><a href="db_connection.html">db_connection()</a></code>.</p>
     </div>
 
     <div class="section level2">
@@ -125,7 +125,7 @@ PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></c
 <span class="r-in"><span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">ps</span><span class="op">$</span><span class="va">src</span><span class="op">$</span><span class="va">con</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># if you re-use DB connections</span></span></span>
-<span class="r-in"><span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">eurocontrol</span><span class="fu">::</span><span class="fu"><a href="db_connection.html">db_connection</a></span><span class="op">(</span><span class="st">"PRU_DEV"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">eurocontrol</span><span class="fu">::</span><span class="fu"><a href="db_connection.html">db_connection</a></span><span class="op">(</span><span class="st">"PRU_READ"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu">airspace_profiles_tidy</span><span class="op">(</span>conn <span class="op">=</span> <span class="va">conn</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ... do something else with conn</span></span></span>
@@ -144,7 +144,7 @@ PRU_DEV to establish a <code><a href="db_connection.html">db_connection()</a></c
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

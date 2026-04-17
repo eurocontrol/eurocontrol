@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,13 +68,13 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>XXXX_DBNAME </span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>XXXX_PWD</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>XXXX_USR</span></code></pre></div>
-<p>where <code>XXXX</code> is something like <code>PRU_DEV</code>, <code>PRU_PROD</code>, … as defined in the AIU. Of course other accounts/schemes with access to the underlying tables can be used and encoded in custom environment variables following the pattern above. The details about which tables are accessed can be found in the relevant functions documentation.</p>
+<p>where <code>XXXX</code> is something like <code>PRU_DEV</code>, <code>PRU_DEV</code>, <code>PRU_PROD</code>, … as defined in the AIU. Of course other accounts/schemes with access to the underlying tables can be used and encoded in custom environment variables following the pattern above. The details about which tables are accessed can be found in the relevant functions documentation.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>A typical use case is to retrieve a list of flights operated in the area managed by EUROCONTROL’s Network Manager.</p>
-<p>For example for the flight list of March 2023 you can run (you need access and setup for <code>PRU_DEV</code> schema):</p>
+<p>For example for the flight list of March 2023 you can run (you need access and setup for <code>PRU_READ</code> schema):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://eurocontrol.github.io/eurocontrol/">eurocontrol</a></span><span class="op">)</span></span>
 <span></span>
@@ -137,7 +137,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -1,0 +1,66 @@
+# The `eurocontrol` package
+
+The goal of the `eurocontrol` package is to provide helper functions to
+the Agency’s employees for setup, data retrieval from internal
+databases, … .
+
+## Installation
+
+You can install the development version of the `eurocontrol` package
+from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("eurocontrol/eurocontrol")
+```
+
+**NOTE**: This package (hiddenly) depends on the `ROracle` package,
+please have it installed according to the guidelines as published
+[here](https://github.com/euctrl-pru/howto/wiki/Tools-Installation-and-Setup-%28For-R%29#roracle).
+
+## Setup
+
+Some of the functions in this package access data from EUROCONTROL’s
+internal Oracle schemes (maintained by PRISME group.) The code relies on
+having the relevant credentials stored in specifically named environment
+variables. The pattern for the environment variable names is
+
+``` R
+XXXX_DBNAME 
+XXXX_PWD
+XXXX_USR
+```
+
+where `XXXX` is something like `PRU_DEV`, `PRU_DEV`, `PRU_PROD`, … as
+defined in the AIU. Of course other accounts/schemes with access to the
+underlying tables can be used and encoded in custom environment
+variables following the pattern above. The details about which tables
+are accessed can be found in the relevant functions documentation.
+
+## Example
+
+A typical use case is to retrieve a list of flights operated in the area
+managed by EUROCONTROL’s Network Manager.
+
+For example for the flight list of March 2023 you can run (you need
+access and setup for `PRU_READ` schema):
+
+``` r
+library(eurocontrol)
+
+flights_tidy(wef = "2023-01-01", til = "2023-04-01")
+```
+
+# Development
+
+In order to build the relevant `pkgdown` web pages, execute the
+following code:
+
+``` r
+# How to build the pkgdown from behind proxied Internet
+library(withr)
+library(pkgdown)
+
+with_options(list(pkgdown.internet = FALSE),
+             build_site())
+```
