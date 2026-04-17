@@ -8,7 +8,7 @@
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to
-#' `SWH_FCT.FAC_APDS_FLIGHT_IR691` or go with the default which uses PRU_ATMAP
+#' `SWH_FCT.FAC_APDS_FLIGHT_IR691` or go with the default which uses PRU_READ
 #' to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
@@ -27,7 +27,7 @@
 #'
 apdf_tbl <- function(conn = NULL) {
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_ATMAP")
+    conn <- db_connection(schema = "PRU_READ")
   }
   apdf <- dplyr::tbl(
     conn,
@@ -46,7 +46,7 @@ apdf_tbl <- function(conn = NULL) {
 #'
 #' # Note
 #' You need to either provide a connection `conn` that has access to
-#' `SWH_FCT.FAC_APDS_FLIGHT_IR691`, or go with the default which uses PRU_ATMAP
+#' `SWH_FCT.FAC_APDS_FLIGHT_IR691`, or go with the default which uses PRU_READ
 #' to establish a [db_connection()].
 #'
 #' @inheritParams airlines_tbl
