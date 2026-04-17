@@ -4,25 +4,31 @@
 #' The `schema` is in fact the prefix of the environment variables
 #' where the credentials are stored, like `<schema>_USR`,
 #' `<schema>_PWD` and `<schema>_DBNAME`.
-#' Possible values for `schema` are `PRU_PROD`, `PRU_DEV`,
-#' `PRU_TEST`, ...
+#' Possible values for `schema` are `PRU_READ`, `PRU_PROD`,
+#' `PRU_DEV`, `PRU_TEST`, ...
 #'
 #' @param schema the Oracle DB schema to connect to.
 #'
 #'
-#' @return A connection to a database (specifically an implementation of [DBI::DBIConnection-class]
-#'         for an Oracle database.)
+#' @return A connection to a database (specifically an implementation of
+#'         [DBI::DBIConnection-class] for an Oracle database.)
 #' @export
 #'
 #' @examples
 #' \dontrun{
+#' # Within a function call (or interactive session, a restart will close the
+#' # `withr` calls) you should use the following snippet of code
+#' withr::local_envvar(c(TZ = "UTC", ORA_SDTZ = "UTC", NLS_LANG = ".AL32UTF8"))
+#' # connect with PRU_READ credentials
+#' conn <- db_connection("PRU_READ") |> withr::local_db_connection()
+#' # or alternativelly more basically (you need to explicitly close the
+#' # the DB connection):
 #' conn <- db_connection()
 #' # ... perform other API operations re-using the same connection
 #' # ...
 #' DBI::dbDisconnect(conn)
 #' }
-db_connection <- function(schema = "PRU_PROD") {
-
+db_connection <- function(schema = "PRU_READ") {
   USR <- Sys.getenv(paste0(schema, "_USR"))
   PWD <- Sys.getenv(paste0(schema, "_PWD"))
   DBN <- Sys.getenv(paste0(schema, "_DBNAME"))
@@ -33,13 +39,12 @@ db_connection <- function(schema = "PRU_PROD") {
     "NLS_LANG" = ".AL32UTF8"
   ))
   conn <- DBI::dbConnect(
-    drv      = DBI::dbDriver("Oracle"),
+    drv = DBI::dbDriver("Oracle"),
     username = USR,
     password = PWD,
-    dbname   = DBN,
+    dbname = DBN,
     timezone = "UTC"
   )
 
   conn
 }
-
