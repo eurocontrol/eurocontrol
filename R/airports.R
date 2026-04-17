@@ -13,9 +13,13 @@ export_airports <- function(wef, til) {
     "ORA_SDTZ" = "UTC",
     "NLS_LANG" = ".AL32UTF8"
   ))
-  conn <- withr::local_db_connection(eurocontrol::db_connection(schema = "PRU_DEV"))
+  conn <- db_connection("PRU_READ") |> withr::local_db_connection()
 
   conn |>
     dplyr::tbl(dbplyr::in_schema("SWH_FCT", "DIM_AIRPORT")) |>
-    dplyr::filter(.data$VALID_FROM <= TO_DATE(wef, "YYYY-MM-DD"), TO_DATE(til, "YYYY-MM-DD") <= .data$VALID_TO)
+    dplyr::filter(
+      .data$VALID_FROM <= TO_DATE(wef, "YYYY-MM-DD"),
+      TO_DATE(til, "YYYY-MM-DD") <= .data$VALID_TO
+    ) |>
+    dplyr::collect()
 }
