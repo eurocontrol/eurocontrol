@@ -33,6 +33,7 @@ reference:
   - flights_tidy
   - point_profiles_tidy
   - airports_oa
+  - adrr_flights_tidy
 
 - subtitle: Formats
   desc: >
