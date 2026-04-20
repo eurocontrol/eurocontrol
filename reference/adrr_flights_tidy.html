@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.21</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.22</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,20 +67,44 @@ Aviation Data Repository for Research manual):</p><div class="section">
 <h3 id="flight-details">Flight details<a class="anchor" aria-label="anchor" href="#flight-details"></a></h3>
 
 <ul><li><p><code>ECTRL ID</code>: flight unique id.</p></li>
-<li><p><code>ADEP</code>/<code>ADES</code>:</p></li>
-<li><p><code>ADEP Latitude</code>/<code>ADES Latitude</code>:</p></li>
-<li><p><code>ADEP Longitude</code>/<code>ADES Longitude</code>:</p></li>
-<li><p><code>FILED OFF BLOCK TIME</code>:</p></li>
-<li><p><code>FILED ARRIVAL TIME</code>:</p></li>
-<li><p><code>ACTUAL OFF BLOCK TIME</code>:</p></li>
-<li><p><code>ACTUAL ARRIVAL TIME</code>:</p></li>
-<li><p><code>AC Type</code>:</p></li>
-<li><p><code>AC Operator</code>:</p></li>
-<li><p><code>AC Registration</code>:</p></li>
-<li><p><code>ICAO Flight Type</code>:</p></li>
-<li><p><code>STATFOR Market Segment</code>:</p></li>
-<li><p><code>Requested FL</code>:</p></li>
-<li><p><code>Actual Distance Flown (nm)</code>:</p></li>
+<li><p><code>ADEP</code>: <a href="https://observablehq.com/@openaviation/airports" class="external-link">ICAO code</a> of the</p></li>
+<li><p><code>ADEP Latitude</code>: <code>ADEP</code> latitude (decimal degrees North)</p></li>
+<li><p><code>ADEP Longitude</code>: <code>ADEP</code> longitude (decimal degrees East)
+<strong>A</strong>erodrome of <strong>DEP</strong>arture</p></li>
+<li><p><code>ADES</code>: <a href="https://observablehq.com/@openaviation/airports" class="external-link">ICAO code</a> of the
+<strong>A</strong>erodrome of <strong>DES</strong>tination</p></li>
+<li><p><code>ADES Latitude</code>: <code>ADES</code> latitude (decimal degrees North)</p></li>
+<li><p><code>ADES Longitude</code>: <code>ADES</code> longitude (decimal degrees East)</p></li>
+<li><p><code>FILED OFF BLOCK TIME</code>: (Last) filed off-block time</p></li>
+<li><p><code>FILED ARRIVAL TIME</code>: (Last) filed arrival time</p></li>
+<li><p><code>ACTUAL OFF BLOCK TIME</code>: actual off-block time for flown (M3) trajectory</p></li>
+<li><p><code>ACTUAL ARRIVAL TIME</code>: arrival time for flown (M3) trajectory</p></li>
+<li><p><code>AC Type</code>: the <a href="https://www.icao.int/publications/doc8643/pages/search.aspx" class="external-link">ICAO code for the aircraft type</a>,
+for example A30B for an Airbus A-300B2-200.</p></li>
+<li><p><code>AC Operator</code>: the <a href="https://en.wikipedia.org/wiki/List_of_airline_codes" class="external-link">ICAO Airline Designator</a>,
+i.e. <code>OAL</code> for <code>Olympic</code></p></li>
+<li><p><code>AC Registration</code>: the <a href="https://en.wikipedia.org/wiki/Aircraft_registration" class="external-link">aircraft registration</a>
+(with spaces, dashes, ... stripped), e.g. GEUUU</p></li>
+<li><p><code>ICAO Flight Type</code>: flight type (see
+<a href="https://www.skybrary.aero/articles/flight-plan-completion" class="external-link">FPL Item 8</a>).
+Possible values:</p><ul><li><p><code>S</code> for scheduled air service</p></li>
+<li><p><code>N</code> for non-scheduled air service</p></li>
+</ul></li>
+<li><p><code>STATFOR Market Segment</code>: market segment type as defined on the
+<a href="https://www.eurocontrol.int/publication/market-segment-rules" class="external-link">Market Segment Rules</a>,
+it can be:</p><ul><li><p>“Mainline”</p></li>
+<li><p>“Regional”</p></li>
+<li><p>“Low-Cost”</p></li>
+<li><p>“Business Aviation”</p></li>
+<li><p>“All-Cargo”</p></li>
+<li><p>“Charter” (Non-Scheduled)</p></li>
+<li><p>“Military”</p></li>
+<li><p>“Other”</p></li>
+<li><p>"Not classified"</p></li>
+</ul></li>
+<li><p><code>Requested FL</code>: requested cruising flight level (FL)</p></li>
+<li><p><code>Actual Distance Flown (nm)</code>: route length (in Nautical Miles) for for flown
+(M3) trajectory</p></li>
 </ul></div>
 
     </div>

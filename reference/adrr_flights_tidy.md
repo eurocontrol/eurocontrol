@@ -36,33 +36,77 @@ for Research manual):
 
 - `ECTRL ID`: flight unique id.
 
-- `ADEP`/`ADES`:
+- `ADEP`: [ICAO code](https://observablehq.com/@openaviation/airports)
+  of the
 
-- `ADEP Latitude`/`ADES Latitude`:
+- `ADEP Latitude`: `ADEP` latitude (decimal degrees North)
 
-- `ADEP Longitude`/`ADES Longitude`:
+- `ADEP Longitude`: `ADEP` longitude (decimal degrees East)
+  **A**erodrome of **DEP**arture
 
-- `FILED OFF BLOCK TIME`:
+- `ADES`: [ICAO code](https://observablehq.com/@openaviation/airports)
+  of the **A**erodrome of **DES**tination
 
-- `FILED ARRIVAL TIME`:
+- `ADES Latitude`: `ADES` latitude (decimal degrees North)
 
-- `ACTUAL OFF BLOCK TIME`:
+- `ADES Longitude`: `ADES` longitude (decimal degrees East)
 
-- `ACTUAL ARRIVAL TIME`:
+- `FILED OFF BLOCK TIME`: (Last) filed off-block time
 
-- `AC Type`:
+- `FILED ARRIVAL TIME`: (Last) filed arrival time
 
-- `AC Operator`:
+- `ACTUAL OFF BLOCK TIME`: actual off-block time for flown (M3)
+  trajectory
 
-- `AC Registration`:
+- `ACTUAL ARRIVAL TIME`: arrival time for flown (M3) trajectory
 
-- `ICAO Flight Type`:
+- `AC Type`: the [ICAO code for the aircraft
+  type](https://www.icao.int/publications/doc8643/pages/search.aspx),
+  for example A30B for an Airbus A-300B2-200.
 
-- `STATFOR Market Segment`:
+- `AC Operator`: the [ICAO Airline
+  Designator](https://en.wikipedia.org/wiki/List_of_airline_codes), i.e.
+  `OAL` for `Olympic`
 
-- `Requested FL`:
+- `AC Registration`: the [aircraft
+  registration](https://en.wikipedia.org/wiki/Aircraft_registration)
+  (with spaces, dashes, ... stripped), e.g. GEUUU
 
-- `Actual Distance Flown (nm)`:
+- `ICAO Flight Type`: flight type (see [FPL Item
+  8](https://www.skybrary.aero/articles/flight-plan-completion)).
+  Possible values:
+
+  - `S` for scheduled air service
+
+  - `N` for non-scheduled air service
+
+- `STATFOR Market Segment`: market segment type as defined on the
+  [Market Segment
+  Rules](https://www.eurocontrol.int/publication/market-segment-rules),
+  it can be:
+
+  - “Mainline”
+
+  - “Regional”
+
+  - “Low-Cost”
+
+  - “Business Aviation”
+
+  - “All-Cargo”
+
+  - “Charter” (Non-Scheduled)
+
+  - “Military”
+
+  - “Other”
+
+  - "Not classified"
+
+- `Requested FL`: requested cruising flight level (FL)
+
+- `Actual Distance Flown (nm)`: route length (in Nautical Miles) for for
+  flown (M3) trajectory
 
 ## Note
 

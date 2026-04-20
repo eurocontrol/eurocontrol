@@ -236,7 +236,7 @@ details, aircraft info, aircraft operator info and operational details):
 - AOBT_3: **A**ctual **O**ff-**B**lock **T**ime for flown (M3)
   trajectory
 
-- ARVT_3: **ARV**ival **T**ime for flown (M3) trajectory
+- ARVT_3: **AR**i**V**al **T**ime for flown (M3) trajectory
 
 - TAXI_TIME_3: Taxi time for flown (M3) trajectory
 
