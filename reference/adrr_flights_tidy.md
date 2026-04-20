@@ -37,12 +37,11 @@ for Research manual):
 - `ECTRL ID`: flight unique id.
 
 - `ADEP`: [ICAO code](https://observablehq.com/@openaviation/airports)
-  of the
+  of the **A**erodrome of **DEP**arture
 
 - `ADEP Latitude`: `ADEP` latitude (decimal degrees North)
 
 - `ADEP Longitude`: `ADEP` longitude (decimal degrees East)
-  **A**erodrome of **DEP**arture
 
 - `ADES`: [ICAO code](https://observablehq.com/@openaviation/airports)
   of the **A**erodrome of **DES**tination
@@ -70,7 +69,7 @@ for Research manual):
 
 - `AC Registration`: the [aircraft
   registration](https://en.wikipedia.org/wiki/Aircraft_registration)
-  (with spaces, dashes, ... stripped), e.g. GEUUU
+  (with spaces, dashes, ... stripped), e.g. `GEUUU`
 
 - `ICAO Flight Type`: flight type (see [FPL Item
   8](https://www.skybrary.aero/articles/flight-plan-completion)).
