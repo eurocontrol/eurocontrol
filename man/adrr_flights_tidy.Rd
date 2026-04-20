@@ -21,20 +21,48 @@ Aviation Data Repository for Research manual):
 \subsection{Flight details}{
 \itemize{
 \item \verb{ECTRL ID}: flight unique id.
-\item \code{ADEP}/\code{ADES}:
-\item \verb{ADEP Latitude}/\verb{ADES Latitude}:
-\item \verb{ADEP Longitude}/\verb{ADES Longitude}:
-\item \verb{FILED OFF BLOCK TIME}:
-\item \verb{FILED ARRIVAL TIME}:
-\item \verb{ACTUAL OFF BLOCK TIME}:
-\item \verb{ACTUAL ARRIVAL TIME}:
-\item \verb{AC Type}:
-\item \verb{AC Operator}:
-\item \verb{AC Registration}:
-\item \verb{ICAO Flight Type}:
-\item \verb{STATFOR Market Segment}:
-\item \verb{Requested FL}:
-\item \verb{Actual Distance Flown (nm)}:
+\item \code{ADEP}: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the
+\item \verb{ADEP Latitude}: \code{ADEP} latitude (decimal degrees North)
+\item \verb{ADEP Longitude}: \code{ADEP} longitude (decimal degrees East)
+\strong{A}erodrome of \strong{DEP}arture
+\item \code{ADES}: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the
+\strong{A}erodrome of \strong{DES}tination
+\item \verb{ADES Latitude}: \code{ADES} latitude (decimal degrees North)
+\item \verb{ADES Longitude}: \code{ADES} longitude (decimal degrees East)
+\item \verb{FILED OFF BLOCK TIME}: (Last) filed off-block time
+\item \verb{FILED ARRIVAL TIME}: (Last) filed arrival time
+\item \verb{ACTUAL OFF BLOCK TIME}: actual off-block time for flown (M3) trajectory
+\item \verb{ACTUAL ARRIVAL TIME}: arrival time for flown (M3) trajectory
+\item \verb{AC Type}: the \href{https://www.icao.int/publications/doc8643/pages/search.aspx}{ICAO code for the aircraft type},
+for example A30B for an Airbus A-300B2-200.
+\item \verb{AC Operator}: the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator},
+i.e. \code{OAL} for \code{Olympic}
+\item \verb{AC Registration}: the \href{https://en.wikipedia.org/wiki/Aircraft_registration}{aircraft registration}
+(with spaces, dashes, ... stripped), e.g. GEUUU
+\item \verb{ICAO Flight Type}: flight type (see
+\href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}).
+Possible values:
+\itemize{
+\item \code{S} for scheduled air service
+\item \code{N} for non-scheduled air service
+}
+\item \verb{STATFOR Market Segment}: market segment type as defined on the
+\href{https://www.eurocontrol.int/publication/market-segment-rules}{Market Segment Rules},
+it can be:
+\itemize{
+\item “Mainline”
+\item “Regional”
+\item “Low-Cost”
+\item “Business Aviation”
+\item “All-Cargo”
+\item “Charter” (Non-Scheduled)
+\item “Military”
+\item “Other”
+\item "Not classified"
+}
+\item \verb{Requested FL}: requested cruising flight level (FL)
+\item \verb{Actual Distance Flown (nm)}: route length (in Nautical Miles) for for flown
+(M3) trajectory
 }
 }
 }

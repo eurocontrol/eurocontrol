@@ -155,7 +155,7 @@ i.e. \code{OAL} for \code{Olympic}
 \item ARVT_1: \strong{AR}ri\strong{V}al \strong{T}ime for FPL-based (M1) trajectory
 \item TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
 \item AOBT_3: \strong{A}ctual \strong{O}ff-\strong{B}lock \strong{T}ime for flown (M3) trajectory
-\item ARVT_3: \strong{ARV}ival \strong{T}ime for flown (M3) trajectory
+\item ARVT_3: \strong{AR}i\strong{V}al \strong{T}ime for flown (M3) trajectory
 \item TAXI_TIME_3: Taxi time for flown (M3) trajectory
 \item RTE_LEN_1: route length (in Nautical Miles) for FPL-based (M1) trajectory
 \item RTE_LEN_3: route length (in Nautical Miles) for for flown (M3) trajectory

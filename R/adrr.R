@@ -13,20 +13,44 @@
 #' Aviation Data Repository for Research manual):
 #' ## Flight details
 #' * `ECTRL ID`: flight unique id.
-#' * `ADEP`/`ADES`:
-#' * `ADEP Latitude`/`ADES Latitude`:
-#' * `ADEP Longitude`/`ADES Longitude`:
-#' * `FILED OFF BLOCK TIME`:
-#' * `FILED ARRIVAL TIME`:
-#' * `ACTUAL OFF BLOCK TIME`:
-#' * `ACTUAL ARRIVAL TIME`:
-#' * `AC Type`:
-#' * `AC Operator`:
-#' * `AC Registration`:
-#' * `ICAO Flight Type`:
-#' * `STATFOR Market Segment`:
-#' * `Requested FL`:
-#' * `Actual Distance Flown (nm)`:
+#' * `ADEP`: [ICAO code](https://observablehq.com/@openaviation/airports) of the
+#' * `ADEP Latitude`: `ADEP` latitude (decimal degrees North)
+#' * `ADEP Longitude`: `ADEP` longitude (decimal degrees East)
+#'   **A**erodrome of **DEP**arture
+#' * `ADES`: [ICAO code](https://observablehq.com/@openaviation/airports) of the
+#'   **A**erodrome of **DES**tination
+#' * `ADES Latitude`: `ADES` latitude (decimal degrees North)
+#' * `ADES Longitude`: `ADES` longitude (decimal degrees East)
+#' * `FILED OFF BLOCK TIME`: (Last) filed off-block time
+#' * `FILED ARRIVAL TIME`: (Last) filed arrival time
+#' * `ACTUAL OFF BLOCK TIME`: actual off-block time for flown (M3) trajectory
+#' * `ACTUAL ARRIVAL TIME`: arrival time for flown (M3) trajectory
+#' * `AC Type`: the [ICAO code for the aircraft type](https://www.icao.int/publications/doc8643/pages/search.aspx),
+#'    for example A30B for an Airbus A-300B2-200.
+#' * `AC Operator`: the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes),
+#'   i.e. `OAL` for `Olympic`
+#' * `AC Registration`: the [aircraft registration](https://en.wikipedia.org/wiki/Aircraft_registration)
+#'   (with spaces, dashes, ... stripped), e.g. GEUUU
+#' * `ICAO Flight Type`: flight type (see
+#'     [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)).
+#'   Possible values:
+#'   - `S` for scheduled air service
+#'   - `N` for non-scheduled air service
+#' * `STATFOR Market Segment`: market segment type as defined on the
+#'   [Market Segment Rules](https://www.eurocontrol.int/publication/market-segment-rules),
+#'   it can be:
+#'   - “Mainline”
+#'   - “Regional”
+#'   - “Low-Cost”
+#'   - “Business Aviation”
+#'   - “All-Cargo”
+#'   - “Charter” (Non-Scheduled)
+#'   - “Military”
+#'   - “Other”
+#'   - "Not classified"
+#' * `Requested FL`: requested cruising flight level (FL)
+#' * `Actual Distance Flown (nm)`: route length (in Nautical Miles) for for flown
+#'   (M3) trajectory
 #'
 #' @export
 #' @examples

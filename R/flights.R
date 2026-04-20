@@ -172,7 +172,7 @@ flights_tbl <- function(conn = NULL) {
 #' * ARVT_1: **AR**ri**V**al **T**ime for FPL-based (M1) trajectory
 #' * TAXI_TIME_1: Taxi time for FPL-based (M1) trajectory
 #' * AOBT_3: **A**ctual **O**ff-**B**lock **T**ime for flown (M3) trajectory
-#' * ARVT_3: **ARV**ival **T**ime for flown (M3) trajectory
+#' * ARVT_3: **AR**i**V**al **T**ime for flown (M3) trajectory
 #' * TAXI_TIME_3: Taxi time for flown (M3) trajectory
 #' * RTE_LEN_1: route length (in Nautical Miles) for FPL-based (M1) trajectory
 #' * RTE_LEN_3: route length (in Nautical Miles) for for flown (M3) trajectory
