@@ -105,6 +105,8 @@ Helpers for typical queries.
   : Export point profile from NM trajectories
 - [`airports_oa()`](https://eurocontrol.github.io/eurocontrol/reference/airports_oa.md)
   : retrieve latest airport list from OurAirports
+- [`adrr_flights_tidy()`](https://eurocontrol.github.io/eurocontrol/reference/adrr_flights_tidy.md)
+  : Extract ADRR flight list in an interval of dates
 
 ### Formats
 
