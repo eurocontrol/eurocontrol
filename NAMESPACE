@@ -2,6 +2,7 @@
 
 export(":=")
 export(.data)
+export(adrr_flights_tidy)
 export(airlines_tbl)
 export(airlines_tidy)
 export(airports_oa)
