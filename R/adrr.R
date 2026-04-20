@@ -14,9 +14,9 @@
 #' ## Flight details
 #' * `ECTRL ID`: flight unique id.
 #' * `ADEP`: [ICAO code](https://observablehq.com/@openaviation/airports) of the
+#'   **A**erodrome of **DEP**arture
 #' * `ADEP Latitude`: `ADEP` latitude (decimal degrees North)
 #' * `ADEP Longitude`: `ADEP` longitude (decimal degrees East)
-#'   **A**erodrome of **DEP**arture
 #' * `ADES`: [ICAO code](https://observablehq.com/@openaviation/airports) of the
 #'   **A**erodrome of **DES**tination
 #' * `ADES Latitude`: `ADES` latitude (decimal degrees North)
@@ -30,7 +30,7 @@
 #' * `AC Operator`: the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes),
 #'   i.e. `OAL` for `Olympic`
 #' * `AC Registration`: the [aircraft registration](https://en.wikipedia.org/wiki/Aircraft_registration)
-#'   (with spaces, dashes, ... stripped), e.g. GEUUU
+#'   (with spaces, dashes, ... stripped), e.g. `GEUUU`
 #' * `ICAO Flight Type`: flight type (see
 #'     [FPL Item 8](https://www.skybrary.aero/articles/flight-plan-completion)).
 #'   Possible values:

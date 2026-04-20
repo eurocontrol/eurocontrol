@@ -22,9 +22,9 @@ Aviation Data Repository for Research manual):
 \itemize{
 \item \verb{ECTRL ID}: flight unique id.
 \item \code{ADEP}: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the
+\strong{A}erodrome of \strong{DEP}arture
 \item \verb{ADEP Latitude}: \code{ADEP} latitude (decimal degrees North)
 \item \verb{ADEP Longitude}: \code{ADEP} longitude (decimal degrees East)
-\strong{A}erodrome of \strong{DEP}arture
 \item \code{ADES}: \href{https://observablehq.com/@openaviation/airports}{ICAO code} of the
 \strong{A}erodrome of \strong{DES}tination
 \item \verb{ADES Latitude}: \code{ADES} latitude (decimal degrees North)
@@ -38,7 +38,7 @@ for example A30B for an Airbus A-300B2-200.
 \item \verb{AC Operator}: the \href{https://en.wikipedia.org/wiki/List_of_airline_codes}{ICAO Airline Designator},
 i.e. \code{OAL} for \code{Olympic}
 \item \verb{AC Registration}: the \href{https://en.wikipedia.org/wiki/Aircraft_registration}{aircraft registration}
-(with spaces, dashes, ... stripped), e.g. GEUUU
+(with spaces, dashes, ... stripped), e.g. \code{GEUUU}
 \item \verb{ICAO Flight Type}: flight type (see
 \href{https://www.skybrary.aero/articles/flight-plan-completion}{FPL Item 8}).
 Possible values:
