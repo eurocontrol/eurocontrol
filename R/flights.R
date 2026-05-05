@@ -159,6 +159,7 @@ flights_tbl <- function(conn = NULL) {
 #'   - `H` HEAVY, i.e. maximum certificated takeoff mass of 136_000 kg (300_000 lbs) or more
 #'     (except those specified as `J`)
 #'   - `J` SUPER, presently the only the AIRBUS A-380-800
+#' * ICAO_EQPT: aircraft equipment information
 #'
 #' ## Aircraft operator details
 #' * AIRCRAFT_OPERATOR: the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes),
@@ -240,6 +241,7 @@ flights_tidy <- function(
     "AIRCRAFT_ADDRESS",
     "AIRCRAFT_TYPE_ICAO_ID",
     "WK_TBL_CAT",
+    "ICAO_EQPT",
     #-- aircraft operator
     "AIRCRAFT_OPERATOR",
     "AO_ISO_CTRY_CODE",

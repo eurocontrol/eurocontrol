@@ -136,6 +136,7 @@ but more than 7_000 kg (15_500 lbs)
 (except those specified as \code{J})
 \item \code{J} SUPER, presently the only the AIRBUS A-380-800
 }
+\item ICAO_EQPT: aircraft equipment information
 }
 }
 
