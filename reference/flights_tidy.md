@@ -212,6 +212,8 @@ details, aircraft info, aircraft operator info and operational details):
 
   - `J` SUPER, presently the only the AIRBUS A-380-800
 
+- ICAO_EQPT: aircraft equipment information
+
 ### Aircraft operator details
 
 - AIRCRAFT_OPERATOR: the [ICAO Airline

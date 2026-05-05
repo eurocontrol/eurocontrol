@@ -15,13 +15,13 @@ Source:
 [`DESCRIPTION`](https://github.com/eurocontrol/eurocontrol/blob/main/DESCRIPTION)
 
 Spinielli E (2026). *eurocontrol: Helper functions for EUROCONTROL
-useRs*. R package version 0.1.22,
+useRs*. R package version 0.1.23,
 <https://eurocontrol.github.io/eurocontrol/>.
 
     @Manual{,
       title = {eurocontrol: Helper functions for EUROCONTROL useRs},
       author = {Enrico Spinielli},
       year = {2026},
-      note = {R package version 0.1.22},
+      note = {R package version 0.1.23},
       url = {https://eurocontrol.github.io/eurocontrol/},
     }

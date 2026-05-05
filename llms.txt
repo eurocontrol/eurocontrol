@@ -10,6 +10,7 @@ You can install the development version of the `eurocontrol` package
 from [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("eurocontrol/eurocontrol")
 ```
@@ -46,6 +47,7 @@ For example for the flight list of March 2023 you can run (you need
 access and setup for `PRU_READ` schema):
 
 ``` r
+
 library(eurocontrol)
 
 flights_tidy(wef = "2023-01-01", til = "2023-04-01")
@@ -57,6 +59,7 @@ In order to build the relevant `pkgdown` web pages, execute the
 following code:
 
 ``` r
+
 # How to build the pkgdown from behind proxied Internet
 library(withr)
 library(pkgdown)
