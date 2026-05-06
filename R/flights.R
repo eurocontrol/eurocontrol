@@ -78,6 +78,11 @@ flights_tbl <- function(conn = NULL) {
 #' @param include_sensitive include sensitive flights, default FALSE
 #' @param include_military include military flights, default FALSE
 #' @param include_head include Head of State flights, default FALSE
+#' @param extra_cols a character vector with the name of additional columns from
+#'            `V_FAC_FLIGHT_MS`, default NULL.
+#'            This can be useful for example to get equipment data, i.e.
+#'            `ICAO_EQPT` or similar (`COM_EQPT`, `DATA_LINK_EQPT`, `NAV_EQPT`,
+#'             `SSR_EQPT`, `SURVIVAL_EQPT`).
 #'
 #' @return A [dbplyr::tbl_dbi()] with the following columns (grouped here by
 #'         flight details, aerodrome details, aircraft info, aircraft operator
@@ -159,7 +164,6 @@ flights_tbl <- function(conn = NULL) {
 #'   - `H` HEAVY, i.e. maximum certificated takeoff mass of 136_000 kg (300_000 lbs) or more
 #'     (except those specified as `J`)
 #'   - `J` SUPER, presently the only the AIRBUS A-380-800
-#' * ICAO_EQPT: aircraft equipment information
 #'
 #' ## Aircraft operator details
 #' * AIRCRAFT_OPERATOR: the [ICAO Airline Designator](https://en.wikipedia.org/wiki/List_of_airline_codes),
@@ -180,6 +184,9 @@ flights_tbl <- function(conn = NULL) {
 #' * FLT_DUR_1: route duration (in minutes) for FPL-based (M1) trajectory
 #' * FLT_DUR_3: route length (in minutes) for flown (M3) trajectory
 #' * FLT_TOW: takeoff weight
+#'
+#' ## Additional details
+#' * all extra columns as from `extra_cols`
 #'
 #' @export
 #'
@@ -210,7 +217,8 @@ flights_tidy <- function(
   ids = NULL,
   include_sensitive = FALSE,
   include_military = FALSE,
-  include_head = FALSE
+  include_head = FALSE,
+  extra_cols = NULL
 ) {
   columns <- c(
     #-- flight
@@ -241,7 +249,6 @@ flights_tidy <- function(
     "AIRCRAFT_ADDRESS",
     "AIRCRAFT_TYPE_ICAO_ID",
     "WK_TBL_CAT",
-    "ICAO_EQPT",
     #-- aircraft operator
     "AIRCRAFT_OPERATOR",
     "AO_ISO_CTRY_CODE",
@@ -261,6 +268,10 @@ flights_tidy <- function(
     "FLT_TOW",
     NULL
   )
+
+  if (!is.null(extra_cols) & !is.character(extra_cols)) {
+    stop("extra_cols needs to be a character vector or NULL")
+  }
 
   if (is.null(conn)) {
     conn <- db_connection(schema = "PRU_READ")
@@ -322,6 +333,10 @@ flights_tidy <- function(
       )
   }
 
+  # all columns in `columns` with the addition of the extra ones of `extra_cols`
+  # that are not already in `columns`. Respect the order.
+  all_cols <- c(columns, extra_cols[!extra_cols %in% columns])
+
   fff <- fff |>
     dplyr::left_join(frl, by = "SK_FLT_TYPE_RULE_ID") |>
     dplyr::left_join(aog, by = c("AIRCRAFT_OPERATOR" = "AO_CODE")) |>
@@ -347,6 +362,6 @@ flights_tidy <- function(
       COUNTRY_CODE_ADES_FILED = .data$COUNTRY_CODE,
       COUNTRY_NAME_ADES_FILED = .data$COUNTRY_NAME
     ) |>
-    dplyr::select(dplyr::all_of(columns))
+    dplyr::select(dplyr::all_of(all_cols))
   fff
 }

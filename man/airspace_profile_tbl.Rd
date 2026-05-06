@@ -10,10 +10,10 @@ airspace_profile_tbl(conn = NULL)
 \item{conn}{Database connection or instantiate the default one.}
 }
 \value{
-a \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} referencing the Oracle table for airspace profiles.
+a \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} referencing the Oracle table for airspace profiles.
 }
 \description{
-The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} is referencing the airspace profiles table
+The returned \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} is referencing the airspace profiles table
 in PRISME. You can use \code{dplyr}/\code{dbplyr} verbs to filter, join, ... with other
 datasets.
 }

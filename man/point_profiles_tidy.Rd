@@ -16,10 +16,10 @@ point_profiles_tidy(
 \item{conn}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
-in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
 
 \item{til}{un\strong{TIL}l date (excluded) at Zulu time
-in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
 
 \item{profile}{the \href{https://ansperformance.eu/definition/flight-models/}{model of the trajectory}
 profile (default: 'CTFM'), one of:

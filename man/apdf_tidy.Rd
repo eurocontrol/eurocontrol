@@ -10,13 +10,13 @@ apdf_tidy(conn = NULL, wef, til)
 \item{conn}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
-in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
 
 \item{til}{un\strong{TIL}l date (excluded) at Zulu time
-in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
 }
 \value{
-A \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns:
+A \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} with the following columns:
 \itemize{
 \item APDS_ID: the airport operator dataflow unique record id.
 \item ID: the so called \verb{SAM ID}, used internally by PRISME
@@ -58,7 +58,7 @@ for example A21N for Airbus A321neo.
 }
 }
 \description{
-The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} includes movements information in the
+The returned \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} includes movements information in the
 interval \verb{[wef, til)}.
 \strong{NOTE}: it can only cover ONE month at a time
 }

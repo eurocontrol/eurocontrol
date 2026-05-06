@@ -19,6 +19,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Enrico Spinielli \email{enrico.spinielli@eurocontrol.int} (\href{https://orcid.org/0000-0001-8584-9131}{ORCID})
 
+Authors:
+\itemize{
+  \item Enrico Spinielli \email{enrico.spinielli@eurocontrol.int} (\href{https://orcid.org/0000-0001-8584-9131}{ORCID})
+}
+
 Other contributors:
 \itemize{
   \item EUROCONTROL [copyright holder, funder]

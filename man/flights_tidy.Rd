@@ -12,17 +12,18 @@ flights_tidy(
   ids = NULL,
   include_sensitive = FALSE,
   include_military = FALSE,
-  include_head = FALSE
+  include_head = FALSE,
+  extra_cols = NULL
 )
 }
 \arguments{
 \item{conn}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
-in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
 
 \item{til}{un\strong{TIL}l date (excluded) at Zulu time
-in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
 
 \item{icao_flt_types}{the types of flights as described below in
 \code{ICAO_FLT_TYPE}, default \code{c('S', 'N')}, NULL includes all
@@ -37,9 +38,15 @@ either pass NULL or make sure 'M' is included}
 \item{include_military}{include military flights, default FALSE}
 
 \item{include_head}{include Head of State flights, default FALSE}
+
+\item{extra_cols}{a character vector with the name of additional columns from
+\code{V_FAC_FLIGHT_MS}, default NULL.
+This can be useful for example to get equipment data, i.e.
+\code{ICAO_EQPT} or similar (\code{COM_EQPT}, \code{DATA_LINK_EQPT}, \code{NAV_EQPT},
+\code{SSR_EQPT}, \code{SURVIVAL_EQPT}).}
 }
 \value{
-A \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns (grouped here by
+A \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} with the following columns (grouped here by
 flight details, aerodrome details, aircraft info, aircraft operator
 info and operational details):
 \subsection{Flight details}{
@@ -136,7 +143,6 @@ but more than 7_000 kg (15_500 lbs)
 (except those specified as \code{J})
 \item \code{J} SUPER, presently the only the AIRBUS A-380-800
 }
-\item ICAO_EQPT: aircraft equipment information
 }
 }
 
@@ -165,9 +171,15 @@ i.e. \code{OAL} for \code{Olympic}
 \item FLT_TOW: takeoff weight
 }
 }
+
+\subsection{Additional details}{
+\itemize{
+\item all extra columns as from \code{extra_cols}
+}
+}
 }
 \description{
-The returned \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} includes scheduled and non-scheduled flight
+The returned \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} includes scheduled and non-scheduled flight
 departing in the right-opened interval \verb{[wef, til)}.
 
 Defaults values will assure that General aviation, State, military and

@@ -1,7 +1,7 @@
 Type: Package
 Package: eurocontrol
 Title: Helper functions for EUROCONTROL useRs
-Version: 0.1.23
+Version: 0.1.24
 Authors@R: c(
     person("Enrico", "Spinielli", , "enrico.spinielli@eurocontrol.int", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8584-9131")),
@@ -28,7 +28,6 @@ Imports:
     withr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.3
 Suggests: 
     ROracle,
     roxygen2
@@ -36,3 +35,4 @@ Roxygen: list(markdown = TRUE)
 URL: https://eurocontrol.github.io/eurocontrol/, https://github.com/eurocontrol/eurocontrol
 Depends: 
     R (>= 4.1.0)
+Config/roxygen2/version: 8.0.0

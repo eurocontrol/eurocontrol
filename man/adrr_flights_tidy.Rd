@@ -10,13 +10,13 @@ adrr_flights_tidy(conn = NULL, wef, til)
 \item{conn}{Database connection or instantiate the default one.}
 
 \item{wef}{\strong{W}ith \strong{EF}fect date (included) at Zulu time
-in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
 
 \item{til}{un\strong{TIL}l date (excluded) at Zulu time
-in a format recognized by \code{\link[lubridate:as_date]{lubridate::as_datetime()}}}
+in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
 }
 \value{
-A \code{\link[dbplyr:tbl.src_dbi]{dbplyr::tbl_dbi()}} with the following columns (as defined in the
+A \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} with the following columns (as defined in the
 Aviation Data Repository for Research manual):
 \subsection{Flight details}{
 \itemize{
