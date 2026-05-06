@@ -15,7 +15,7 @@ They can be retrieved via the other function call arguments in case of need."></
 
     <a class="navbar-brand me-2" href="../index.html">eurocontrol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.23</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.24</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,8 @@ They can be retrieved via the other function call arguments in case of need.</p>
 <span>  ids <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  include_sensitive <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  include_military <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  include_head <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  include_head <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  extra_cols <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,6 +104,14 @@ either pass NULL or make sure 'M' is included</p></dd>
 
 <dt id="arg-include-head">include_head<a class="anchor" aria-label="anchor" href="#arg-include-head"></a></dt>
 <dd><p>include Head of State flights, default FALSE</p></dd>
+
+
+<dt id="arg-extra-cols">extra_cols<a class="anchor" aria-label="anchor" href="#arg-extra-cols"></a></dt>
+<dd><p>a character vector with the name of additional columns from
+<code>V_FAC_FLIGHT_MS</code>, default NULL.
+This can be useful for example to get equipment data, i.e.
+<code>ICAO_EQPT</code> or similar (<code>COM_EQPT</code>, <code>DATA_LINK_EQPT</code>, <code>NAV_EQPT</code>,
+<code>SSR_EQPT</code>, <code>SURVIVAL_EQPT</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -194,7 +203,6 @@ but more than 7_000 kg (15_500 lbs)</p></li>
 (except those specified as <code>J</code>)</p></li>
 <li><p><code>J</code> SUPER, presently the only the AIRBUS A-380-800</p></li>
 </ul></li>
-<li><p>ICAO_EQPT: aircraft equipment information</p></li>
 </ul></div>
 
 <div class="section">
@@ -221,6 +229,12 @@ i.e. <code>OAL</code> for <code>Olympic</code></p></li>
 <li><p>FLT_DUR_1: route duration (in minutes) for FPL-based (M1) trajectory</p></li>
 <li><p>FLT_DUR_3: route length (in minutes) for flown (M3) trajectory</p></li>
 <li><p>FLT_TOW: takeoff weight</p></li>
+</ul></div>
+
+<div class="section">
+<h3 id="additional-details">Additional details<a class="anchor" aria-label="anchor" href="#additional-details"></a></h3>
+
+<ul><li><p>all extra columns as from <code>extra_cols</code></p></li>
 </ul></div>
 
     </div>

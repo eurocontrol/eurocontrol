@@ -17,6 +17,11 @@ Useful links:
 **Maintainer**: Enrico Spinielli <enrico.spinielli@eurocontrol.int>
 ([ORCID](https://orcid.org/0000-0001-8584-9131))
 
+Authors:
+
+- Enrico Spinielli <enrico.spinielli@eurocontrol.int>
+  ([ORCID](https://orcid.org/0000-0001-8584-9131))
+
 Other contributors:
 
 - EUROCONTROL \[copyright holder, funder\]

@@ -20,7 +20,8 @@ flights_tidy(
   ids = NULL,
   include_sensitive = FALSE,
   include_military = FALSE,
-  include_head = FALSE
+  include_head = FALSE,
+  extra_cols = NULL
 )
 ```
 
@@ -63,6 +64,13 @@ flights_tidy(
 - include_head:
 
   include Head of State flights, default FALSE
+
+- extra_cols:
+
+  a character vector with the name of additional columns from
+  `V_FAC_FLIGHT_MS`, default NULL. This can be useful for example to get
+  equipment data, i.e. `ICAO_EQPT` or similar (`COM_EQPT`,
+  `DATA_LINK_EQPT`, `NAV_EQPT`, `SSR_EQPT`, `SURVIVAL_EQPT`).
 
 ## Value
 
@@ -212,8 +220,6 @@ details, aircraft info, aircraft operator info and operational details):
 
   - `J` SUPER, presently the only the AIRBUS A-380-800
 
-- ICAO_EQPT: aircraft equipment information
-
 ### Aircraft operator details
 
 - AIRCRAFT_OPERATOR: the [ICAO Airline
@@ -253,6 +259,10 @@ details, aircraft info, aircraft operator info and operational details):
 - FLT_DUR_3: route length (in minutes) for flown (M3) trajectory
 
 - FLT_TOW: takeoff weight
+
+### Additional details
+
+- all extra columns as from `extra_cols`
 
 ## Note
 
