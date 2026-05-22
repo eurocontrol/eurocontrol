@@ -22,6 +22,7 @@ Useful links:
 Authors:
 \itemize{
   \item Enrico Spinielli \email{enrico.spinielli@eurocontrol.int} (\href{https://orcid.org/0000-0001-8584-9131}{ORCID})
+  \item Quinten Goens \email{quinten.goens@eurocontrol.int} (\href{https://orcid.org/0000-0003-2187-1924}{ORCID})
 }
 
 Other contributors:
