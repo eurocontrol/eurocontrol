@@ -264,10 +264,8 @@ flights_airspace_profiles_tidy <- function(
   cols <- colnames(flt)
 
   flt <- flt |>
-    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
-    # dplyr::inner_join(prf, by = c("ID" = "ID"))
-    dplyr::inner_join(prf, by = c("ID" = "ID")) |>
-    dplyr::select(cols) |>
+    dplyr::inner_join(ids, by = "ID") |>
+    dplyr::select(dplyr::all_of(cols)) |>
     dplyr::distinct()
 
   flt
