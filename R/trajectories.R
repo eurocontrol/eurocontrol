@@ -77,6 +77,7 @@ airspace_profile_tbl <- function(conn = NULL) {
 #' @return a [dbplyr::tbl_dbi()] with the following columns
 #'
 #' * ID: the so called `SAM ID`, used internally by PRISME
+#' * FLT_UID: flight unique id.
 #' * SEQ_ID: the sequence number of the segment for the relevant airspace profile
 #' * ENTRY_TIME: the time of entry into the relevant airspace
 #' * ENTRY_LON:  the longitude of entry into the relevant airspace
@@ -137,7 +138,7 @@ airspace_profiles_tidy <- function(
 
   flt <- flights_tidy(conn = conn, wef = wef_before, til = til_after)
   ids <- flt |>
-    dplyr::select(.data$ID) |>
+    dplyr::select(.data$ID, .data$FLT_UID) |>
     dplyr::distinct()
 
   prf <- airspace_profile_tbl(conn = conn) |>
@@ -162,9 +163,15 @@ airspace_profiles_tidy <- function(
     )
 
   prf <- prf |>
+    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
     dplyr::inner_join(ids, by = c("SAM_ID" = "ID")) |>
+    # dply::select(-ID) |>
+    # dplyr::rename(
+    #   ID = .data$SAM_ID
+    # ) |>
     dplyr::select(
       .data$SAM_ID,
+      .data$FLT_UID,
       .data$SEQ_ID,
       .data$ENTRY_TIME,
       .data$ENTRY_LON,
