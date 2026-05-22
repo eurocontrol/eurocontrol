@@ -13,7 +13,12 @@
 #'
 #' @inheritParams airlines_tbl
 #'
-#' @param cfmu_airac the AIRAC cycle number (CFMU format), e.g. `"517"`
+#' @param cfmu_airac the AIRAC cycle number (CFMU format), e.g. `"517"` or
+#'   `517`. Both character and numeric inputs are accepted.
+#'   See [airac::cfmu_airac()] to look up the cycle number for a given date.
+#'
+#' @seealso [airac::cfmu_airac()] from the
+#'   \href{https://github.com/eurocontrol/airac}{airac} package.
 #'
 #' @return An `sf` object with the following columns:
 #' * `AC_ID`: the AIRAC cycle id
@@ -44,6 +49,7 @@
 #' DBI::dbDisconnect(conn)
 #' }
 acc_sf <- function(conn = NULL, cfmu_airac) {
+  cfmu_airac <- as.character(cfmu_airac)
   rlang::check_installed("sf", reason = "to parse GeoJSON airspace geometries")
 
   if (is.null(conn)) {
@@ -124,6 +130,9 @@ acc_sf <- function(conn = NULL, cfmu_airac) {
 #'
 #' @inheritParams acc_sf
 #'
+#' @seealso [airac::cfmu_airac()] from the
+#'   \href{https://github.com/eurocontrol/airac}{airac} package.
+#'
 #' @return An `sf` object with the following columns:
 #' * `airac_cfmu`: the AIRAC cycle id
 #' * `id`: the airspace identifier
@@ -154,6 +163,7 @@ acc_sf <- function(conn = NULL, cfmu_airac) {
 #' DBI::dbDisconnect(conn)
 #' }
 ansp_sf <- function(conn = NULL, cfmu_airac) {
+  cfmu_airac <- as.character(cfmu_airac)
   rlang::check_installed("sf", reason = "to parse GeoJSON airspace geometries")
 
   if (is.null(conn)) {
@@ -262,6 +272,9 @@ ansp_sf <- function(conn = NULL, cfmu_airac) {
 #'
 #' @inheritParams acc_sf
 #'
+#' @seealso [airac::cfmu_airac()] from the
+#'   \href{https://github.com/eurocontrol/airac}{airac} package.
+#'
 #' @return An `sf` object with the following columns:
 #' * `AC_ID`: the AIRAC cycle id
 #' * `AV_AIRSPACE_ID`: the airspace identifier
@@ -291,6 +304,7 @@ ansp_sf <- function(conn = NULL, cfmu_airac) {
 #' DBI::dbDisconnect(conn)
 #' }
 es_sf <- function(conn = NULL, cfmu_airac) {
+  cfmu_airac <- as.character(cfmu_airac)
   rlang::check_installed("sf", reason = "to parse GeoJSON airspace geometries")
 
   if (is.null(conn)) {
@@ -375,6 +389,9 @@ es_sf <- function(conn = NULL, cfmu_airac) {
 #'
 #' @inheritParams acc_sf
 #'
+#' @seealso [airac::cfmu_airac()] from the
+#'   \href{https://github.com/eurocontrol/airac}{airac} package.
+#'
 #' @return An `sf` object with the following columns:
 #' * `airac_cfmu`: the AIRAC cycle id
 #' * `icao`: the 2-letter ICAO prefix (derived from `code`)
@@ -405,6 +422,7 @@ es_sf <- function(conn = NULL, cfmu_airac) {
 #' DBI::dbDisconnect(conn)
 #' }
 fir_sf <- function(conn = NULL, cfmu_airac) {
+  cfmu_airac <- as.character(cfmu_airac)
   rlang::check_installed("sf", reason = "to parse GeoJSON airspace geometries")
 
   if (is.null(conn)) {
