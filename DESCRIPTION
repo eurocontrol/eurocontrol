@@ -28,9 +28,10 @@ Imports:
     withr
 Encoding: UTF-8
 LazyData: true
-Suggests: 
+Suggests:
     ROracle,
-    roxygen2
+    roxygen2,
+    sf
 Roxygen: list(markdown = TRUE)
 URL: https://eurocontrol.github.io/eurocontrol/, https://github.com/eurocontrol/eurocontrol
 Depends: 
