@@ -9,7 +9,9 @@ es_sf(conn = NULL, cfmu_airac)
 \arguments{
 \item{conn}{Database connection or instantiate the default one.}
 
-\item{cfmu_airac}{the AIRAC cycle number (CFMU format), e.g. \code{"517"}}
+\item{cfmu_airac}{the AIRAC cycle number (CFMU format), e.g. \code{"517"} or
+\code{517}. Both character and numeric inputs are accepted.
+See \code{\link[airac:cfmu_airac]{airac::cfmu_airac()}} to look up the cycle number for a given date.}
 }
 \value{
 An \code{sf} object with the following columns:
@@ -31,7 +33,7 @@ specified CFMU AIRAC cycle.
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to
 \code{ENV_SP.AIRSPACE}, \code{PRU_CFMU_ES} and \code{SWH_MAP} or go with the default
-which uses PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
+which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 
 The \code{sf} package is required but only suggested; install it if not available.
 }
@@ -44,7 +46,7 @@ es <- es_sf(cfmu_airac = "517")
 sf::st_write(es, "es-517.geojson", driver = "GeoJSON")
 
 # if you re-use DB connections
-conn <- eurocontrol::db_connection("PRU_READ")
+conn <- eurocontrol::db_connection("PRU_DEV")
 es <- es_sf(conn = conn, cfmu_airac = "517")
 
 # ... do something else with conn
@@ -52,4 +54,8 @@ es <- es_sf(conn = conn, cfmu_airac = "517")
 # then manually close the connection to the DB
 DBI::dbDisconnect(conn)
 }
+}
+\seealso{
+\code{\link[airac:cfmu_airac]{airac::cfmu_airac()}} from the
+\href{https://github.com/eurocontrol/airac}{airac} package.
 }

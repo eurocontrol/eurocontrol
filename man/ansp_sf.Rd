@@ -9,7 +9,9 @@ ansp_sf(conn = NULL, cfmu_airac)
 \arguments{
 \item{conn}{Database connection or instantiate the default one.}
 
-\item{cfmu_airac}{the AIRAC cycle number (CFMU format), e.g. \code{"517"}}
+\item{cfmu_airac}{the AIRAC cycle number (CFMU format), e.g. \code{"517"} or
+\code{517}. Both character and numeric inputs are accepted.
+See \code{\link[airac:cfmu_airac]{airac::cfmu_airac()}} to look up the cycle number for a given date.}
 }
 \value{
 An \code{sf} object with the following columns:
@@ -35,7 +37,7 @@ Airspaces with code \code{AIRPORT}, \code{UNKNOWN} or \code{MILITARY} are exclud
 \section{Note}{
 You need to either provide a connection \code{conn} that has access to
 \code{ENV_SP.AIRSPACE}, \code{PRU_CFMU_ANSP} and \code{SWH_MAP} or go with the default
-which uses PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
+which uses PRU_DEV to establish a \code{\link[=db_connection]{db_connection()}}.
 
 The \code{sf} package is required but only suggested; install it if not available.
 }
@@ -48,7 +50,7 @@ ansps <- ansp_sf(cfmu_airac = "481")
 sf::st_write(ansps, "ansp_ace_481.geojson", driver = "GeoJSON")
 
 # if you re-use DB connections
-conn <- eurocontrol::db_connection("PRU_READ")
+conn <- eurocontrol::db_connection("PRU_DEV")
 ansps <- ansp_sf(conn = conn, cfmu_airac = "481")
 
 # ... do something else with conn
@@ -56,4 +58,8 @@ ansps <- ansp_sf(conn = conn, cfmu_airac = "481")
 # then manually close the connection to the DB
 DBI::dbDisconnect(conn)
 }
+}
+\seealso{
+\code{\link[airac:cfmu_airac]{airac::cfmu_airac()}} from the
+\href{https://github.com/eurocontrol/airac}{airac} package.
 }
