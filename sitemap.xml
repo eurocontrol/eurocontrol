@@ -5,6 +5,7 @@
 <url><loc>https://eurocontrol.github.io/eurocontrol/authors.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/index.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/news/index.html</loc></url>
+<url><loc>https://eurocontrol.github.io/eurocontrol/reference/acc_sf.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/adrr_flights_tidy.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/aircraft_model.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/aircraft_type.html</loc></url>
@@ -13,10 +14,13 @@
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/airports_oa.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/airspace_profile_tbl.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/airspace_profiles_tidy.html</loc></url>
+<url><loc>https://eurocontrol.github.io/eurocontrol/reference/ansp_sf.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/apdf_tbl.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/apdf_tidy.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/db_connection.html</loc></url>
+<url><loc>https://eurocontrol.github.io/eurocontrol/reference/es_sf.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/eurocontrol-package.html</loc></url>
+<url><loc>https://eurocontrol.github.io/eurocontrol/reference/fir_sf.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/flights_airspace_profiles_tidy.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/flights_tbl.html</loc></url>
 <url><loc>https://eurocontrol.github.io/eurocontrol/reference/flights_tidy.html</loc></url>

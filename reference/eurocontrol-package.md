@@ -22,6 +22,9 @@ Authors:
 - Enrico Spinielli <enrico.spinielli@eurocontrol.int>
   ([ORCID](https://orcid.org/0000-0001-8584-9131))
 
+- Quinten Goens <quinten.goens@eurocontrol.int>
+  ([ORCID](https://orcid.org/0000-0003-2187-1924))
+
 Other contributors:
 
 - EUROCONTROL \[copyright holder, funder\]

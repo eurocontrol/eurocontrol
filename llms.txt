@@ -92,6 +92,16 @@ Useful data.
 
 Helpers for typical queries.
 
+- [`acc_sf()`](https://eurocontrol.github.io/eurocontrol/reference/acc_sf.md)
+  : Retrieve ACC/OAC airspace geometries for a given AIRAC cycle
+- [`ansp_sf()`](https://eurocontrol.github.io/eurocontrol/reference/ansp_sf.md)
+  : Retrieve ACE ANSP airspace geometries for a given AIRAC cycle
+- [`es_sf()`](https://eurocontrol.github.io/eurocontrol/reference/es_sf.md)
+  : Retrieve Elementary Sector airspace geometries for a given AIRAC
+  cycle
+- [`fir_sf()`](https://eurocontrol.github.io/eurocontrol/reference/fir_sf.md)
+  : Retrieve FIR (Flight Information Region) airspace geometries for a
+  given AIRAC cycle
 - [`airlines_tidy()`](https://eurocontrol.github.io/eurocontrol/reference/airlines_tidy.md)
   : Airline info including group affiliation
 - [`airspace_profiles_tidy()`](https://eurocontrol.github.io/eurocontrol/reference/airspace_profiles_tidy.md)
