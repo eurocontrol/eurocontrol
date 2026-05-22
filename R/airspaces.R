@@ -7,7 +7,7 @@
 #' # Note
 #' You need to either provide a connection `conn` that has access to
 #' `ENV_SP.AIRSPACE`, `PRU_STAT_AUA` and `SWH_MAP` or go with the default
-#' which uses PRU_READ to establish a [db_connection()].
+#' which uses PRU_DEV to establish a [db_connection()].
 #'
 #' The `sf` package is required but only suggested; install it if not available.
 #'
@@ -35,7 +35,7 @@
 #' sf::st_write(acc, "acc-517.geojson", driver = "GeoJSON")
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_READ")
+#' conn <- eurocontrol::db_connection("PRU_DEV")
 #' acc <- acc_sf(conn = conn, cfmu_airac = "517")
 #'
 #' # ... do something else with conn
@@ -47,7 +47,7 @@ acc_sf <- function(conn = NULL, cfmu_airac) {
   rlang::check_installed("sf", reason = "to parse GeoJSON airspace geometries")
 
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_READ")
+    conn <- db_connection(schema = "PRU_DEV")
   }
 
   withr::local_envvar(c(
@@ -118,7 +118,7 @@ acc_sf <- function(conn = NULL, cfmu_airac) {
 #' # Note
 #' You need to either provide a connection `conn` that has access to
 #' `ENV_SP.AIRSPACE`, `PRU_CFMU_ANSP` and `SWH_MAP` or go with the default
-#' which uses PRU_READ to establish a [db_connection()].
+#' which uses PRU_DEV to establish a [db_connection()].
 #'
 #' The `sf` package is required but only suggested; install it if not available.
 #'
@@ -145,7 +145,7 @@ acc_sf <- function(conn = NULL, cfmu_airac) {
 #' sf::st_write(ansps, "ansp_ace_481.geojson", driver = "GeoJSON")
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_READ")
+#' conn <- eurocontrol::db_connection("PRU_DEV")
 #' ansps <- ansp_sf(conn = conn, cfmu_airac = "481")
 #'
 #' # ... do something else with conn
@@ -157,7 +157,7 @@ ansp_sf <- function(conn = NULL, cfmu_airac) {
   rlang::check_installed("sf", reason = "to parse GeoJSON airspace geometries")
 
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_READ")
+    conn <- db_connection(schema = "PRU_DEV")
   }
 
   withr::local_envvar(c(
@@ -256,7 +256,7 @@ ansp_sf <- function(conn = NULL, cfmu_airac) {
 #' # Note
 #' You need to either provide a connection `conn` that has access to
 #' `ENV_SP.AIRSPACE`, `PRU_CFMU_ES` and `SWH_MAP` or go with the default
-#' which uses PRU_READ to establish a [db_connection()].
+#' which uses PRU_DEV to establish a [db_connection()].
 #'
 #' The `sf` package is required but only suggested; install it if not available.
 #'
@@ -282,7 +282,7 @@ ansp_sf <- function(conn = NULL, cfmu_airac) {
 #' sf::st_write(es, "es-517.geojson", driver = "GeoJSON")
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_READ")
+#' conn <- eurocontrol::db_connection("PRU_DEV")
 #' es <- es_sf(conn = conn, cfmu_airac = "517")
 #'
 #' # ... do something else with conn
@@ -294,7 +294,7 @@ es_sf <- function(conn = NULL, cfmu_airac) {
   rlang::check_installed("sf", reason = "to parse GeoJSON airspace geometries")
 
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_READ")
+    conn <- db_connection(schema = "PRU_DEV")
   }
 
   withr::local_envvar(c(
@@ -369,7 +369,7 @@ es_sf <- function(conn = NULL, cfmu_airac) {
 #' # Note
 #' You need to either provide a connection `conn` that has access to
 #' `ENV_SP.AIRSPACE_VOLUME`, `PRU_CFMU_FIR` and `SWH_MAP` or go with the
-#' default which uses PRU_READ to establish a [db_connection()].
+#' default which uses PRU_DEV to establish a [db_connection()].
 #'
 #' The `sf` package is required but only suggested; install it if not available.
 #'
@@ -396,7 +396,7 @@ es_sf <- function(conn = NULL, cfmu_airac) {
 #' sf::st_write(firs, "ir-517.geojson", driver = "GeoJSON")
 #'
 #' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_READ")
+#' conn <- eurocontrol::db_connection("PRU_DEV")
 #' firs <- fir_sf(conn = conn, cfmu_airac = "517")
 #'
 #' # ... do something else with conn
@@ -408,7 +408,7 @@ fir_sf <- function(conn = NULL, cfmu_airac) {
   rlang::check_installed("sf", reason = "to parse GeoJSON airspace geometries")
 
   if (is.null(conn)) {
-    conn <- db_connection(schema = "PRU_READ")
+    conn <- db_connection(schema = "PRU_DEV")
   }
 
   withr::local_envvar(c(
