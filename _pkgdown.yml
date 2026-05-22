@@ -26,6 +26,10 @@ reference:
   desc: >
     Helpers for typical queries.
   contents:
+  - acc_sf
+  - ansp_sf
+  - es_sf
+  - fir_sf
   - airlines_tidy
   - airspace_profiles_tidy
   - apdf_tidy

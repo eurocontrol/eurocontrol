@@ -5,6 +5,8 @@ Version: 0.1.24
 Authors@R: c(
     person("Enrico", "Spinielli", , "enrico.spinielli@eurocontrol.int", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8584-9131")),
+    person("Quinten", "Goens", , "quinten.goens@eurocontrol.int", role = "aut",
+           comment = c(ORCID = "0000-0003-2187-1924")),
     person("EUROCONTROL", role = c("cph", "fnd"))
   )
 Maintainer: Enrico Spinielli <enrico.spinielli@eurocontrol.int>
@@ -28,9 +30,10 @@ Imports:
     withr
 Encoding: UTF-8
 LazyData: true
-Suggests: 
+Suggests:
     ROracle,
-    roxygen2
+    roxygen2,
+    sf
 Roxygen: list(markdown = TRUE)
 URL: https://eurocontrol.github.io/eurocontrol/, https://github.com/eurocontrol/eurocontrol
 Depends: 
