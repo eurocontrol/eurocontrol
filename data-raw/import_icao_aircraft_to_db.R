@@ -1,4 +1,3 @@
-
 library(eurocontrol)
 library(dbplyr)
 library(dplyr)
@@ -14,25 +13,26 @@ con <- eurocontrol::db_connection()
 #   df        = aircraft_type,
 #   name      = "ICAO_AIRCRAFT_TYPE"
 # )
-
+# according to https://github.com/tidyverse/dbplyr/issues/635#issuecomment-1088434596
+# you can use copy_to(..., in_transaction = FALSE)
 
 local_envvar(c("TZ" = "UTC", "ORA_SDTZ" = "UTC"))
 
 DBI::dbRemoveTable(con, "ICAO_AIRCRAFT_TYPE")
 DBI::dbWriteTable(
-  conn      = con,
-  name      = "ICAO_AIRCRAFT_TYPE",
-  value     = aircraft_type,
-  append    = FALSE,
+  conn = con,
+  name = "ICAO_AIRCRAFT_TYPE",
+  value = aircraft_type,
+  append = FALSE,
   row.names = FALSE
 )
 
 DBI::dbRemoveTable(con, "ICAO_AIRCRAFT_MODEL")
 DBI::dbWriteTable(
-  conn      = con,
-  name      = "ICAO_AIRCRAFT_MODEL",
-  value     = aircraft_model,
-  append    = FALSE,
+  conn = con,
+  name = "ICAO_AIRCRAFT_MODEL",
+  value = aircraft_model,
+  append = FALSE,
   row.names = FALSE
 )
 
@@ -42,7 +42,6 @@ icao_aircraft_model <- tbl(con, "ICAO_AIRCRAFT_MODEL") |> collect()
 
 
 DBI::dbDisconnect(con)
-
 
 # SELECT
 # *
