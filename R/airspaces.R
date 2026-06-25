@@ -233,13 +233,13 @@ ansp_sf <- function(conn = NULL, cfmu_airac) {
       !.data$CODE %in% c("AIRPORT", "UNKNOWN", "MILITARY")
     ) |>
     dplyr::rename(
-      airac_cfmu    = "AC_ID",
-      id            = "AV_AIRSPACE_ID",
-      code          = "CODE",
-      min_fl        = "MIN_FLIGHT_LEVEL",
-      max_fl        = "MAX_FLIGHT_LEVEL",
-      name          = "NAME",
-      ace_code      = "ACE_CODE",
+      airac_cfmu = "AC_ID",
+      id = "AV_AIRSPACE_ID",
+      code = "CODE",
+      min_fl = "MIN_FLIGHT_LEVEL",
+      max_fl = "MAX_FLIGHT_LEVEL",
+      name = "NAME",
+      ace_code = "ACE_CODE",
       airspace_type = "AIRSPACE_TYPE",
       NULL
     ) |>
@@ -322,10 +322,10 @@ es_sf <- function(conn = NULL, cfmu_airac) {
     WITH
       AIRSPACE_NAMES AS (
         SELECT DISTINCT
-          AIRSPACE_ID,
-          AIRSPACE_TYPE,
-          NAME,
-          CODE
+          A.AIRSPACE_ID,
+          A.AIRSPACE_TYPE,
+          P.NAME,
+          P.CODE
         FROM
           ENV_SP.AIRSPACE A,
           PRU_CFMU_ES P
@@ -489,12 +489,12 @@ fir_sf <- function(conn = NULL, cfmu_airac) {
     dplyr::first() |>
     sf::st_read(quiet = TRUE) |>
     dplyr::rename(
-      airac_cfmu    = "AC_ID",
-      code          = "CODE",
-      id            = "ID",
-      min_fl        = "MIN_FLIGHT_LEVEL",
-      max_fl        = "MAX_FLIGHT_LEVEL",
-      name          = "NAME",
+      airac_cfmu = "AC_ID",
+      code = "CODE",
+      id = "ID",
+      min_fl = "MIN_FLIGHT_LEVEL",
+      max_fl = "MAX_FLIGHT_LEVEL",
+      name = "NAME",
       airspace_type = "AIRSPACE_TYPE",
       NULL
     ) |>
