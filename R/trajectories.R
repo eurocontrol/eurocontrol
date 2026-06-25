@@ -254,7 +254,7 @@ flights_airspace_profiles_tidy <- function(
     profile = profile
   )
   ids <- prf |>
-    dplyr::select(.data$ID) |>
+    dplyr::select("ID") |>
     dplyr::distinct()
 
   # reuse the same DB connection as per the flights
@@ -266,7 +266,7 @@ flights_airspace_profiles_tidy <- function(
   flt <- flt |>
     # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
     # dplyr::inner_join(prf, by = c("ID" = "ID"))
-    dplyr::inner_join(prf, by = c("ID" = "ID")) |>
+    dplyr::inner_join(prf, by = c("ID" = "ID", "FLT_UID" = "FLT_UID")) |>
     dplyr::select(cols) |>
     dplyr::distinct()
 
