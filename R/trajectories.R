@@ -193,8 +193,8 @@ airspace_profiles_tidy <- function(
 }
 
 
-#' Extract the flights list for the airspace profile segments intersecting
-#' an interval of interest
+#' Extract the segments intersecting a set of airspace IDs in an interval
+#' of time and complement them with flight information
 #'
 #' @description
 #' The returned [dbplyr::tbl_dbi()] includes scheduled and non-scheduled flights
@@ -208,6 +208,8 @@ airspace_profiles_tidy <- function(
 #' uses PRU_READ to establish a [db_connection()].
 #'
 #' @inheritParams airspace_profiles_tidy
+#' @inheritParams flights_tidy
+#' @param airspaces list of airspace ids
 #'
 #' @return a [dbplyr::tbl_dbi()] with the same columns as [flights_tidy()]
 #'         plus the airspace id, `AIRSPACE_ID`, being crossed, one row per
@@ -217,18 +219,16 @@ airspace_profiles_tidy <- function(
 #'
 #' @examples
 #' \dontrun{
-#' aa <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
-#'
-#' # if you re-use DB connections
-#' conn <- eurocontrol::db_connection("PRU_READ")
-#' flights_airspace_profiles_tidy(conn = conn,
-#'                                wef = "2023-01-01",
-#'                                til = "2023-04-01")
-#'
-#' # ... do something else with conn
-#' # ...
-#' # then manually close the connection to the DB
-#' DBI::dbDisconnect(conn)
+#' withr::local_envvar(c(TZ = "UTC", ORA_SDTZ = "UTC", NLS_LANG = ".AL32UTF8"))
+#' conn <- withr::local_db_connection(db_connection("PRU_READ"))
+#' flights_airspace_profiles_tidy(
+#'   conn = conn,
+#'   wef = "2026-06-12",
+#'   til = "2026-06-13",
+#'   airspace = "ES",
+#'   profile = "CTFM",
+#'   airspaces = c("LYBALW2", "LYBATW2")
+#' )
 #' }
 flights_airspace_profiles_tidy <- function(
   conn = NULL,
@@ -243,33 +243,71 @@ flights_airspace_profiles_tidy <- function(
   before_hours <- 28
   after_hours <- 24
 
-  wef_before <- (lubridate::as_datetime(wef) -
-    lubridate::dhours(before_hours)) |>
+  wef <- lubridate::as_datetime(wef)
+  til <- lubridate::as_datetime(til)
+
+  wef_before <- (wef - lubridate::dhours(before_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
-  til_after <- (lubridate::as_date(til) + lubridate::dhours(after_hours)) |>
+  til_after <- (til + lubridate::dhours(after_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
 
-  profiles <- airspace_profiles_tidy(
-    conn = conn,
-    wef = wef,
-    til = til,
-    airspace = airspace,
-    profile = profile
-  ) |>
-    dplyr::filter(AIRSPACE_ID %in% airspaces) |>
-    dplyr::select(ID)
+  wef <- wef |> format("%Y-%m-%d %H:%M:%S")
+  til <- til |> format("%Y-%m-%d %H:%M:%S")
 
-  # reuse the same DB connection as per the flights
-  conn <- prf$src$con
+  if (is.null(conn)) {
+    conn <- db_connection(schema = "PRU_READ")
+  }
 
-  flt <- flights_tidy(
-    conn = conn,
-    wef = wef,
-    til = til
-  ) |>
-    semi_join(profiles, by = "ID")
+  flt <- flights_tidy(conn = conn, wef = wef_before, til = til_after)
+  ids <- flt |>
+    dplyr::select("ID", "FLT_UID") |>
+    dplyr::distinct()
 
-  flt
+  prf <- airspace_profile_tbl(conn = conn) |>
+    dplyr::filter(
+      TO_DATE(wef_before, "yyyy-mm-dd hh24:mi:ss") <= .data$LOBT,
+      .data$LOBT < TO_DATE(til_after, "yyyy-mm-dd hh24:mi:ss"),
+      .data$MODEL_TYPE %in% profile,
+      .data$AIRSPACE_TYPE == airspace,
+      # entry
+      !is.na(.data$ENTRY_LON),
+      !is.na(.data$ENTRY_LAT),
+      !is.na(.data$ENTRY_TIME),
+      !is.na(.data$ENTRY_FL),
+      # exit
+      !is.na(.data$EXIT_LON),
+      !is.na(.data$EXIT_LAT),
+      !is.na(.data$EXIT_TIME),
+      !is.na(.data$EXIT_FL),
+      # consider only the segments intersecting the [wef, til)
+      TO_DATE(wef, "yyyy-mm-dd hh24:mi:ss") < .data$EXIT_TIME,
+      .data$ENTRY_TIME <= TO_DATE(til, "yyyy-mm-dd hh24:mi:ss"),
+      NULL
+    ) |>
+    dplyr::select(
+      "SAM_ID",
+      "SEQ_ID",
+      "ENTRY_TIME",
+      "ENTRY_LON",
+      "ENTRY_LAT",
+      "ENTRY_FL",
+      "EXIT_TIME",
+      "EXIT_LON",
+      "EXIT_LAT",
+      "EXIT_FL",
+      "AIRSPACE_ID",
+      "AIRSPACE_TYPE",
+      "MODEL_TYPE"
+    ) |>
+    dplyr::rename(
+      ID = "SAM_ID"
+    )
+
+  prf <- prf |>
+    dplyr::left_join(flt, by = c("ID" = "ID")) |>
+    dplyr::select("ID", "FLT_UID", dplyr::everything())
+
+  prf
 }
 
 

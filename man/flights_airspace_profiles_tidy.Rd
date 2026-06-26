@@ -2,13 +2,14 @@
 % Please edit documentation in R/trajectories.R
 \name{flights_airspace_profiles_tidy}
 \alias{flights_airspace_profiles_tidy}
-\title{Extract the flights list for the airspace profile segments intersecting
-an interval of interest}
+\title{Extract the segments intersecting a set of airspace IDs in an interval
+of time and complement them with flight information}
 \usage{
 flights_airspace_profiles_tidy(
   conn = NULL,
   wef,
   til,
+  airspaces,
   airspace = "FIR",
   profile = "CTFM"
 )
@@ -21,6 +22,8 @@ in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datet
 
 \item{til}{un\strong{TIL}l date (excluded) at Zulu time
 in a format recognized by \code{\link[lubridate:as_datetime]{lubridate::as_datetime()}}}
+
+\item{airspaces}{list of airspace ids}
 
 \item{airspace}{the type of airspace (default: 'FIR'), one of:
 \itemize{
@@ -45,6 +48,8 @@ profile (default: 'CTFM'), one of:
 }
 \value{
 a \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} with the same columns as \code{\link[=flights_tidy]{flights_tidy()}}
+plus the airspace id, \code{AIRSPACE_ID}, being crossed, one row per
+crossed airspace.
 }
 \description{
 The returned \code{\link[dbplyr:tbl_dbi]{dbplyr::tbl_dbi()}} includes scheduled and non-scheduled flights
@@ -60,17 +65,15 @@ uses PRU_READ to establish a \code{\link[=db_connection]{db_connection()}}.
 
 \examples{
 \dontrun{
-aa <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
-
-# if you re-use DB connections
-conn <- eurocontrol::db_connection("PRU_READ")
-flights_airspace_profiles_tidy(conn = conn,
-                               wef = "2023-01-01",
-                               til = "2023-04-01")
-
-# ... do something else with conn
-# ...
-# then manually close the connection to the DB
-DBI::dbDisconnect(conn)
+withr::local_envvar(c(TZ = "UTC", ORA_SDTZ = "UTC", NLS_LANG = ".AL32UTF8"))
+conn <- withr::local_db_connection(db_connection("PRU_READ"))
+flights_airspace_profiles_tidy(
+  conn = conn,
+  wef = "2023-01-01",
+  til = "2023-04-01",
+  airspace = "ES",
+  profile = "CTFM",
+  airspaces = c("LYBALW2", "LYBATW2")
+)
 }
 }
