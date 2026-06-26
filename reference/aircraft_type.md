@@ -42,4 +42,4 @@ aircraft_type
 ## Format
 
 An object of class `tbl_df` (inherits from `tbl`, `data.frame`) with
-2719 rows and 7 columns.
+2612 rows and 7 columns.

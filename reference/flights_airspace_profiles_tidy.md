@@ -1,4 +1,4 @@
-# Extract the flights list for the airspace profile segments intersecting an interval of interest
+# Extract the segments intersecting a set of airspace IDs in an interval of time and complement them with flight information
 
 The returned
 [`dbplyr::tbl_dbi()`](https://dbplyr.tidyverse.org/reference/tbl.src_dbi.html)
@@ -13,6 +13,7 @@ flights_airspace_profiles_tidy(
   conn = NULL,
   wef,
   til,
+  airspaces,
   airspace = "FIR",
   profile = "CTFM"
 )
@@ -34,6 +35,10 @@ flights_airspace_profiles_tidy(
 
   un**TIL**l date (excluded) at Zulu time in a format recognized by
   [`lubridate::as_datetime()`](https://lubridate.tidyverse.org/reference/as_date.html)
+
+- airspaces:
+
+  list of airspace ids
 
 - airspace:
 
@@ -76,6 +81,8 @@ a
 [`dbplyr::tbl_dbi()`](https://dbplyr.tidyverse.org/reference/tbl.src_dbi.html)
 with the same columns as
 [`flights_tidy()`](https://eurocontrol.github.io/eurocontrol/reference/flights_tidy.md)
+plus the airspace id, `AIRSPACE_ID`, being crossed, one row per crossed
+airspace.
 
 ## Note
 
@@ -91,17 +98,15 @@ or go with the default which uses PRU_READ to establish a
 
 ``` r
 if (FALSE) { # \dontrun{
-aa <- flights_airspace_profiles_tidy(wef = "2023-01-01", til = "2023-04-01")
-
-# if you re-use DB connections
-conn <- eurocontrol::db_connection("PRU_READ")
-flights_airspace_profiles_tidy(conn = conn,
-                               wef = "2023-01-01",
-                               til = "2023-04-01")
-
-# ... do something else with conn
-# ...
-# then manually close the connection to the DB
-DBI::dbDisconnect(conn)
+withr::local_envvar(c(TZ = "UTC", ORA_SDTZ = "UTC", NLS_LANG = ".AL32UTF8"))
+conn <- withr::local_db_connection(db_connection("PRU_READ"))
+flights_airspace_profiles_tidy(
+  conn = conn,
+  wef = "2023-01-01",
+  til = "2023-04-01",
+  airspace = "ES",
+  profile = "CTFM",
+  airspaces = c("LYBALW2", "LYBATW2")
+)
 } # }
 ```
