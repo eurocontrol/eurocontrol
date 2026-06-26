@@ -210,6 +210,8 @@ airspace_profiles_tidy <- function(
 #' @inheritParams airspace_profiles_tidy
 #'
 #' @return a [dbplyr::tbl_dbi()] with the same columns as [flights_tidy()]
+#'         plus the airspace id, `AIRSPACE_ID`, being crossed, one row per
+#'         crossed airspace.
 #'
 #' @export
 #'
@@ -232,6 +234,7 @@ flights_airspace_profiles_tidy <- function(
   conn = NULL,
   wef,
   til,
+  airspaces,
   airspace = "FIR",
   profile = "CTFM"
 ) {
@@ -246,29 +249,25 @@ flights_airspace_profiles_tidy <- function(
   til_after <- (lubridate::as_date(til) + lubridate::dhours(after_hours)) |>
     format("%Y-%m-%d %H:%M:%S")
 
-  prf <- airspace_profiles_tidy(
+  profiles <- airspace_profiles_tidy(
     conn = conn,
-    wef,
-    til,
+    wef = wef,
+    til = til,
     airspace = airspace,
     profile = profile
-  )
-  ids <- prf |>
-    dplyr::select("ID") |>
-    dplyr::distinct()
+  ) |>
+    dplyr::filter(AIRSPACE_ID %in% airspaces) |>
+    dplyr::select(ID)
 
   # reuse the same DB connection as per the flights
   conn <- prf$src$con
 
-  flt <- flights_tidy(conn = conn, wef = wef_before, til = til_after)
-  cols <- colnames(flt)
-
-  flt <- flt |>
-    # dplyr::inner_join(flt, sql_on = "LHS.SAM_ID = RHS.ID AND LHS.LOBT = LHS.LOBT") |>
-    # dplyr::inner_join(prf, by = c("ID" = "ID"))
-    dplyr::inner_join(prf, by = c("ID" = "ID", "FLT_UID" = "FLT_UID")) |>
-    dplyr::select(dplyr::all_of(cols)) |>
-    dplyr::distinct()
+  flt <- flights_tidy(
+    conn = conn,
+    wef = wef,
+    til = til
+  ) |>
+    semi_join(profiles, by = "ID")
 
   flt
 }
